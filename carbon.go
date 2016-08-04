@@ -16,6 +16,10 @@ func (c Carbon) AddYears(y int) time.Time {
 	return c.AddDate(1, 0, 0)
 }
 
+// Add a year to the instance
+func (c Carbon) AddYear() time.Time {
+	return c.AddYears(1)
+}
 //-----------------------------------------------------------
 // Create a Carbon instance from a DateTime one.
 func Instance() {
