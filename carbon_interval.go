@@ -6,34 +6,34 @@ package carbon
 * syntax as it allows you to do CarbonInterval::create(1)->fn() rather than
 * (new CarbonInterval(1))->fn().
  */
-func Create() {
-}
+//func Create() {
+//}
 
 /**
 * Create a CarbonInterval instance from a DateInterval one.  Can not instance
 * DateInterval objects created from DateTime::diff() as you can't externally
 * set the $days field.
  */
-func Instance() {
-}
+//func Instance() {
+//}
 
 // Get the translator instance in use
-func GetTranslator() {
-}
+//func GetTranslator() {
+//}
 
 /*
 * Set the translator instance to use
  */
-func SetTranslator() {
-}
+//func SetTranslator() {
+//}
 
 // Get the current translator locale
-func GetLocale() {
-}
+//func GetLocale() {
+//}
 
 // Set the current translator locale
-func SetLocale() {
-}
+//func SetLocale() {
+//}
 
 // Allow setting of weeks and days to be cumulative.
 func WeeksAndDays() {

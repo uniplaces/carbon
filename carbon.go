@@ -1,5 +1,22 @@
 package carbon
 
+import "time"
+
+type Carbon struct {
+	time.Time
+}
+
+func NewCarbon(t time.Time) Carbon {
+	return Carbon{Time: t}
+}
+
+// AddYears adds years to the instance.
+// Positive value travel forward while negative value travel into the past.
+func (c Carbon) AddYears(y int) time.Time {
+	return c.AddDate(1, 0, 0)
+}
+
+//-----------------------------------------------------------
 // Create a Carbon instance from a DateTime one.
 func Instance() {
 }
@@ -462,11 +479,6 @@ func IsFriday() {
 
 // Checks if this day is a Saturday.
 func IsSaturday() {
-}
-
-// Add years to the instance. Positive $value travel forward while
-// negative $value travel into the past.
-func AddYears() {
 }
 
 // Add a year to the instance
