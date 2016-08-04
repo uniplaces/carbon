@@ -1,65 +1,38 @@
 package carbon
 
-// A simple API extension for DateTime
-// @property      int $year
-// @property      int $yearIso
-// @property      int $month
-// @property      int $day
-// @property      int $hour
-// @property      int $minute
-// @property      int $second
-// @property      int $timestamp seconds since the Unix Epoch
-// @property      \DateTimeZone $timezone the current timezone
-// @property      \DateTimeZone $tz alias of timezone
-// @property-read int $micro
-// @property-read int $dayOfWeek 0 (for Sunday) through 6 (for Saturday)
-// @property-read int $dayOfYear 0 through 365
-// @property-read int $weekOfMonth 1 through 5
-// @property-read int $weekOfYear ISO-8601 week number of year, weeks starting on Monday
-// @property-read int $daysInMonth number of days in the given month
-// @property-read int $age does a diffInYears() with default parameters
-// @property-read int $quarter the quarter of this instance, 1 - 4
-// @property-read int $offset the timezone offset in seconds from UTC
-// @property-read int $offsetHours the timezone offset in hours from UTC
-// @property-read bool $dst daylight savings time indicator, true if DST, false otherwise
-// @property-read bool $local checks if the timezone is local, true if local, false otherwise
-// @property-read bool $utc checks if the timezone is UTC, true if UTC, false otherwise
-// @property-read string $timezoneName
-// @property-read string $tzName
-
 // Create a Carbon instance from a DateTime one.
-func instance() {
+func Instance() {
 }
 
 // Create a carbon instance from a string.
 // This is an alias for the constructor that allows better fluent syntax
 // as it allows you to do Carbon::parse('Monday next week')->fn() rather
 // than (new Carbon('Monday next week'))->fn().
-func parse() {
+func Parse() {
 }
 
 // Get a Carbon instance for the current date and time.
-func now() {
+func Now() {
 }
 
 // Create a Carbon instance for today.
-func today() {
+func Today() {
 }
 
 // Create a Carbon instance for tomorrow.
-func tomorrow() {
+func Tomorrow() {
 }
 
 // Create a Carbon instance for yesterday.
-func yesterday() {
+func Yesterday() {
 }
 
 // Create a Carbon instance for the greatest supported date.
-func maxValue() {
+func MaxValue() {
 }
 
 // Create a Carbon instance for the lowest supported date.
-func minValue() {
+func MinValue() {
 }
 
 // Create a new Carbon instance from a specific date and time.
@@ -69,7 +42,7 @@ func minValue() {
 // values for $minute and $second will be their now() values.
 // If $hour is not null then the default values for $minute and $second
 // will be 0.
-func create() {
+func Create() {
 }
 
 // Create a new safe Carbon instance from a specific date and time.
@@ -82,131 +55,117 @@ func create() {
 // If one of the set values is not valid, an \InvalidArgumentException
 // will be thrown.
 // @throws \Carbon\Exceptions\InvalidDateException
-func createSafe() {
+func CreateSafe() {
 }
 
 // Create a Carbon instance from just a date. The time portion is set to now.
-func createFromDate() {
+func CreateFromDate() {
 }
 
 // Create a Carbon instance from just a time. The date portion is set to today.
-func createFromTime() {
+func CreateFromTime() {
 }
 
 // Create a Carbon instance from a specific format.
 // @throws \InvalidArgumentException
-func createFromFormat() {
+func CreateFromFormat() {
 }
 
 // Set last errors.
-func setLastErrors() {
+func SetLastErrors() {
 }
 
 // {@inheritdoc}
-func getLastErrors() {
+func GetLastErrors() {
 }
 
 // Create a Carbon instance from a timestamp.
-func createFromTimestamp() {
+func CreateFromTimestamp() {
 }
 
 // Create a Carbon instance from an UTC timestamp.
-func createFromTimestampUTC() {
+func CreateFromTimestampUTC() {
 }
 
 // Get a copy of the instance.
-func copy() {
-}
-
-// Get a part of the Carbon object
-// @throws \InvalidArgumentException
-func __get() {
-}
-
-// Check if an attribute exists on the object
-func __isset() {
-}
-
-// Set a part of the Carbon object
-// @throws \InvalidArgumentException
-func __set() {
+func Copy() {
 }
 
 // Set the instance's year
-func year() {
+func Year() {
 }
 
 // Set the instance's month
-func month() {
+func Month() {
 }
 
 // Set the instance's day
-func day() {
+func Day() {
 }
 
 // Set the instance's hour
-func hour() {
+func Hour() {
 }
 
 // Set the instance's minute
-func minute() {
+func Minute() {
 }
 
 // Set the instance's second
-func second() {
+func Second() {
 }
 
 // Sets the current date of the DateTime object to a different date.
 // Calls modify as a workaround for a php bug
-func setDate() {
+func SetDate() {
 }
 
 // Set the date and time all together
-func setDateTime() {
+func SetDateTime() {
 }
 
 // Set the time by time string
-func setTimeFromTimeString() {
+func SetTimeFromTimeString() {
 }
 
 // Set the instance's timestamp
-func timestamp() {
+func Timestamp() {
 }
 
 // Alias for setTimezone()
-func timezone() {
+func Timezone() {
 }
 
 // Alias for setTimezone()
-func tz() {
+func Tz() {
 }
 
 // Set the instance's timezone from a string or object
-func setTimezone() {
+func SetTimezone() {
 }
 
 // Get the first day of week
-func getWeekStartsAt() {
+func GetWeekStartsAt() {
 }
 
 // Set the first day of week
-func setWeekStartsAt() {
+func SetWeekStartsAt() {
 }
 
 // Get the last day of week
-func getWeekEndsAt() {
+func GetWeekEndsAt() {
 }
 
 // Set the last day of week
-func setWeekEndsAt() {
+func SetWeekEndsAt() {
 }
 
 // Get weekend days
-func getWeekendDays() {
+func GetWeekendDays() {
 }
 
 // Set weekend days
-func setWeekendDays() {
+func SetWeekendDays() {
 }
 
 // Set a Carbon instance (real or mock) to be returned when a "now"
@@ -219,537 +178,533 @@ func setWeekendDays() {
 // has no affect as the mock value will be returned regardless of its value.
 // To clear the test instance call this method using the default
 // parameter of null.
-func setTestNow() {
+func SetTestNow() {
 }
 
 // Get the Carbon instance (real or mock) to be returned when a "now"
 // instance is created.
-func getTestNow() {
+func GetTestNow() {
 }
 
 // Determine if there is a valid test instance set. A valid test instance
 // is anything that is not null.
-func hasTestNow() {
+func HasTestNow() {
 }
 
 // Determine if there is a relative keyword in the time string, this is to
 // create dates relative to now for test instances. e.g.: next tuesday
-func hasRelativeKeywords() {
+func HasRelativeKeywords() {
 }
 
 // Intialize the translator instance if necessary.
-func translator() {
+func Translator() {
 }
 
 // Get the translator instance in use
-func getTranslator() {
+func GetTranslator() {
 }
 
 // Set the translator instance to use
-func setTranslator() {
+func SetTranslator() {
 }
 
 // Get the current translator locale
-func getLocale() {
+func GetLocale() {
 }
 
 // Set the current translator locale and indicate if the source locale file exists
-func setLocale() {
+func SetLocale() {
 }
 
 // Format the instance with the current locale.  You can set the current
-func formatLocalized() {
+func FormatLocalized() {
 }
 
 // Reset the format used to the default when type juggling a Carbon instance to a string
-func resetToStringFormat() {
+func ResetToStringFormat() {
 }
 
 // Set the default format used when type juggling a Carbon instance to a string
-func setToStringFormat() {
-}
-
-// Format the instance as a string using the set format
-func __toString() {
+func SetToStringFormat() {
 }
 
 // Format the instance as date
-func toDateString() {
+func ToDateString() {
 }
 
 // Format the instance as a readable date
-func toFormattedDateString() {
+func ToFormattedDateString() {
 }
 
 // Format the instance as time
-func toTimeString() {
+func ToTimeString() {
 }
 
 // Format the instance as date and time
-func toDateTimeString() {
+func ToDateTimeString() {
 }
 
 // Format the instance with day, date and time
-func toDayDateTimeString() {
+func ToDayDateTimeString() {
 }
 
 // Format the instance as ATOM
-func toAtomString() {
+func ToAtomString() {
 }
 
 // Format the instance as COOKIE
-func toCookieString() {
+func ToCookieString() {
 }
 
 // Format the instance as ISO8601
-func toIso8601String() {
+func ToIso8601String() {
 }
 
 // Format the instance as RFC822
-func toRfc822String() {
+func ToRfc822String() {
 }
 
 // Format the instance as RFC850
-func toRfc850String() {
+func ToRfc850String() {
 }
 
 // Format the instance as RFC1036
-func toRfc1036String() {
+func ToRfc1036String() {
 }
 
 // Format the instance as RFC1123
-func toRfc1123String() {
+func ToRfc1123String() {
 }
 
 // Format the instance as RFC2822
-func toRfc2822String() {
+func ToRfc2822String() {
 }
 
 // Format the instance as RFC3339
-func toRfc3339String() {
+func ToRfc3339String() {
 }
 
 // Format the instance as RSS
-func toRssString() {
+func ToRssString() {
 }
 
 // Format the instance as W3C
-func toW3cString() {
+func ToW3cString() {
 }
 
 // Determines if the instance is equal to another
-func eq() {
+func Eq() {
 }
 
 // Determines if the instance is equal to another
 // @see eq()
-func equalTo() {
+func EqualTo() {
 }
 
 // Determines if the instance is not equal to another
-func ne() {
+func Ne() {
 }
 
 // Determines if the instance is not equal to another
 // @see ne()
-func notEqualTo() {
+func NotEqualTo() {
 }
 
 // Determines if the instance is greater (after) than another
-func gt() {
+func Gt() {
 }
 
 // Determines if the instance is greater (after) than another
 // @see gt()
-func greaterThan() {
+func GreaterThan() {
 }
 
 // Determines if the instance is greater (after) than or equal to another
-func gte() {
+func Gte() {
 }
 
 // Determines if the instance is greater (after) than or equal to another
 // @see gte()
-func greaterThanOrEqualTo() {
+func GreaterThanOrEqualTo() {
 }
 
 // Determines if the instance is less (before) than another
-func lt() {
+func Lt() {
 }
 
 // Determines if the instance is less (before) than another
 // @see lt()
-func lessThan() {
+func LessThan() {
 }
 
 // Determines if the instance is less (before) or equal to another
-func lte() {
+func Lte() {
 }
 
 // Determines if the instance is less (before) or equal to another
 // @see lte()
-func lessThanOrEqualTo() {
+func LessThanOrEqualTo() {
 }
 
 // Determines if the instance is between two others
-func between() {
+func Between() {
 }
 
 // Get the closest date from the instance.
-func closest() {
+func Closest() {
 }
 
 // Get the farthest date from the instance.
-func farthest() {
+func Farthest() {
 }
 
 // Get the minimum instance between a given instance (default now) and the current instance.
-func min() {
+func Min() {
 }
 
 // Get the minimum instance between a given instance (default now) and the current instance.
 // @see min()
-func minimum() {
+func Minimum() {
 }
 
 // Get the maximum instance between a given instance (default now) and the current instance.
-func max() {
+func Max() {
 }
 
 // Get the maximum instance between a given instance (default now) and the current instance.
 // @see max()
-func maximum() {
+func Maximum() {
 }
 
 // Determines if the instance is a weekday
-func isWeekday() {
+func IsWeekday() {
 }
 
 // Determines if the instance is a weekend day
-func isWeekend() {
+func IsWeekend() {
 }
 
 // Determines if the instance is yesterday
-func isYesterday() {
+func IsYesterday() {
 }
 
 // Determines if the instance is today
-func isToday() {
+func IsToday() {
 }
 
 // Determines if the instance is tomorrow
-func isTomorrow() {
+func IsTomorrow() {
 }
 
 // Determines if the instance is in the future, ie. greater (after) than now
-func isFuture() {
+func IsFuture() {
 }
 
 // Determines if the instance is in the past, ie. less (before) than now
-func isPast() {
+func IsPast() {
 }
 
 // Determines if the instance is a leap year
-func isLeapYear() {
+func IsLeapYear() {
 }
 
 // Determines if the instance is a long year
-func isLongYear() {
+func IsLongYear() {
 }
 
 // Compares the formatted values of the two dates.
-func isSameAs() {
+func IsSameAs() {
 }
 
 // Determines if the instance is in the current year
-func isCurrentYear() {
+func IsCurrentYear() {
 }
 
 // Checks if the passed in date is in the same year as the instance year.
-func isSameYear() {
+func IsSameYear() {
 }
 
 // Determines if the instance is in the current month
-func isCurrentMonth() {
+func IsCurrentMonth() {
 }
 
 // Checks if the passed in date is in the same month as the instance month (and year if needed).
-func isSameMonth() {
+func IsSameMonth() {
 }
 
 // Checks if the passed in date is the same day as the instance current day.
-func isSameDay() {
+func IsSameDay() {
 }
 
 // Checks if this day is a Sunday.
-func isSunday() {
+func IsSunday() {
 }
 
 // Checks if this day is a Monday.
-func isMonday() {
+func IsMonday() {
 }
 
 // Checks if this day is a Tuesday.
-func isTuesday() {
+func IsTuesday() {
 }
 
 // Checks if this day is a Wednesday.
-func isWednesday() {
+func IsWednesday() {
 }
 
 // Checks if this day is a Thursday.
-func isThursday() {
+func IsThursday() {
 }
 
 // Checks if this day is a Friday.
-func isFriday() {
+func IsFriday() {
 }
 
 // Checks if this day is a Saturday.
-func isSaturday() {
+func IsSaturday() {
 }
 
 // Add years to the instance. Positive $value travel forward while
 // negative $value travel into the past.
-func addYears() {
+func AddYears() {
 }
 
 // Add a year to the instance
-func addYear() {
+func AddYear() {
 }
 
 // Remove a year from the instance
-func subYear() {
+func SubYear() {
 }
 
 // Remove years from the instance.
-func subYears() {
+func SubYears() {
 }
 
 // Add quarters to the instance. Positive $value travels forward while
 // negative $value travels into the past.
-func addQuarters() {
+func AddQuarters() {
 }
 
 // Add a quarter to the instance
-func addQuarter() {
+func AddQuarter() {
 }
 
 // Remove a quarter from the instance
-func subQuarter() {
+func SubQuarter() {
 }
 
 // Remove quarters from the instance
-func subQuarters() {
+func SubQuarters() {
 }
 
 // Add centuries to the instance. Positive $value travels forward while
 // negative $value travels into the past.
-func addCenturies() {
+func AddCenturies() {
 }
 
 // Add a century to the instance
-func addCentury() {
+func AddCentury() {
 }
 
 // Remove a century from the instance
-func subCentury() {
+func SubCentury() {
 }
 
 // Remove centuries from the instance
-func subCenturies() {
+func SubCenturies() {
 }
 
 // Add months to the instance. Positive $value travels forward while
 // negative $value travels into the past.
-func addMonths() {
+func AddMonths() {
 }
 
 // Add a month to the instance
-func addMonth() {
+func AddMonth() {
 }
 
 // Remove a month from the instance
-func subMonth() {
+func SubMonth() {
 }
 
 // Remove months from the instance
-func subMonths() {
+func SubMonths() {
 }
 
 // Add months without overflowing to the instance. Positive $value
 // travels forward while negative $value travels into the past.
-func addMonthsNoOverflow() {
+func AddMonthsNoOverflow() {
 }
 
 // Add a month with no overflow to the instance
-func addMonthNoOverflow() {
+func AddMonthNoOverflow() {
 }
 
 // Remove a month with no overflow from the instance
-func subMonthNoOverflow() {
+func SubMonthNoOverflow() {
 }
 
 // Remove months with no overflow from the instance
-func subMonthsNoOverflow() {
+func SubMonthsNoOverflow() {
 }
 
 // Add days to the instance. Positive $value travels forward while
 // negative $value travels into the past.
-func addDays() {
+func AddDays() {
 }
 
 // Add a day to the instance
-func addDay() {
+func AddDay() {
 }
 
 // Remove a day from the instance
-func subDay() {
+func SubDay() {
 }
 
 // Remove days from the instance
-func subDays() {
+func SubDays() {
 }
 
 // Add weekdays to the instance. Positive $value travels forward while
 // negative $value travels into the past.
-func addWeekdays() {
+func AddWeekdays() {
 }
 
 // Add a weekday to the instance
-func addWeekday() {
+func AddWeekday() {
 }
 
 // Remove a weekday from the instance
-func subWeekday() {
+func SubWeekday() {
 }
 
 // Remove weekdays from the instance
-func subWeekdays() {
+func SubWeekdays() {
 }
 
 // Add weeks to the instance. Positive $value travels forward while
 // negative $value travels into the past.
-func addWeeks() {
+func AddWeeks() {
 }
 
 // Add a week to the instance
-func addWeek() {
+func AddWeek() {
 }
 
 // Remove a week from the instance
-func subWeek() {
+func SubWeek() {
 }
 
 // Remove weeks to the instance
-func subWeeks() {
+func SubWeeks() {
 }
 
 // Add hours to the instance. Positive $value travels forward while
 // negative $value travels into the past.
-func addHours() {
+func AddHours() {
 }
 
 // Add an hour to the instance
-func addHour() {
+func AddHour() {
 }
 
 // Remove an hour from the instance
-func subHour() {
+func SubHour() {
 }
 
 // Remove hours from the instance
-func subHours() {
+func SubHours() {
 }
 
 // Add minutes to the instance. Positive $value travels forward while
 // negative $value travels into the past.
-func addMinutes() {
+func AddMinutes() {
 }
 
 // Add a minute to the instance
-func addMinute() {
+func AddMinute() {
 }
 
 // Remove a minute from the instance
-func subMinute() {
+func SubMinute() {
 }
 
 // Remove minutes from the instance
-func subMinutes() {
+func SubMinutes() {
 }
 
 // Add seconds to the instance. Positive $value travels forward while
 // negative $value travels into the past.
-func addSeconds() {
+func AddSeconds() {
 }
 
 // Add a second to the instance
-func addSecond() {
+func AddSecond() {
 }
 
 // Remove a second from the instance
-func subSecond() {
+func SubSecond() {
 }
 
 // Remove seconds from the instance
-func subSeconds() {
+func SubSeconds() {
 }
 
 // Get the difference in years
-func diffInYears() {
+func DiffInYears() {
 }
 
 // Get the difference in months
-func diffInMonths() {
+func DiffInMonths() {
 }
 
 // Get the difference in weeks
-func diffInWeeks() {
+func DiffInWeeks() {
 }
 
 // Get the difference in days
-func diffInDays() {
+func DiffInDays() {
 }
 
 // Get the difference in days using a filter closure
-func diffInDaysFiltered() {
+func DiffInDaysFiltered() {
 }
 
 // Get the difference in hours using a filter closure
-func diffInHoursFiltered() {
+func DiffInHoursFiltered() {
 }
 
 // Get the difference by the given interval using a filter closure
-func diffFiltered() {
+func DiffFiltered() {
 }
 
 // Get the difference in weekdays
-func diffInWeekdays() {
+func DiffInWeekdays() {
 }
 
 // Get the difference in weekend days using a filter
-func diffInWeekendDays() {
+func DiffInWeekendDays() {
 }
 
 // Get the difference in hours
-func diffInHours() {
+func DiffInHours() {
 }
 
 // Get the difference in minutes
-func diffInMinutes() {
+func DiffInMinutes() {
 }
 
 // Get the difference in seconds
-func diffInSeconds() {
+func DiffInSeconds() {
 }
 
 // The number of seconds since midnight.
-func secondsSinceMidnight() {
+func SecondsSinceMidnight() {
 }
 
 // The number of seconds until 23:23:59.
-func secondsUntilEndOfDay() {
+func SecondsUntilEndOfDay() {
 }
 
 // Get the difference in a human readable format in the current locale.
@@ -765,165 +720,165 @@ func secondsUntilEndOfDay() {
 // When comparing a value in the future to another value:
 // 1 hour after
 // 5 months after
-func diffForHumans() {
+func DiffForHumans() {
 }
 
 // Resets the time to 00:00:00
-func startOfDay() {
+func StartOfDay() {
 }
 
 // Resets the time to 23:59:59
-func endOfDay() {
+func EndOfDay() {
 }
 
 // Resets the date to the first day of the month and the time to 00:00:00
-func startOfMonth() {
+func StartOfMonth() {
 }
 
 // Resets the date to end of the month and time to 23:59:59
-func endOfMonth() {
+func EndOfMonth() {
 }
 
 // Resets the date to the first day of the quarter and the time to 00:00:00
-func startOfQuarter() {
+func StartOfQuarter() {
 }
 
 // Resets the date to end of the quarter and time to 23:59:59
-func endOfQuarter() {
+func EndOfQuarter() {
 }
 
 // Resets the date to the first day of the year and the time to 00:00:00
-func startOfYear() {
+func StartOfYear() {
 }
 
 // Resets the date to end of the year and time to 23:59:59
-func endOfYear() {
+func EndOfYear() {
 }
 
 // Resets the date to the first day of the decade and the time to 00:00:00
-func startOfDecade() {
+func StartOfDecade() {
 }
 
 // Resets the date to end of the decade and time to 23:59:59
-func endOfDecade() {
+func EndOfDecade() {
 }
 
 // Resets the date to the first day of the century and the time to 00:00:00
-func startOfCentury() {
+func StartOfCentury() {
 }
 
 // Resets the date to end of the century and time to 23:59:59
-func endOfCentury() {
+func EndOfCentury() {
 }
 
 // Resets the date to the first day of week (defined in $weekStartsAt) and the time to 00:00:00
-func startOfWeek() {
+func StartOfWeek() {
 }
 
 // Resets the date to end of week (defined in $weekEndsAt) and time to 23:59:59
-func endOfWeek() {
+func EndOfWeek() {
 }
 
 // Modify to the next occurrence of a given day of the week.
 // If no dayOfWeek is provided, modify to the next occurrence
 // of the current day of the week.  Use the supplied consts
 // to indicate the desired dayOfWeek, ex. static::MONDAY.
-func next() {
+func Next() {
 }
 
 // Go forward to the next weekday.
-func nextWeekday() {
+func NextWeekday() {
 }
 
 // Go backward to the previous weekday.
-func previousWeekday() {
+func PreviousWeekday() {
 }
 
 // Go forward to the next weekend day.
-func nextWeekendDay() {
+func NextWeekendDay() {
 }
 
 // Go backward to the previous weekend day.
-func previousWeekendDay() {
+func PreviousWeekendDay() {
 }
 
 // Modify to the previous occurrence of a given day of the week.
 // If no dayOfWeek is provided, modify to the previous occurrence
 // of the current day of the week.  Use the supplied consts
 // to indicate the desired dayOfWeek, ex. static::MONDAY.
-func previous() {
+func Previous() {
 }
 
 // Modify to the first occurrence of a given day of the week
 // in the current month. If no dayOfWeek is provided, modify to the
 // first day of the current month.  Use the supplied consts
 // to indicate the desired dayOfWeek, ex. static::MONDAY.
-func firstOfMonth() {
+func FirstOfMonth() {
 }
 
 // Modify to the last occurrence of a given day of the week
 // in the current month. If no dayOfWeek is provided, modify to the
 // last day of the current month.  Use the supplied consts
 // to indicate the desired dayOfWeek, ex. static::MONDAY.
-func lastOfMonth() {
+func LastOfMonth() {
 }
 
 // Modify to the given occurrence of a given day of the week
 // in the current month. If the calculated occurrence is outside the scope
 // of the current month, then return false and no modifications are made.
 // Use the supplied consts to indicate the desired dayOfWeek, ex. static::MONDAY.
-func nthOfMonth() {
+func NthOfMonth() {
 }
 
 // Modify to the first occurrence of a given day of the week
 // in the current quarter. If no dayOfWeek is provided, modify to the
 // first day of the current quarter.  Use the supplied consts
 // to indicate the desired dayOfWeek, ex. static::MONDAY.
-func firstOfQuarter() {
+func FirstOfQuarter() {
 }
 
 // Modify to the last occurrence of a given day of the week
 // in the current quarter. If no dayOfWeek is provided, modify to the
 // last day of the current quarter.  Use the supplied consts
 // to indicate the desired dayOfWeek, ex. static::MONDAY.
-func lastOfQuarter() {
+func LastOfQuarter() {
 }
 
 // Modify to the given occurrence of a given day of the week
 // in the current quarter. If the calculated occurrence is outside the scope
 // of the current quarter, then return false and no modifications are made.
 // Use the supplied consts to indicate the desired dayOfWeek, ex. static::MONDAY.
-func nthOfQuarter() {
+func NthOfQuarter() {
 }
 
 // Modify to the first occurrence of a given day of the week
 // in the current year. If no dayOfWeek is provided, modify to the
 // first day of the current year.  Use the supplied consts
 // to indicate the desired dayOfWeek, ex. static::MONDAY.
-func firstOfYear() {
+func FirstOfYear() {
 }
 
 // Modify to the last occurrence of a given day of the week
 // in the current year. If no dayOfWeek is provided, modify to the
 // last day of the current year.  Use the supplied consts
 // to indicate the desired dayOfWeek, ex. static::MONDAY.
-func lastOfYear() {
+func LastOfYear() {
 }
 
 // Modify to the given occurrence of a given day of the week
 // in the current year. If the calculated occurrence is outside the scope
 // of the current year, then return false and no modifications are made.
 // Use the supplied consts to indicate the desired dayOfWeek, ex. static::MONDAY.
-func nthOfYear() {
+func NthOfYear() {
 }
 
 // Modify the current instance to the average of a given instance (default now) and the current instance.
-func average() {
+func Average() {
 }
 
-func isBirthday() {
+func IsBirthday() {
 }
 
 // Consider the timezone when modifying the instance.
-func modify() {
+func Modify() {
 }
