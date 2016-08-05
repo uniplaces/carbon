@@ -16,7 +16,7 @@ func NewCarbon(t time.Time) Carbon {
 }
 
 // AddYear adds a year to the current time
-// Positive value travel forward while negative value travel into the past.
+// Positive value travel forward while negative value travel into the past
 func (c Carbon) AddYears(y int) Carbon {
 	return Carbon{Time: c.AddDate(y, 0, 0)}
 }
@@ -27,7 +27,7 @@ func (c Carbon) AddYear() Carbon {
 }
 
 // AddQuarters adds quarters to the current timePositive $value travels forward while
-// Positive value travel forward while negative value travel into the past.
+// Positive value travel forward while negative value travel into the past
 func (c Carbon) AddQuarters(q int) Carbon {
 	return Carbon{Time: c.AddDate(0, MonthsPerQuarter*q, 0)}
 }
@@ -37,8 +37,8 @@ func (c Carbon) AddQuarter() Carbon {
 	return c.AddQuarters(1)
 }
 
-// AddCenturies adds centuries to the time.
-// Positive value travels forward while negative value travels into the past.
+// AddCenturies adds centuries to the time
+// Positive value travels forward while negative value travels into the past
 func (c Carbon) AddCenturies(cen int) Carbon {
 	return Carbon{c.AddDate(YearsPerCenturies*cen, 0, 0)}
 }
@@ -48,6 +48,16 @@ func (c Carbon) AddCentury() Carbon {
 	return c.AddCenturies(1)
 }
 
+// AddMonths adds months to the current time
+// Positive value travels forward while negative value travels into the past
+func (c Carbon) AddMonths(m int) Carbon {
+	return Carbon{c.AddDate(0, m, 0)}
+}
+
+// AddMonth adds a month to the current time
+func (c Carbon) AddMonth() Carbon {
+	return c.AddMonths(1)
+}
 //-----------------------------------------------------------
 // Create a Carbon instance from a DateTime one.
 func Instance() {
@@ -535,15 +545,6 @@ func SubCentury() {
 
 // Remove centuries from the instance
 func SubCenturies() {
-}
-
-// Add months to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddMonths() {
-}
-
-// Add a month to the instance
-func AddMonth() {
 }
 
 // Remove a month from the instance
