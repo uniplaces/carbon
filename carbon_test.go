@@ -187,3 +187,39 @@ func TestAddSecond(t *testing.T) {
 	expected := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 1, 0, time.UTC))
 	assert.Equal(t, expected, d, "The seconds should be equal to 1")
 }
+
+func TestAddDaysPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2010, time.January, 10, 22, 59, 0, 0, time.UTC))
+
+	d := c.AddDays(10)
+
+	expected := NewCarbon(time.Date(2010, time.January, 20, 22, 59, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 20")
+}
+
+func TestAddDaysZero(t *testing.T) {
+	c := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	d := c.AddDays(0)
+
+	expected := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 23")
+}
+
+func TestAddDaysNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	d := c.AddDays(-10)
+
+	expected := NewCarbon(time.Date(2009, time.December, 31, 23, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 31")
+}
+
+func TestAddDay(t *testing.T) {
+	c := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	d := c.AddDay()
+
+	expected := NewCarbon(time.Date(2010, time.January, 11, 23, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 11")
+}

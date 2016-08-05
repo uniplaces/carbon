@@ -75,11 +75,13 @@ func (c Carbon) AddSecond() Carbon {
 
 // AddDays adds a day to the current time.
 // Positive value travels forward while negative value travels into the past
-func AddDays() {
+func (c Carbon) AddDays(d int) Carbon {
+	return Carbon{Time:c.AddDate(0,0,d)}
 }
 
 // Add a day to the instance
-func AddDay() {
+func (c Carbon) AddDay() Carbon {
+	return c.AddDays(1)
 }
 
 //-----------------------------------------------------------
