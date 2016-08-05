@@ -68,7 +68,7 @@ func (c Carbon) AddSeconds(s int) Carbon {
 	return Carbon{Time: c.Add(d)}
 }
 
-// Add a second to the instance
+// AddSecond adds a second to the time
 func (c Carbon) AddSecond() Carbon {
 	return c.AddSeconds(1)
 }
@@ -76,12 +76,39 @@ func (c Carbon) AddSecond() Carbon {
 // AddDays adds a day to the current time.
 // Positive value travels forward while negative value travels into the past
 func (c Carbon) AddDays(d int) Carbon {
-	return Carbon{Time:c.AddDate(0,0,d)}
+	return Carbon{Time: c.AddDate(0, 0, d)}
 }
 
-// Add a day to the instance
+// AddDay adds a day to the current time
 func (c Carbon) AddDay() Carbon {
 	return c.AddDays(1)
+}
+
+// AddWeekdays adds a weekday to the current time
+// Positive value travels forward while negative value travels into the past
+func (c Carbon) AddWeekdays(wd int) Carbon {
+	d := 1
+	if wd < 0 {
+		d = -1
+		wd *= -1
+	}
+	t := c.Time
+	for wd > 0 {
+		t = t.AddDate(0, 0, d)
+		if t.Weekday() != time.Saturday && t.Weekday() != time.Sunday {
+			wd -= 1
+		}
+	}
+	return Carbon{Time: t}
+}
+
+// AddWeekDay adds a weekday to the current time
+func (c Carbon) AddWeekday() Carbon {
+	return c.AddWeekdays(1)
+}
+
+// AddWeek adds a week to the current time
+func AddWeek() {
 }
 
 //-----------------------------------------------------------
@@ -598,23 +625,12 @@ func SubMonthNoOverflow() {
 func SubMonthsNoOverflow() {
 }
 
-
-
 // Remove a day from the instance
 func SubDay() {
 }
 
 // Remove days from the instance
 func SubDays() {
-}
-
-// Add weekdays to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddWeekdays() {
-}
-
-// Add a weekday to the instance
-func AddWeekday() {
 }
 
 // Remove a weekday from the instance
@@ -628,10 +644,6 @@ func SubWeekdays() {
 // Add weeks to the instance. Positive $value travels forward while
 // negative $value travels into the past.
 func AddWeeks() {
-}
-
-// Add a week to the instance
-func AddWeek() {
 }
 
 // Remove a week from the instance
