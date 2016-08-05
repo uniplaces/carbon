@@ -122,7 +122,7 @@ func TestAddMonthsPositive(t *testing.T) {
 	d := c.AddMonths(2)
 
 	expected := NewCarbon(time.Date(2010, time.March, 10, 23, 0, 0, 0, time.UTC))
-	assert.Equal(t, expected, d, "The year should be equal March of 2010")
+	assert.Equal(t, expected, d, "The Month should be equal to March")
 }
 
 func TestAddMonthsZero(t *testing.T) {
@@ -131,7 +131,7 @@ func TestAddMonthsZero(t *testing.T) {
 	d := c.AddMonths(0)
 
 	expected := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
-	assert.Equal(t, expected, d, "The year should be equal January of 2010")
+	assert.Equal(t, expected, d, "The Month should be equal January")
 }
 
 func TestAddMonthsNegative(t *testing.T) {
@@ -140,14 +140,50 @@ func TestAddMonthsNegative(t *testing.T) {
 	d := c.AddMonths(-3)
 
 	expected := NewCarbon(time.Date(2009, time.October, 10, 23, 0, 0, 0, time.UTC))
-	assert.Equal(t, expected, d, "The year should be equal October of 2009")
+	assert.Equal(t, expected, d, "The Month should be equal to October")
 }
 
-func TestAddMonthsNoOverflow(t *testing.T) {
+func TestAddMonth(t *testing.T) {
 	c := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
 
 	d := c.AddMonth()
 
 	expected := NewCarbon(time.Date(2010, time.February, 10, 23, 0, 0, 0, time.UTC))
-	assert.Equal(t, expected, d, "The year should be equal October of 2010")
+	assert.Equal(t, expected, d, "The Month should be equal to February")
+}
+
+func TestAddSecondsPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2010, time.January, 10, 22, 59, 0, 0, time.UTC))
+
+	d := c.AddSeconds(70)
+
+	expected := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 10, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 10")
+}
+
+func TestAddSecondsZero(t *testing.T) {
+	c := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	d := c.AddSeconds(0)
+
+	expected := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 0")
+}
+
+func TestAddSecondsNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	d := c.AddSeconds(-20)
+
+	expected := NewCarbon(time.Date(2010, time.January, 10, 22, 59, 40, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 40")
+}
+
+func TestAddSecond(t *testing.T) {
+	c := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	d := c.AddSecond()
+
+	expected := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 1, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 1")
 }

@@ -1,6 +1,8 @@
 package carbon
 
-import "time"
+import (
+	"time"
+)
 
 const (
 	MonthsPerQuarter  = 3
@@ -58,6 +60,28 @@ func (c Carbon) AddMonths(m int) Carbon {
 func (c Carbon) AddMonth() Carbon {
 	return c.AddMonths(1)
 }
+
+// AddSeconds adds seconds to the current time.
+// Positive value travels forward while negative value travels into the past.
+func (c Carbon) AddSeconds(s int) Carbon {
+	d := time.Duration(s) * time.Second
+	return Carbon{Time: c.Add(d)}
+}
+
+// Add a second to the instance
+func (c Carbon) AddSecond() Carbon {
+	return c.AddSeconds(1)
+}
+
+// AddDays adds a day to the current time.
+// Positive value travels forward while negative value travels into the past
+func AddDays() {
+}
+
+// Add a day to the instance
+func AddDay() {
+}
+
 //-----------------------------------------------------------
 // Create a Carbon instance from a DateTime one.
 func Instance() {
@@ -572,14 +596,7 @@ func SubMonthNoOverflow() {
 func SubMonthsNoOverflow() {
 }
 
-// Add days to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddDays() {
-}
 
-// Add a day to the instance
-func AddDay() {
-}
 
 // Remove a day from the instance
 func SubDay() {
@@ -655,15 +672,6 @@ func SubMinute() {
 
 // Remove minutes from the instance
 func SubMinutes() {
-}
-
-// Add seconds to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddSeconds() {
-}
-
-// Add a second to the instance
-func AddSecond() {
 }
 
 // Remove a second from the instance
