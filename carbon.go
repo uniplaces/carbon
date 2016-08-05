@@ -17,19 +17,24 @@ func NewCarbon(t time.Time) Carbon {
 
 // AddYear adds a year to the current time
 // Positive value travel forward while negative value travel into the past.
-func (c Carbon) AddYears(y int) time.Time {
-	return c.AddDate(y, 0, 0)
+func (c Carbon) AddYears(y int) Carbon {
+	return Carbon{Time: c.AddDate(y, 0, 0)}
 }
 
 // AddYear adds a year to the current time
-func (c Carbon) AddYear() time.Time {
+func (c Carbon) AddYear() Carbon {
 	return c.AddYears(1)
 }
 
 // AddQuarters adds quarters to the current timePositive $value travels forward while
 // Positive value travel forward while negative value travel into the past.
-func (c Carbon) AddQuarters(q int) time.Time {
-	return c.AddDate(0, MonthsPerQuarter * q, 0)
+func (c Carbon) AddQuarters(q int) Carbon {
+	return Carbon{Time: c.AddDate(0, MonthsPerQuarter * q, 0)}
+}
+
+// AddQuarter adds a quarter to the instance
+func (c Carbon) AddQuarter() Carbon {
+	return c.AddQuarters(1)
 }
 
 //-----------------------------------------------------------
@@ -503,12 +508,6 @@ func SubYear() {
 
 // Remove years from the instance.
 func SubYears() {
-}
-
-
-
-// Add a quarter to the instance
-func AddQuarter() {
 }
 
 // Remove a quarter from the instance
