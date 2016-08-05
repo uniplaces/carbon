@@ -2,6 +2,11 @@ package carbon
 
 import "time"
 
+const (
+
+	MonthsPerQuarter = 3
+)
+
 type Carbon struct {
 	time.Time
 }
@@ -10,16 +15,23 @@ func NewCarbon(t time.Time) Carbon {
 	return Carbon{Time: t}
 }
 
-// AddYears adds years to the instance.
+// AddYear adds a year to the current time
 // Positive value travel forward while negative value travel into the past.
 func (c Carbon) AddYears(y int) time.Time {
-	return c.AddDate(1, 0, 0)
+	return c.AddDate(y, 0, 0)
 }
 
-// Add a year to the instance
+// AddYear adds a year to the current time
 func (c Carbon) AddYear() time.Time {
 	return c.AddYears(1)
 }
+
+// AddQuarters adds quarters to the current timePositive $value travels forward while
+// Positive value travel forward while negative value travel into the past.
+func (c Carbon) AddQuarters(q int) time.Time {
+	return c.AddDate(0, MonthsPerQuarter * q, 0)
+}
+
 //-----------------------------------------------------------
 // Create a Carbon instance from a DateTime one.
 func Instance() {
@@ -485,10 +497,6 @@ func IsFriday() {
 func IsSaturday() {
 }
 
-// Add a year to the instance
-func AddYear() {
-}
-
 // Remove a year from the instance
 func SubYear() {
 }
@@ -497,10 +505,7 @@ func SubYear() {
 func SubYears() {
 }
 
-// Add quarters to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddQuarters() {
-}
+
 
 // Add a quarter to the instance
 func AddQuarter() {
