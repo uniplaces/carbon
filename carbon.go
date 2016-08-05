@@ -3,8 +3,8 @@ package carbon
 import "time"
 
 const (
-
-	MonthsPerQuarter = 3
+	MonthsPerQuarter  = 3
+	YearsPerCenturies = 100
 )
 
 type Carbon struct {
@@ -29,12 +29,23 @@ func (c Carbon) AddYear() Carbon {
 // AddQuarters adds quarters to the current timePositive $value travels forward while
 // Positive value travel forward while negative value travel into the past.
 func (c Carbon) AddQuarters(q int) Carbon {
-	return Carbon{Time: c.AddDate(0, MonthsPerQuarter * q, 0)}
+	return Carbon{Time: c.AddDate(0, MonthsPerQuarter*q, 0)}
 }
 
-// AddQuarter adds a quarter to the instance
+// AddQuarter adds a quarter to the current time
 func (c Carbon) AddQuarter() Carbon {
 	return c.AddQuarters(1)
+}
+
+// AddCenturies adds centuries to the time.
+// Positive value travels forward while negative value travels into the past.
+func (c Carbon) AddCenturies(cen int) Carbon {
+	return Carbon{c.AddDate(YearsPerCenturies*cen, 0, 0)}
+}
+
+// Add a century to the current times
+func (c Carbon) AddCentury() Carbon {
+	return c.AddCenturies(1)
 }
 
 //-----------------------------------------------------------
@@ -516,15 +527,6 @@ func SubQuarter() {
 
 // Remove quarters from the instance
 func SubQuarters() {
-}
-
-// Add centuries to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddCenturies() {
-}
-
-// Add a century to the instance
-func AddCentury() {
 }
 
 // Remove a century from the instance

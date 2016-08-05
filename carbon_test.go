@@ -62,7 +62,6 @@ func TestAddQuartersZero(t *testing.T) {
 	assert.Equal(t, expected, d, "The Month should be equal to November")
 }
 
-
 func TestAddQuartersNegative(t *testing.T) {
 	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
 
@@ -79,4 +78,40 @@ func TestAddQuarter(t *testing.T) {
 
 	expected := NewCarbon(time.Date(2010, time.April, 10, 23, 0, 0, 0, time.UTC))
 	assert.Equal(t, expected, d, "The month should be equal to June of 2010")
+}
+
+func TestAddCenturiesPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	d := c.AddCenturies(3)
+
+	expected := NewCarbon(time.Date(2310, time.January, 10, 23, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal 2110")
+}
+
+func TestAddCenturiesZero(t *testing.T) {
+	c := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	d := c.AddCenturies(0)
+
+	expected := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal 2010")
+}
+
+func TestAddCenturiesNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	d := c.AddCenturies(-2)
+
+	expected := NewCarbon(time.Date(1810, time.January, 10, 23, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal 1810")
+}
+
+func TestAddCentury(t *testing.T) {
+	c := NewCarbon(time.Date(2010, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	d := c.AddCentury()
+
+	expected := NewCarbon(time.Date(2110, time.January, 10, 23, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal 2110")
 }
