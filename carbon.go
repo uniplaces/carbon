@@ -119,6 +119,26 @@ func (c Carbon) AddWeek() Carbon {
 	return c.AddWeeks(1)
 }
 
+// AddHours adds an hour to the current time
+// Positive value travels forward while negative value travels into the past
+func (c Carbon) AddHours(h int) Carbon {
+	d := time.Duration(h) * time.Hour
+	return Carbon{Time: c.Add(d)}
+}
+
+// Add an hour to the instance
+func (c Carbon) AddHour() Carbon {
+	return c.AddHours(1)
+}
+
+// Add months without overflowing to the instance. Positive $value
+// travels forward while negative $value travels into the past.
+func AddMonthsNoOverflow() {
+}
+
+// Add a month with no overflow to the instance
+func AddMonthNoOverflow() {
+}
 //-----------------------------------------------------------
 // Create a Carbon instance from a DateTime one.
 func Instance() {
@@ -616,14 +636,6 @@ func SubMonth() {
 func SubMonths() {
 }
 
-// Add months without overflowing to the instance. Positive $value
-// travels forward while negative $value travels into the past.
-func AddMonthsNoOverflow() {
-}
-
-// Add a month with no overflow to the instance
-func AddMonthNoOverflow() {
-}
 
 // Remove a month with no overflow from the instance
 func SubMonthNoOverflow() {
@@ -658,14 +670,6 @@ func SubWeek() {
 func SubWeeks() {
 }
 
-// Add hours to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddHours() {
-}
-
-// Add an hour to the instance
-func AddHour() {
-}
 
 // Remove an hour from the instance
 func SubHour() {
