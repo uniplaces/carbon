@@ -259,3 +259,39 @@ func TestAddWeekday(t *testing.T) {
 	expected := NewCarbon(time.Date(2016, time.August, 8, 10, 0, 0, 0, time.UTC))
 	assert.Equal(t, expected, d, "The day should be equal to 8")
 }
+
+func TestAddWeeksPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+
+	d := c.AddWeeks(2)
+
+	expected := NewCarbon(time.Date(2016, time.August, 19, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 19")
+}
+
+func TestAddWeeksZero(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+
+	d := c.AddWeeks(0)
+
+	expected := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 5")
+}
+
+func TestAddWeeksNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+
+	d := c.AddWeeks(-2)
+
+	expected := NewCarbon(time.Date(2016, time.July, 22, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 22")
+}
+
+func TestAddWeek(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+
+	d := c.AddWeek()
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 12")
+}

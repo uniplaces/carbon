@@ -5,6 +5,7 @@ import (
 )
 
 const (
+	DaysPerWeek = 7
 	MonthsPerQuarter  = 3
 	YearsPerCenturies = 100
 )
@@ -102,13 +103,20 @@ func (c Carbon) AddWeekdays(wd int) Carbon {
 	return Carbon{Time: t}
 }
 
-// AddWeekDay adds a weekday to the current time
+// AddWeekday adds a weekday to the current time
 func (c Carbon) AddWeekday() Carbon {
 	return c.AddWeekdays(1)
 }
 
+// AddWeeks adds a week to the current time
+// Positive value travels forward while negative value travels into the past.
+func (c Carbon) AddWeeks(w int) Carbon {
+	return Carbon{Time: c.AddDate(0, 0, DaysPerWeek * w)}
+}
+
 // AddWeek adds a week to the current time
-func AddWeek() {
+func (c Carbon) AddWeek() Carbon {
+	return c.AddWeeks(1)
 }
 
 //-----------------------------------------------------------
@@ -641,10 +649,6 @@ func SubWeekday() {
 func SubWeekdays() {
 }
 
-// Add weeks to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddWeeks() {
-}
 
 // Remove a week from the instance
 func SubWeek() {
