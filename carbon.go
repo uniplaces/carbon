@@ -131,13 +131,25 @@ func (c Carbon) AddHour() Carbon {
 	return c.AddHours(1)
 }
 
-// Add months without overflowing to the instance. Positive $value
-// travels forward while negative $value travels into the past.
-func AddMonthsNoOverflow() {
+// AddMonthsNoOverflow adds a month to the current time, not overflowing in case the
+// destination month has less days than the current one.
+// Positive value travels forward while negative value travels into the past.
+func (c Carbon) AddMonthsNoOverflow(m int) Carbon {
+	addedDate := Carbon{Time: c.AddDate(0, m, 0)}
+	if c.Day() != addedDate.Day() {
+		return previousMonthLastDay(addedDate)
+	}
+	return addedDate
 }
 
-// Add a month with no overflow to the instance
-func AddMonthNoOverflow() {
+// Retrive the last month's day
+func previousMonthLastDay(c Carbon) Carbon {
+	return Carbon{Time: c.AddDate(0, 0, -c.Day())}
+}
+
+// AddMonthNoOverflow adds a month with no overflow to the current time
+func (c Carbon) AddMonthNoOverflow() Carbon {
+	return c.AddMonthsNoOverflow(1)
 }
 
 // AddMiinutes adds minutes to the current time

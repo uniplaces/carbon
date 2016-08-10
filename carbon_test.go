@@ -368,3 +368,57 @@ func TestAddMinute(t *testing.T) {
 	expected := NewCarbon(time.Date(2016, time.August, 5, 10, 1, 0, 0, time.UTC))
 	assert.Equal(t, expected, d, "The minutes should be equal to 1")
 }
+
+func TestAddMonthsNoOverflowZero(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+
+	d := c.AddMonthsNoOverflow(0)
+
+	expected := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to August")
+}
+
+func TestAddMonthsNoOverflowPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.AddMonthsNoOverflow(2)
+
+	expected := NewCarbon(time.Date(2016, time.March, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to March")
+}
+
+func TestAddMonthsNoOverflowPositiveWithOverflow(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.AddMonthsNoOverflow(1)
+
+	expected := NewCarbon(time.Date(2012, time.February, 29, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to February")
+}
+
+func TestAddMonthsNoOverflowNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.February, 29, 1, 0, 0, 0, time.UTC))
+
+	d := c.AddMonthsNoOverflow(-2)
+
+	expected := NewCarbon(time.Date(2011, time.December, 29, 1, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to December")
+}
+
+func TestAddMonthsNoOverflowNegativeWithOverflow(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.March, 31, 1, 0, 0, 0, time.UTC))
+
+	d := c.AddMonthsNoOverflow(-1)
+
+	expected := NewCarbon(time.Date(2012, time.February, 29, 1, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to February")
+}
+
+func TestAddMonthNoOverflow(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.AddMonthNoOverflow()
+
+	expected := NewCarbon(time.Date(2012, time.February, 29, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to February")
+}
