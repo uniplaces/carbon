@@ -332,3 +332,39 @@ func TestAddHour(t *testing.T) {
 	assert.Equal(t, expected, d, "The hour should be equal to 11")
 
 }
+
+func TestAddMinutesZero(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+
+	d := c.AddMinutes(0)
+
+	expected := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The minutes should be equal to 0")
+}
+
+func TestAddMinutesPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+
+	d := c.AddMinutes(50)
+
+	expected := NewCarbon(time.Date(2016, time.August, 5, 10, 50, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The minutes should be equal to 50")
+}
+
+func TestAddMinutesNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+
+	d := c.AddMinutes(-50)
+
+	expected := NewCarbon(time.Date(2016, time.August, 5, 9, 10, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The minutes should be equal to 50")
+}
+
+func TestAddMinute(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+
+	d := c.AddMinute()
+
+	expected := NewCarbon(time.Date(2016, time.August, 5, 10, 1, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The minutes should be equal to 1")
+}

@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	DaysPerWeek = 7
+	DaysPerWeek       = 7
 	MonthsPerQuarter  = 3
 	YearsPerCenturies = 100
 )
@@ -111,7 +111,7 @@ func (c Carbon) AddWeekday() Carbon {
 // AddWeeks adds a week to the current time
 // Positive value travels forward while negative value travels into the past.
 func (c Carbon) AddWeeks(w int) Carbon {
-	return Carbon{Time: c.AddDate(0, 0, DaysPerWeek * w)}
+	return Carbon{Time: c.AddDate(0, 0, DaysPerWeek*w)}
 }
 
 // AddWeek adds a week to the current time
@@ -139,6 +139,19 @@ func AddMonthsNoOverflow() {
 // Add a month with no overflow to the instance
 func AddMonthNoOverflow() {
 }
+
+// AddMiinutes adds minutes to the current time
+// Positive value travels forward while negative value travels into the past.
+func (c Carbon) AddMinutes(m int) Carbon {
+	d := time.Duration(m) * time.Minute
+	return Carbon{Time: c.Add(d)}
+}
+
+// AddMinute adds a minute to the current time
+func (c Carbon) AddMinute() Carbon {
+	return c.AddMinutes(1)
+}
+
 //-----------------------------------------------------------
 // Create a Carbon instance from a DateTime one.
 func Instance() {
@@ -636,7 +649,6 @@ func SubMonth() {
 func SubMonths() {
 }
 
-
 // Remove a month with no overflow from the instance
 func SubMonthNoOverflow() {
 }
@@ -661,7 +673,6 @@ func SubWeekday() {
 func SubWeekdays() {
 }
 
-
 // Remove a week from the instance
 func SubWeek() {
 }
@@ -670,22 +681,12 @@ func SubWeek() {
 func SubWeeks() {
 }
 
-
 // Remove an hour from the instance
 func SubHour() {
 }
 
 // Remove hours from the instance
 func SubHours() {
-}
-
-// Add minutes to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddMinutes() {
-}
-
-// Add a minute to the instance
-func AddMinute() {
 }
 
 // Remove a minute from the instance
