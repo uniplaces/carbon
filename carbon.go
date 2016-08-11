@@ -293,11 +293,13 @@ func (c *Carbon) SubMinutes(m int) *Carbon {
 }
 
 // SubSecond removes a second from the current time
-func SubSecond() {
+func (c *Carbon) SubSecond() *Carbon {
+	return c.SubSeconds(1)
 }
 
 // SubSeconds removes seconds from the current time
-func SubSeconds() {
+func (c *Carbon) SubSeconds(s int) *Carbon {
+	return c.AddSeconds(-s)
 }
 
 //-----------------------------------------------------------

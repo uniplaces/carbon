@@ -791,3 +791,38 @@ func TestSubMinute(t *testing.T) {
 	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 19, 0, 0, time.UTC))
 	assert.Equal(t, expected, d, "The minutes should be equal to 19")
 }
+
+func TestSubSecondsZero(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubSeconds(0)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 0")
+}
+
+func TestSubSecondsPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	d := c.SubSeconds(10)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 20, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 20")
+}
+
+func TestSubSecondsNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	d := c.SubSeconds(-10)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 40, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 40")
+}
+func TestSubSecond(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	d := c.SubSecond()
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 29, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 29")
+}
