@@ -1,13 +1,203 @@
 package carbon
 
+import (
+	"time"
+)
+
+// Represent the number of elements in a given period
+const (
+	DaysPerWeek       = 7
+	MonthsPerQuarter  = 3
+	YearsPerCenturies = 100
+)
+
+// The Carbon type represents a Time instance.
+// Provides a simple API extention for Time.
+type Carbon struct {
+	time.Time
+}
+
+// NewCarbon returns a new Carbon instance
+func NewCarbon(t time.Time) *Carbon {
+	return &Carbon{
+		Time: t,
+	}
+}
+
+// AddYear adds a year to the current time
+// Positive value travel forward while negative value travel into the past
+func (c *Carbon) AddYears(y int) *Carbon {
+	return &Carbon{
+		Time: c.AddDate(y, 0, 0),
+	}
+}
+
+// AddYear adds a year to the current time
+func (c *Carbon) AddYear() *Carbon {
+	return c.AddYears(1)
+}
+
+// AddQuarters adds quarters to the current timePositive $value travels forward while
+// Positive value travel forward while negative value travel into the past
+func (c *Carbon) AddQuarters(q int) *Carbon {
+	return &Carbon{
+		Time: c.AddDate(0, MonthsPerQuarter*q, 0),
+	}
+}
+
+// AddQuarter adds a quarter to the current time
+func (c *Carbon) AddQuarter() *Carbon {
+	return c.AddQuarters(1)
+}
+
+// AddCenturies adds centuries to the time
+// Positive value travels forward while negative value travels into the past
+func (c *Carbon) AddCenturies(cen int) *Carbon {
+	return &Carbon{
+		c.AddDate(YearsPerCenturies*cen, 0, 0),
+	}
+}
+
+// Add a century to the current times
+func (c *Carbon) AddCentury() *Carbon {
+	return c.AddCenturies(1)
+}
+
+// AddMonths adds months to the current time
+// Positive value travels forward while negative value travels into the past
+func (c *Carbon) AddMonths(m int) *Carbon {
+	return &Carbon{
+		Time: c.AddDate(0, m, 0),
+	}
+}
+
+// AddMonth adds a month to the current time
+func (c *Carbon) AddMonth() *Carbon {
+	return c.AddMonths(1)
+}
+
+// AddSeconds adds seconds to the current time.
+// Positive value travels forward while negative value travels into the past.
+func (c *Carbon) AddSeconds(s int) *Carbon {
+	d := time.Duration(s) * time.Second
+	return &Carbon{
+		Time: c.Add(d),
+	}
+}
+
+// AddSecond adds a second to the time
+func (c *Carbon) AddSecond() *Carbon {
+	return c.AddSeconds(1)
+}
+
+// AddDays adds a day to the current time.
+// Positive value travels forward while negative value travels into the past
+func (c *Carbon) AddDays(d int) *Carbon {
+	return &Carbon{
+		Time: c.AddDate(0, 0, d),
+	}
+}
+
+// AddDay adds a day to the current time
+func (c *Carbon) AddDay() *Carbon {
+	return c.AddDays(1)
+}
+
+// AddWeekdays adds a weekday to the current time
+// Positive value travels forward while negative value travels into the past
+func (c *Carbon) AddWeekdays(wd int) *Carbon {
+	d := 1
+	if wd < 0 {
+		d = -1
+		wd *= -1
+	}
+	t := c.Time
+	for wd > 0 {
+		t = t.AddDate(0, 0, d)
+		if t.Weekday() != time.Saturday && t.Weekday() != time.Sunday {
+			wd--
+		}
+	}
+	return &Carbon{
+		Time: t,
+	}
+}
+
+// AddWeekday adds a weekday to the current time
+func (c *Carbon) AddWeekday() *Carbon {
+	return c.AddWeekdays(1)
+}
+
+// AddWeeks adds a week to the current time
+// Positive value travels forward while negative value travels into the past.
+func (c *Carbon) AddWeeks(w int) *Carbon {
+	return &Carbon{
+		Time: c.AddDate(0, 0, DaysPerWeek*w),
+	}
+}
+
+// AddWeek adds a week to the current time
+func (c *Carbon) AddWeek() *Carbon {
+	return c.AddWeeks(1)
+}
+
+// AddHours adds an hour to the current time
+// Positive value travels forward while negative value travels into the past
+func (c *Carbon) AddHours(h int) *Carbon {
+	d := time.Duration(h) * time.Hour
+	return &Carbon{
+		Time: c.Add(d),
+	}
+}
+
+// Add an hour to the instance
+func (c *Carbon) AddHour() *Carbon {
+	return c.AddHours(1)
+}
+
+// AddMonthsNoOverflow adds a month to the current time, not overflowing in case the
+// destination month has less days than the current one.
+// Positive value travels forward while negative value travels into the past.
+func (c *Carbon) AddMonthsNoOverflow(m int) *Carbon {
+	addedDate := &Carbon{Time: c.AddDate(0, m, 0)}
+	if c.Day() != addedDate.Day() {
+		return addedDate.PreviousMonthLastDay()
+	}
+	return addedDate
+}
+
+// PreviousMonthLastDay returns the last day of the previous month
+func (c *Carbon) PreviousMonthLastDay() *Carbon {
+	return &Carbon{
+		Time: c.AddDate(0, 0, -c.Day()),
+	}
+}
+
+// AddMonthNoOverflow adds a month with no overflow to the current time
+func (c *Carbon) AddMonthNoOverflow() *Carbon {
+	return c.AddMonthsNoOverflow(1)
+}
+
+// AddMiinutes adds minutes to the current time
+// Positive value travels forward while negative value travels into the past.
+func (c *Carbon) AddMinutes(m int) *Carbon {
+	d := time.Duration(m) * time.Minute
+	return &Carbon{
+		Time: c.Add(d),
+	}
+}
+
+// AddMinute adds a minute to the current time
+func (c *Carbon) AddMinute() *Carbon {
+	return c.AddMinutes(1)
+}
+
+//-----------------------------------------------------------
 // Create a Carbon instance from a DateTime one.
 func Instance() {
 }
 
 // Create a carbon instance from a string.
-// This is an alias for the constructor that allows better fluent syntax
-// as it allows you to do Carbon::parse('Monday next week')->fn() rather
-// than (new Carbon('Monday next week'))->fn().
 func Parse() {
 }
 
@@ -464,30 +654,12 @@ func IsFriday() {
 func IsSaturday() {
 }
 
-// Add years to the instance. Positive $value travel forward while
-// negative $value travel into the past.
-func AddYears() {
-}
-
-// Add a year to the instance
-func AddYear() {
-}
-
 // Remove a year from the instance
 func SubYear() {
 }
 
 // Remove years from the instance.
 func SubYears() {
-}
-
-// Add quarters to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddQuarters() {
-}
-
-// Add a quarter to the instance
-func AddQuarter() {
 }
 
 // Remove a quarter from the instance
@@ -498,30 +670,12 @@ func SubQuarter() {
 func SubQuarters() {
 }
 
-// Add centuries to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddCenturies() {
-}
-
-// Add a century to the instance
-func AddCentury() {
-}
-
 // Remove a century from the instance
 func SubCentury() {
 }
 
 // Remove centuries from the instance
 func SubCenturies() {
-}
-
-// Add months to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddMonths() {
-}
-
-// Add a month to the instance
-func AddMonth() {
 }
 
 // Remove a month from the instance
@@ -532,30 +686,12 @@ func SubMonth() {
 func SubMonths() {
 }
 
-// Add months without overflowing to the instance. Positive $value
-// travels forward while negative $value travels into the past.
-func AddMonthsNoOverflow() {
-}
-
-// Add a month with no overflow to the instance
-func AddMonthNoOverflow() {
-}
-
 // Remove a month with no overflow from the instance
 func SubMonthNoOverflow() {
 }
 
 // Remove months with no overflow from the instance
 func SubMonthsNoOverflow() {
-}
-
-// Add days to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddDays() {
-}
-
-// Add a day to the instance
-func AddDay() {
 }
 
 // Remove a day from the instance
@@ -566,30 +702,12 @@ func SubDay() {
 func SubDays() {
 }
 
-// Add weekdays to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddWeekdays() {
-}
-
-// Add a weekday to the instance
-func AddWeekday() {
-}
-
 // Remove a weekday from the instance
 func SubWeekday() {
 }
 
 // Remove weekdays from the instance
 func SubWeekdays() {
-}
-
-// Add weeks to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddWeeks() {
-}
-
-// Add a week to the instance
-func AddWeek() {
 }
 
 // Remove a week from the instance
@@ -600,15 +718,6 @@ func SubWeek() {
 func SubWeeks() {
 }
 
-// Add hours to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddHours() {
-}
-
-// Add an hour to the instance
-func AddHour() {
-}
-
 // Remove an hour from the instance
 func SubHour() {
 }
@@ -617,30 +726,12 @@ func SubHour() {
 func SubHours() {
 }
 
-// Add minutes to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddMinutes() {
-}
-
-// Add a minute to the instance
-func AddMinute() {
-}
-
 // Remove a minute from the instance
 func SubMinute() {
 }
 
 // Remove minutes from the instance
 func SubMinutes() {
-}
-
-// Add seconds to the instance. Positive $value travels forward while
-// negative $value travels into the past.
-func AddSeconds() {
-}
-
-// Add a second to the instance
-func AddSecond() {
 }
 
 // Remove a second from the instance
