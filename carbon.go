@@ -4,90 +4,108 @@ import (
 	"time"
 )
 
+// Represent the number of elements in a given period
 const (
 	DaysPerWeek       = 7
 	MonthsPerQuarter  = 3
 	YearsPerCenturies = 100
 )
 
+// The Carbon type represents a Time instance.
+// Provides a simple API extention for Time.
 type Carbon struct {
 	time.Time
 }
 
-func NewCarbon(t time.Time) Carbon {
-	return Carbon{Time: t}
+// NewCarbon returns a new Carbon instance
+func NewCarbon(t time.Time) *Carbon {
+	return &Carbon{
+		Time: t,
+	}
 }
 
 // AddYear adds a year to the current time
 // Positive value travel forward while negative value travel into the past
-func (c Carbon) AddYears(y int) Carbon {
-	return Carbon{Time: c.AddDate(y, 0, 0)}
+func (c *Carbon) AddYears(y int) *Carbon {
+	return &Carbon{
+		Time: c.AddDate(y, 0, 0),
+	}
 }
 
 // AddYear adds a year to the current time
-func (c Carbon) AddYear() Carbon {
+func (c *Carbon) AddYear() *Carbon {
 	return c.AddYears(1)
 }
 
 // AddQuarters adds quarters to the current timePositive $value travels forward while
 // Positive value travel forward while negative value travel into the past
-func (c Carbon) AddQuarters(q int) Carbon {
-	return Carbon{Time: c.AddDate(0, MonthsPerQuarter*q, 0)}
+func (c *Carbon) AddQuarters(q int) *Carbon {
+	return &Carbon{
+		Time: c.AddDate(0, MonthsPerQuarter*q, 0),
+	}
 }
 
 // AddQuarter adds a quarter to the current time
-func (c Carbon) AddQuarter() Carbon {
+func (c *Carbon) AddQuarter() *Carbon {
 	return c.AddQuarters(1)
 }
 
 // AddCenturies adds centuries to the time
 // Positive value travels forward while negative value travels into the past
-func (c Carbon) AddCenturies(cen int) Carbon {
-	return Carbon{c.AddDate(YearsPerCenturies*cen, 0, 0)}
+func (c *Carbon) AddCenturies(cen int) *Carbon {
+	return &Carbon{
+		c.AddDate(YearsPerCenturies*cen, 0, 0),
+	}
 }
 
 // Add a century to the current times
-func (c Carbon) AddCentury() Carbon {
+func (c *Carbon) AddCentury() *Carbon {
 	return c.AddCenturies(1)
 }
 
 // AddMonths adds months to the current time
 // Positive value travels forward while negative value travels into the past
-func (c Carbon) AddMonths(m int) Carbon {
-	return Carbon{c.AddDate(0, m, 0)}
+func (c *Carbon) AddMonths(m int) *Carbon {
+	return &Carbon{
+		Time: c.AddDate(0, m, 0),
+	}
 }
 
 // AddMonth adds a month to the current time
-func (c Carbon) AddMonth() Carbon {
+func (c *Carbon) AddMonth() *Carbon {
 	return c.AddMonths(1)
 }
 
 // AddSeconds adds seconds to the current time.
 // Positive value travels forward while negative value travels into the past.
-func (c Carbon) AddSeconds(s int) Carbon {
+func (c *Carbon) AddSeconds(s int) *Carbon {
 	d := time.Duration(s) * time.Second
-	return Carbon{Time: c.Add(d)}
+	return &Carbon{
+		Time: c.Add(d),
+	}
 }
 
 // AddSecond adds a second to the time
-func (c Carbon) AddSecond() Carbon {
+func (c *Carbon) AddSecond() *Carbon {
 	return c.AddSeconds(1)
 }
 
 // AddDays adds a day to the current time.
 // Positive value travels forward while negative value travels into the past
-func (c Carbon) AddDays(d int) Carbon {
-	return Carbon{Time: c.AddDate(0, 0, d)}
+func (c *Carbon) AddDays(d int) *Carbon {
+	return &Carbon{
+		Time: c.AddDate(0, 0, d),
+	}
 }
 
 // AddDay adds a day to the current time
-func (c Carbon) AddDay() Carbon {
+func (c *Carbon) AddDay() *Carbon {
 	return c.AddDays(1)
 }
 
 // AddWeekdays adds a weekday to the current time
 // Positive value travels forward while negative value travels into the past
-func (c Carbon) AddWeekdays(wd int) Carbon {
+func (c *Carbon) AddWeekdays(wd int) *Carbon {
 	d := 1
 	if wd < 0 {
 		d = -1
@@ -97,70 +115,80 @@ func (c Carbon) AddWeekdays(wd int) Carbon {
 	for wd > 0 {
 		t = t.AddDate(0, 0, d)
 		if t.Weekday() != time.Saturday && t.Weekday() != time.Sunday {
-			wd -= 1
+			wd--
 		}
 	}
-	return Carbon{Time: t}
+	return &Carbon{
+		Time: t,
+	}
 }
 
 // AddWeekday adds a weekday to the current time
-func (c Carbon) AddWeekday() Carbon {
+func (c *Carbon) AddWeekday() *Carbon {
 	return c.AddWeekdays(1)
 }
 
 // AddWeeks adds a week to the current time
 // Positive value travels forward while negative value travels into the past.
-func (c Carbon) AddWeeks(w int) Carbon {
-	return Carbon{Time: c.AddDate(0, 0, DaysPerWeek*w)}
+func (c *Carbon) AddWeeks(w int) *Carbon {
+	return &Carbon{
+		Time: c.AddDate(0, 0, DaysPerWeek*w),
+	}
 }
 
 // AddWeek adds a week to the current time
-func (c Carbon) AddWeek() Carbon {
+func (c *Carbon) AddWeek() *Carbon {
 	return c.AddWeeks(1)
 }
 
 // AddHours adds an hour to the current time
 // Positive value travels forward while negative value travels into the past
-func (c Carbon) AddHours(h int) Carbon {
+func (c *Carbon) AddHours(h int) *Carbon {
 	d := time.Duration(h) * time.Hour
-	return Carbon{Time: c.Add(d)}
+	return &Carbon{
+		Time: c.Add(d),
+	}
 }
 
 // Add an hour to the instance
-func (c Carbon) AddHour() Carbon {
+func (c *Carbon) AddHour() *Carbon {
 	return c.AddHours(1)
 }
 
 // AddMonthsNoOverflow adds a month to the current time, not overflowing in case the
 // destination month has less days than the current one.
 // Positive value travels forward while negative value travels into the past.
-func (c Carbon) AddMonthsNoOverflow(m int) Carbon {
-	addedDate := Carbon{Time: c.AddDate(0, m, 0)}
+func (c *Carbon) AddMonthsNoOverflow(m int) *Carbon {
+	addedDate := &Carbon{Time: c.AddDate(0, m, 0)}
 	if c.Day() != addedDate.Day() {
-		return previousMonthLastDay(addedDate)
+		return addedDate.PreviousMonthLastDay()
 	}
 	return addedDate
 }
 
-// Retrive the last month's day
-func previousMonthLastDay(c Carbon) Carbon {
-	return Carbon{Time: c.AddDate(0, 0, -c.Day())}
+// PreviousMonthLastDay returns the last day of the previous month
+func (c *Carbon) PreviousMonthLastDay() *Carbon {
+	return &Carbon{
+		Time: c.AddDate(0, 0, -c.Day()),
+	}
 }
 
 // AddMonthNoOverflow adds a month with no overflow to the current time
-func (c Carbon) AddMonthNoOverflow() Carbon {
+func (c *Carbon) AddMonthNoOverflow() *Carbon {
 	return c.AddMonthsNoOverflow(1)
 }
 
 // AddMiinutes adds minutes to the current time
 // Positive value travels forward while negative value travels into the past.
-func (c Carbon) AddMinutes(m int) Carbon {
+func (c *Carbon) AddMinutes(m int) *Carbon {
 	d := time.Duration(m) * time.Minute
-	return Carbon{Time: c.Add(d)}
+	return &Carbon{
+		Time: c.Add(d),
+	}
 }
 
 // AddMinute adds a minute to the current time
-func (c Carbon) AddMinute() Carbon {
+func (c *Carbon) AddMinute() *Carbon {
 	return c.AddMinutes(1)
 }
 
@@ -170,9 +198,6 @@ func Instance() {
 }
 
 // Create a carbon instance from a string.
-// This is an alias for the constructor that allows better fluent syntax
-// as it allows you to do Carbon::parse('Monday next week')->fn() rather
-// than (new Carbon('Monday next week'))->fn().
 func Parse() {
 }
 

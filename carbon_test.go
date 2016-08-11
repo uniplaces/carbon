@@ -422,3 +422,12 @@ func TestAddMonthNoOverflow(t *testing.T) {
 	expected := NewCarbon(time.Date(2012, time.February, 29, 10, 0, 0, 0, time.UTC))
 	assert.Equal(t, expected, d, "The month should be equal to February")
 }
+
+func TestPreviousMonthLastDay(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.March, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.PreviousMonthLastDay()
+
+	expected := NewCarbon(time.Date(2016, time.February, 29, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 29")
+}

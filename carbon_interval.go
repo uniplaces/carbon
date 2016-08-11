@@ -1,19 +1,10 @@
 package carbon
 
-/**
-* Create a new CarbonInterval instance from specific values.
-* This is an alias for the constructor that allows better fluent
-* syntax as it allows you to do CarbonInterval::create(1)->fn() rather than
-* (new CarbonInterval(1))->fn().
- */
+// Create a new CarbonInterval instance from specific values.
 //func Create() {
 //}
 
-/**
-* Create a CarbonInterval instance from a DateInterval one.  Can not instance
-* DateInterval objects created from DateTime::diff() as you can't externally
-* set the $days field.
- */
+//Create a CarbonInterval instance from a DateInterval one.
 //func Instance() {
 //}
 
@@ -21,9 +12,7 @@ package carbon
 //func GetTranslator() {
 //}
 
-/*
-* Set the translator instance to use
- */
+// Set the translator instance to use
 //func SetTranslator() {
 //}
 
