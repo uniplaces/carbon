@@ -467,3 +467,39 @@ func TestSubYear(t *testing.T) {
 	expected := NewCarbon(time.Date(2011, time.January, 31, 10, 0, 0, 0, time.UTC))
 	assert.Equal(t, expected, d, "The year should be equal to 2011")
 }
+
+func TestSubQuartersZero(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubQuarters(0)
+
+	expected := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to January")
+}
+
+func TestSubQuartersPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubQuarters(2)
+
+	expected := NewCarbon(time.Date(2011, time.July, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to July")
+}
+
+func TestSubQuartersNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubQuarters(-2)
+
+	expected := NewCarbon(time.Date(2012, time.July, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to July")
+}
+
+func TestSubQuarter(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubQuarter()
+
+	expected := NewCarbon(time.Date(2011, time.October, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to October")
+}

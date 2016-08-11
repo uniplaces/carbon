@@ -202,12 +202,14 @@ func (c *Carbon) SubYears(y int) *Carbon {
 	return c.AddYears(-1 * y)
 }
 
-// Remove a quarter from the instance
-func SubQuarter() {
+// SubQuarter removes a quarter from the current time
+func (c *Carbon) SubQuarter() *Carbon {
+	return c.SubQuarters(1)
 }
 
-// Remove quarters from the instance
-func SubQuarters() {
+// SubQuarters removes quarters from current time
+func (c *Carbon) SubQuarters(q int) *Carbon {
+	return c.AddQuarters(-q)
 }
 
 // Remove a century from the instance
