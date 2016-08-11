@@ -24,7 +24,7 @@ func NewCarbon(t time.Time) *Carbon {
 	}
 }
 
-// AddYear adds a year to the current time
+// AddYears adds a year to the current time
 // Positive value travel forward while negative value travel into the past
 func (c *Carbon) AddYears(y int) *Carbon {
 	return &Carbon{
@@ -58,7 +58,7 @@ func (c *Carbon) AddCenturies(cen int) *Carbon {
 	}
 }
 
-// Add a century to the current times
+// AddCentury adds a century to the current time
 func (c *Carbon) AddCentury() *Carbon {
 	return c.AddCenturies(1)
 }
@@ -150,7 +150,7 @@ func (c *Carbon) AddHours(h int) *Carbon {
 	}
 }
 
-// Add an hour to the instance
+// AddHour adds an hour to the current time
 func (c *Carbon) AddHour() *Carbon {
 	return c.AddHours(1)
 }
@@ -178,7 +178,7 @@ func (c *Carbon) AddMonthNoOverflow() *Carbon {
 	return c.AddMonthsNoOverflow(1)
 }
 
-// AddMiinutes adds minutes to the current time
+// AddMinutes adds minutes to the current time
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddMinutes(m int) *Carbon {
 	d := time.Duration(m) * time.Minute
@@ -190,6 +190,96 @@ func (c *Carbon) AddMinutes(m int) *Carbon {
 // AddMinute adds a minute to the current time
 func (c *Carbon) AddMinute() *Carbon {
 	return c.AddMinutes(1)
+}
+
+// SubYear removes a year from the current time
+func (c *Carbon) SubYear() *Carbon {
+	return c.SubYears(1)
+}
+
+// SubYears removes years from current time
+func (c *Carbon) SubYears(y int) *Carbon {
+	return c.AddYears(-1 * y)
+}
+
+// Remove a quarter from the instance
+func SubQuarter() {
+}
+
+// Remove quarters from the instance
+func SubQuarters() {
+}
+
+// Remove a century from the instance
+func SubCentury() {
+}
+
+// Remove centuries from the instance
+func SubCenturies() {
+}
+
+// Remove a month from the instance
+func SubMonth() {
+}
+
+// Remove months from the instance
+func SubMonths() {
+}
+
+// Remove a month with no overflow from the instance
+func SubMonthNoOverflow() {
+}
+
+// Remove months with no overflow from the instance
+func SubMonthsNoOverflow() {
+}
+
+// Remove a day from the instance
+func SubDay() {
+}
+
+// Remove days from the instance
+func SubDays() {
+}
+
+// Remove a weekday from the instance
+func SubWeekday() {
+}
+
+// Remove weekdays from the instance
+func SubWeekdays() {
+}
+
+// Remove a week from the instance
+func SubWeek() {
+}
+
+// Remove weeks to the instance
+func SubWeeks() {
+}
+
+// Remove an hour from the instance
+func SubHour() {
+}
+
+// Remove hours from the instance
+func SubHours() {
+}
+
+// Remove a minute from the instance
+func SubMinute() {
+}
+
+// Remove minutes from the instance
+func SubMinutes() {
+}
+
+// Remove a second from the instance
+func SubSecond() {
+}
+
+// Remove seconds from the instance
+func SubSeconds() {
 }
 
 //-----------------------------------------------------------
@@ -652,94 +742,6 @@ func IsFriday() {
 
 // Checks if this day is a Saturday.
 func IsSaturday() {
-}
-
-// Remove a year from the instance
-func SubYear() {
-}
-
-// Remove years from the instance.
-func SubYears() {
-}
-
-// Remove a quarter from the instance
-func SubQuarter() {
-}
-
-// Remove quarters from the instance
-func SubQuarters() {
-}
-
-// Remove a century from the instance
-func SubCentury() {
-}
-
-// Remove centuries from the instance
-func SubCenturies() {
-}
-
-// Remove a month from the instance
-func SubMonth() {
-}
-
-// Remove months from the instance
-func SubMonths() {
-}
-
-// Remove a month with no overflow from the instance
-func SubMonthNoOverflow() {
-}
-
-// Remove months with no overflow from the instance
-func SubMonthsNoOverflow() {
-}
-
-// Remove a day from the instance
-func SubDay() {
-}
-
-// Remove days from the instance
-func SubDays() {
-}
-
-// Remove a weekday from the instance
-func SubWeekday() {
-}
-
-// Remove weekdays from the instance
-func SubWeekdays() {
-}
-
-// Remove a week from the instance
-func SubWeek() {
-}
-
-// Remove weeks to the instance
-func SubWeeks() {
-}
-
-// Remove an hour from the instance
-func SubHour() {
-}
-
-// Remove hours from the instance
-func SubHours() {
-}
-
-// Remove a minute from the instance
-func SubMinute() {
-}
-
-// Remove minutes from the instance
-func SubMinutes() {
-}
-
-// Remove a second from the instance
-func SubSecond() {
-}
-
-// Remove seconds from the instance
-func SubSeconds() {
 }
 
 // Get the difference in years
