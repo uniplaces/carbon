@@ -647,3 +647,39 @@ func TestSubDay(t *testing.T) {
 	expected := NewCarbon(time.Date(1912, time.January, 30, 10, 0, 0, 0, time.UTC))
 	assert.Equal(t, expected, d, "The day should be equal to 30")
 }
+
+func TestSubWeekdayZero(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubWeekdays(0)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 12")
+}
+
+func TestSubWeekdayPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubWeekdays(5)
+
+	expected := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 5")
+}
+
+func TestSubWeekdayNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubWeekdays(-5)
+
+	expected := NewCarbon(time.Date(2016, time.August, 19, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 19")
+}
+
+func TestSubWeekday(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 15, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubWeekday()
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 12")
+}

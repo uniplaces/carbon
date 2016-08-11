@@ -252,12 +252,14 @@ func (c *Carbon) SubDays(d int) *Carbon {
 	return c.AddDays(-d)
 }
 
-// Remove a weekday from the instance
-func SubWeekday() {
+// SubWeekday removes a weekday from the current time
+func (c *Carbon) SubWeekday() *Carbon {
+	return c.SubWeekdays(1)
 }
 
-// Remove weekdays from the instance
-func SubWeekdays() {
+// SubWeekdays removes a weekday from the current time
+func (c *Carbon) SubWeekdays(wd int) *Carbon {
+	return c.AddWeekdays(-wd)
 }
 
 // Remove a week from the instance
