@@ -503,3 +503,39 @@ func TestSubQuarter(t *testing.T) {
 	expected := NewCarbon(time.Date(2011, time.October, 31, 10, 0, 0, 0, time.UTC))
 	assert.Equal(t, expected, d, "The month should be equal to October")
 }
+
+func TestSubCenturiesZero(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubCenturies(0)
+
+	expected := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal to 2012")
+}
+
+func TestSubCenturiesPositive(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubCenturies(2)
+
+	expected := NewCarbon(time.Date(1712, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal to 1712")
+}
+
+func TestSubCenturiesNegative(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubCenturies(-2)
+
+	expected := NewCarbon(time.Date(2112, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal to 2112")
+}
+
+func TestSubCentury(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubCentury()
+
+	expected := NewCarbon(time.Date(1812, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal to 1812")
+}

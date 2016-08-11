@@ -52,9 +52,9 @@ func (c *Carbon) AddQuarter() *Carbon {
 
 // AddCenturies adds centuries to the time
 // Positive value travels forward while negative value travels into the past
-func (c *Carbon) AddCenturies(cen int) *Carbon {
+func (c *Carbon) AddCenturies(cent int) *Carbon {
 	return &Carbon{
-		c.AddDate(YearsPerCenturies*cen, 0, 0),
+		c.AddDate(YearsPerCenturies*cent, 0, 0),
 	}
 }
 
@@ -212,12 +212,14 @@ func (c *Carbon) SubQuarters(q int) *Carbon {
 	return c.AddQuarters(-q)
 }
 
-// Remove a century from the instance
-func SubCentury() {
+// SubCentury removes a century from the current time
+func (c *Carbon) SubCentury() *Carbon {
+	return c.SubCenturies(1)
 }
 
-// Remove centuries from the instance
-func SubCenturies() {
+// SubCenturies removes centuries from the current instance
+func (c *Carbon) SubCenturies(cent int) *Carbon {
+	return c.AddCenturies(-cent)
 }
 
 // Remove a month from the instance
