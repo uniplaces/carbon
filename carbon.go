@@ -272,15 +272,17 @@ func (c *Carbon) SubWeeks(w int) *Carbon {
 	return c.AddWeeks(-w)
 }
 
-// Remove an hour from the instance
-func SubHour() {
+// SubHour removes an hour from the current time
+func (c *Carbon) SubHour() *Carbon {
+	return c.SubHours(1)
 }
 
-// Remove hours from the instance
-func SubHours() {
+// SubHours removes hours from the current time
+func (c *Carbon) SubHours(h int) *Carbon {
+	return c.AddHours(-h)
 }
 
-// Remove a minute from the instance
+// SubMinutes removes a minute from the current time
 func SubMinute() {
 }
 
