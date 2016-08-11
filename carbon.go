@@ -217,17 +217,19 @@ func (c *Carbon) SubCentury() *Carbon {
 	return c.SubCenturies(1)
 }
 
-// SubCenturies removes centuries from the current instance
+// SubCenturies removes centuries from the current time
 func (c *Carbon) SubCenturies(cent int) *Carbon {
 	return c.AddCenturies(-cent)
 }
 
-// Remove a month from the instance
-func SubMonth() {
+// SubMonth removes a month from the current time
+func (c *Carbon) SubMonth() *Carbon {
+	return c.SubMonths(1)
 }
 
-// Remove months from the instance
-func SubMonths() {
+// SubMonths removes months from the current time
+func (c *Carbon) SubMonths(m int) *Carbon {
+	return c.AddMonths(-m)
 }
 
 // Remove a month with no overflow from the instance
