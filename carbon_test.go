@@ -575,3 +575,39 @@ func TestSubMonth(t *testing.T) {
 	expected := NewCarbon(time.Date(1911, time.December, 31, 10, 0, 0, 0, time.UTC))
 	assert.Equal(t, expected, d, "The month should be equal to December")
 }
+
+func TestSubMonthsNoOverflowZero(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMonthsNoOverflow(0)
+
+	expected := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to January")
+}
+
+func TestSubMonthsNoOverflowPositive(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMonthsNoOverflow(2)
+
+	expected := NewCarbon(time.Date(1911, time.November, 30, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to November")
+}
+
+func TestSubMonthsNoOverflowNegative(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMonthsNoOverflow(-2)
+
+	expected := NewCarbon(time.Date(1912, time.March, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to March")
+}
+
+func TestSubMonthNoOverflow(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMonthNoOverflow()
+
+	expected := NewCarbon(time.Date(1911, time.December, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to December")
+}

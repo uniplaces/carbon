@@ -232,12 +232,14 @@ func (c *Carbon) SubMonths(m int) *Carbon {
 	return c.AddMonths(-m)
 }
 
-// Remove a month with no overflow from the instance
-func SubMonthNoOverflow() {
+// SubMonthNoOverflow remove a month with no overflow from the current time
+func (c *Carbon) SubMonthNoOverflow() *Carbon {
+	return c.SubMonthsNoOverflow(1)
 }
 
-// Remove months with no overflow from the instance
-func SubMonthsNoOverflow() {
+// SubMonthsNoOverflow removes months with no overflow from the current time
+func (c *Carbon) SubMonthsNoOverflow(m int) *Carbon {
+	return c.AddMonthsNoOverflow(-m)
 }
 
 // Remove a day from the instance
