@@ -282,19 +282,21 @@ func (c *Carbon) SubHours(h int) *Carbon {
 	return c.AddHours(-h)
 }
 
-// SubMinutes removes a minute from the current time
-func SubMinute() {
+// SubMinute removes a minute from the current time
+func (c *Carbon) SubMinute() *Carbon {
+	return c.SubMinutes(1)
 }
 
-// Remove minutes from the instance
-func SubMinutes() {
+// SubMinutes removes minutes from the current time
+func (c *Carbon) SubMinutes(m int) *Carbon {
+	return c.AddMinutes(-m)
 }
 
-// Remove a second from the instance
+// SubSecond removes a second from the current time
 func SubSecond() {
 }
 
-// Remove seconds from the instance
+// SubSeconds removes seconds from the current time
 func SubSeconds() {
 }
 
