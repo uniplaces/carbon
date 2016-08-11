@@ -242,12 +242,14 @@ func (c *Carbon) SubMonthsNoOverflow(m int) *Carbon {
 	return c.AddMonthsNoOverflow(-m)
 }
 
-// Remove a day from the instance
-func SubDay() {
+// SubDay removes a day from the current instance
+func (c *Carbon) SubDay() *Carbon {
+	return c.SubDays(1)
 }
 
-// Remove days from the instance
-func SubDays() {
+// SubDays removes days from the current time
+func (c *Carbon) SubDays(d int) *Carbon {
+	return c.AddDays(-d)
 }
 
 // Remove a weekday from the instance

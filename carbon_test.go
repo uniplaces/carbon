@@ -611,3 +611,39 @@ func TestSubMonthNoOverflow(t *testing.T) {
 	expected := NewCarbon(time.Date(1911, time.December, 31, 10, 0, 0, 0, time.UTC))
 	assert.Equal(t, expected, d, "The month should be equal to December")
 }
+
+func TestSubDaysZero(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubDays(0)
+
+	expected := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 31")
+}
+
+func TestSubDaysPositive(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubDays(10)
+
+	expected := NewCarbon(time.Date(1912, time.January, 21, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 21")
+}
+
+func TestSubDaysNegative(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubDays(-10)
+
+	expected := NewCarbon(time.Date(1912, time.February, 10, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 10")
+}
+
+func TestSubDay(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubDay()
+
+	expected := NewCarbon(time.Date(1912, time.January, 30, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 30")
+}
