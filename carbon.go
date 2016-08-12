@@ -302,6 +302,90 @@ func (c *Carbon) SubSeconds(s int) *Carbon {
 	return c.AddSeconds(-s)
 }
 
+// SetYear sets the year of the current time
+func (c *Carbon) SetYear(y int) *Carbon {
+	return &Carbon{
+		Time: time.Date(y, c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location()),
+	}
+}
+
+// SetMonth sets the month of the current time
+func (c *Carbon) SetMonth(m time.Month) *Carbon {
+	return &Carbon{
+		Time: time.Date(c.Year(), m, c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location()),
+	}
+}
+
+// SetDay sets the day of the current time
+func (c *Carbon) SetDay(d int) *Carbon {
+	return &Carbon{
+		Time: time.Date(c.Year(), c.Month(), d, c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location()),
+	}
+}
+
+// SetHour sets the hour of the current time
+func (c *Carbon) SetHour(h int) *Carbon {
+	return &Carbon{
+		Time: time.Date(c.Year(), c.Month(), c.Day(), h, c.Minute(), c.Second(), c.Nanosecond(), c.Location()),
+	}
+}
+
+// SetMinute sets the minute of the current time
+func (c *Carbon) SetMinute(m int) *Carbon {
+	return &Carbon{
+		Time: time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), m, c.Second(), c.Nanosecond(), c.Location()),
+	}
+}
+
+// Set the instance's second
+func (c *Carbon) SetSecond(s int) *Carbon {
+	return &Carbon{
+		Time: time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), s, c.Nanosecond(), c.Location()),
+	}
+}
+
+// Sets the current date of the DateTime object to a different date.
+// Calls modify as a workaround for a php bug
+func SetDate() {
+}
+
+// Set the date and time all together
+func SetDateTime() {
+}
+
+// Set the time by time string
+func SetTimeFromTimeString() {
+}
+
+// Set the instance's timestamp
+func Timestamp() {
+}
+
+// Alias for setTimezone()
+func Timezone() {
+}
+
+// Alias for setTimezone()
+func Tz() {
+}
+
+// Set the instance's timezone from a string or object
+func SetTimezone() {
+}
+
+// Set the last day of week
+func SetWeekEndsAt() {
+}
+
+// Set the first day of week
+func SetWeekStartsAt() {
+}
+
+// Set weekend days
+
+func SetWeekendDays() {
+}
+
 //-----------------------------------------------------------
 // Create a Carbon instance from a DateTime one.
 func Instance() {
@@ -371,14 +455,6 @@ func CreateFromTime() {
 func CreateFromFormat() {
 }
 
-// Set last errors.
-func SetLastErrors() {
-}
-
-// {@inheritdoc}
-func GetLastErrors() {
-}
-
 // Create a Carbon instance from a timestamp.
 func CreateFromTimestamp() {
 }
@@ -391,104 +467,16 @@ func CreateFromTimestampUTC() {
 func Copy() {
 }
 
-// Set the instance's year
-func Year() {
-}
-
-// Set the instance's month
-func Month() {
-}
-
-// Set the instance's day
-func Day() {
-}
-
-// Set the instance's hour
-func Hour() {
-}
-
-// Set the instance's minute
-func Minute() {
-}
-
-// Set the instance's second
-func Second() {
-}
-
-// Sets the current date of the DateTime object to a different date.
-// Calls modify as a workaround for a php bug
-func SetDate() {
-}
-
-// Set the date and time all together
-func SetDateTime() {
-}
-
-// Set the time by time string
-func SetTimeFromTimeString() {
-}
-
-// Set the instance's timestamp
-func Timestamp() {
-}
-
-// Alias for setTimezone()
-func Timezone() {
-}
-
-// Alias for setTimezone()
-func Tz() {
-}
-
-// Set the instance's timezone from a string or object
-func SetTimezone() {
-}
-
 // Get the first day of week
 func GetWeekStartsAt() {
-}
-
-// Set the first day of week
-func SetWeekStartsAt() {
 }
 
 // Get the last day of week
 func GetWeekEndsAt() {
 }
 
-// Set the last day of week
-func SetWeekEndsAt() {
-}
-
 // Get weekend days
 func GetWeekendDays() {
-}
-
-// Set weekend days
-func SetWeekendDays() {
-}
-
-// Set a Carbon instance (real or mock) to be returned when a "now"
-// instance is created.  The provided instance will be returned
-// specifically under the following conditions:
-//   - A call to the static now() method, ex. Carbon::now()
-//   - When a null (or blank string) is passed to the constructor or parse(), ex. new Carbon(null)
-//   - When the string "now" is passed to the constructor or parse(), ex. new Carbon('now')
-// Note the timezone parameter was left out of the examples above and
-// has no affect as the mock value will be returned regardless of its value.
-// To clear the test instance call this method using the default
-// parameter of null.
-func SetTestNow() {
-}
-
-// Get the Carbon instance (real or mock) to be returned when a "now"
-// instance is created.
-func GetTestNow() {
-}
-
-// Determine if there is a valid test instance set. A valid test instance
-// is anything that is not null.
-func HasTestNow() {
 }
 
 // Determine if there is a relative keyword in the time string, this is to
