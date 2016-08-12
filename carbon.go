@@ -24,7 +24,7 @@ func NewCarbon(t time.Time) *Carbon {
 	}
 }
 
-// AddYear adds a year to the current time
+// AddYears adds a year to the current time
 // Positive value travel forward while negative value travel into the past
 func (c *Carbon) AddYears(y int) *Carbon {
 	return &Carbon{
@@ -52,13 +52,13 @@ func (c *Carbon) AddQuarter() *Carbon {
 
 // AddCenturies adds centuries to the time
 // Positive value travels forward while negative value travels into the past
-func (c *Carbon) AddCenturies(cen int) *Carbon {
+func (c *Carbon) AddCenturies(cent int) *Carbon {
 	return &Carbon{
-		c.AddDate(YearsPerCenturies*cen, 0, 0),
+		c.AddDate(YearsPerCenturies*cent, 0, 0),
 	}
 }
 
-// Add a century to the current times
+// AddCentury adds a century to the current time
 func (c *Carbon) AddCentury() *Carbon {
 	return c.AddCenturies(1)
 }
@@ -150,7 +150,7 @@ func (c *Carbon) AddHours(h int) *Carbon {
 	}
 }
 
-// Add an hour to the instance
+// AddHour adds an hour to the current time
 func (c *Carbon) AddHour() *Carbon {
 	return c.AddHours(1)
 }
@@ -178,7 +178,7 @@ func (c *Carbon) AddMonthNoOverflow() *Carbon {
 	return c.AddMonthsNoOverflow(1)
 }
 
-// AddMiinutes adds minutes to the current time
+// AddMinutes adds minutes to the current time
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddMinutes(m int) *Carbon {
 	d := time.Duration(m) * time.Minute
@@ -190,6 +190,116 @@ func (c *Carbon) AddMinutes(m int) *Carbon {
 // AddMinute adds a minute to the current time
 func (c *Carbon) AddMinute() *Carbon {
 	return c.AddMinutes(1)
+}
+
+// SubYear removes a year from the current time
+func (c *Carbon) SubYear() *Carbon {
+	return c.SubYears(1)
+}
+
+// SubYears removes years from current time
+func (c *Carbon) SubYears(y int) *Carbon {
+	return c.AddYears(-1 * y)
+}
+
+// SubQuarter removes a quarter from the current time
+func (c *Carbon) SubQuarter() *Carbon {
+	return c.SubQuarters(1)
+}
+
+// SubQuarters removes quarters from current time
+func (c *Carbon) SubQuarters(q int) *Carbon {
+	return c.AddQuarters(-q)
+}
+
+// SubCentury removes a century from the current time
+func (c *Carbon) SubCentury() *Carbon {
+	return c.SubCenturies(1)
+}
+
+// SubCenturies removes centuries from the current time
+func (c *Carbon) SubCenturies(cent int) *Carbon {
+	return c.AddCenturies(-cent)
+}
+
+// SubMonth removes a month from the current time
+func (c *Carbon) SubMonth() *Carbon {
+	return c.SubMonths(1)
+}
+
+// SubMonths removes months from the current time
+func (c *Carbon) SubMonths(m int) *Carbon {
+	return c.AddMonths(-m)
+}
+
+// SubMonthNoOverflow remove a month with no overflow from the current time
+func (c *Carbon) SubMonthNoOverflow() *Carbon {
+	return c.SubMonthsNoOverflow(1)
+}
+
+// SubMonthsNoOverflow removes months with no overflow from the current time
+func (c *Carbon) SubMonthsNoOverflow(m int) *Carbon {
+	return c.AddMonthsNoOverflow(-m)
+}
+
+// SubDay removes a day from the current instance
+func (c *Carbon) SubDay() *Carbon {
+	return c.SubDays(1)
+}
+
+// SubDays removes days from the current time
+func (c *Carbon) SubDays(d int) *Carbon {
+	return c.AddDays(-d)
+}
+
+// SubWeekday removes a weekday from the current time
+func (c *Carbon) SubWeekday() *Carbon {
+	return c.SubWeekdays(1)
+}
+
+// SubWeekdays removes a weekday from the current time
+func (c *Carbon) SubWeekdays(wd int) *Carbon {
+	return c.AddWeekdays(-wd)
+}
+
+// SubWeek removes a week from the current time
+func (c *Carbon) SubWeek() *Carbon {
+	return c.SubWeeks(1)
+}
+
+// SubWeeks removes weeks to the current time
+func (c *Carbon) SubWeeks(w int) *Carbon {
+	return c.AddWeeks(-w)
+}
+
+// SubHour removes an hour from the current time
+func (c *Carbon) SubHour() *Carbon {
+	return c.SubHours(1)
+}
+
+// SubHours removes hours from the current time
+func (c *Carbon) SubHours(h int) *Carbon {
+	return c.AddHours(-h)
+}
+
+// SubMinute removes a minute from the current time
+func (c *Carbon) SubMinute() *Carbon {
+	return c.SubMinutes(1)
+}
+
+// SubMinutes removes minutes from the current time
+func (c *Carbon) SubMinutes(m int) *Carbon {
+	return c.AddMinutes(-m)
+}
+
+// SubSecond removes a second from the current time
+func (c *Carbon) SubSecond() *Carbon {
+	return c.SubSeconds(1)
+}
+
+// SubSeconds removes seconds from the current time
+func (c *Carbon) SubSeconds(s int) *Carbon {
+	return c.AddSeconds(-s)
 }
 
 //-----------------------------------------------------------
@@ -652,94 +762,6 @@ func IsFriday() {
 
 // Checks if this day is a Saturday.
 func IsSaturday() {
-}
-
-// Remove a year from the instance
-func SubYear() {
-}
-
-// Remove years from the instance.
-func SubYears() {
-}
-
-// Remove a quarter from the instance
-func SubQuarter() {
-}
-
-// Remove quarters from the instance
-func SubQuarters() {
-}
-
-// Remove a century from the instance
-func SubCentury() {
-}
-
-// Remove centuries from the instance
-func SubCenturies() {
-}
-
-// Remove a month from the instance
-func SubMonth() {
-}
-
-// Remove months from the instance
-func SubMonths() {
-}
-
-// Remove a month with no overflow from the instance
-func SubMonthNoOverflow() {
-}
-
-// Remove months with no overflow from the instance
-func SubMonthsNoOverflow() {
-}
-
-// Remove a day from the instance
-func SubDay() {
-}
-
-// Remove days from the instance
-func SubDays() {
-}
-
-// Remove a weekday from the instance
-func SubWeekday() {
-}
-
-// Remove weekdays from the instance
-func SubWeekdays() {
-}
-
-// Remove a week from the instance
-func SubWeek() {
-}
-
-// Remove weeks to the instance
-func SubWeeks() {
-}
-
-// Remove an hour from the instance
-func SubHour() {
-}
-
-// Remove hours from the instance
-func SubHours() {
-}
-
-// Remove a minute from the instance
-func SubMinute() {
-}
-
-// Remove minutes from the instance
-func SubMinutes() {
-}
-
-// Remove a second from the instance
-func SubSecond() {
-}
-
-// Remove seconds from the instance
-func SubSeconds() {
 }
 
 // Get the difference in years

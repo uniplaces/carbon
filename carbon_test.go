@@ -431,3 +431,398 @@ func TestPreviousMonthLastDay(t *testing.T) {
 	expected := NewCarbon(time.Date(2016, time.February, 29, 10, 0, 0, 0, time.UTC))
 	assert.Equal(t, expected, d, "The day should be equal to 29")
 }
+
+func TestSubYearsZero(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubYears(0)
+
+	expected := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal to 2012")
+}
+
+func TestSubYearsPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubYears(2)
+
+	expected := NewCarbon(time.Date(2010, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal to 2010")
+}
+
+func TestSubYearsNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubYears(-2)
+
+	expected := NewCarbon(time.Date(2014, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal to 2015")
+}
+
+func TestSubYear(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubYear()
+
+	expected := NewCarbon(time.Date(2011, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal to 2011")
+}
+
+func TestSubQuartersZero(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubQuarters(0)
+
+	expected := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to January")
+}
+
+func TestSubQuartersPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubQuarters(2)
+
+	expected := NewCarbon(time.Date(2011, time.July, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to July")
+}
+
+func TestSubQuartersNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubQuarters(-2)
+
+	expected := NewCarbon(time.Date(2012, time.July, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to July")
+}
+
+func TestSubQuarter(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubQuarter()
+
+	expected := NewCarbon(time.Date(2011, time.October, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to October")
+}
+
+func TestSubCenturiesZero(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubCenturies(0)
+
+	expected := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal to 2012")
+}
+
+func TestSubCenturiesPositive(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubCenturies(2)
+
+	expected := NewCarbon(time.Date(1712, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal to 1712")
+}
+
+func TestSubCenturiesNegative(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubCenturies(-2)
+
+	expected := NewCarbon(time.Date(2112, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal to 2112")
+}
+
+func TestSubCentury(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubCentury()
+
+	expected := NewCarbon(time.Date(1812, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The year should be equal to 1812")
+}
+
+func TestSubMonthsZero(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMonths(0)
+
+	expected := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to January")
+}
+
+func TestSubMonthsPositive(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMonths(2)
+
+	expected := NewCarbon(time.Date(1911, time.November, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to November")
+}
+
+func TestSubMonthsNegative(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMonths(-2)
+
+	expected := NewCarbon(time.Date(1912, time.March, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to March")
+}
+
+func TestSubMonth(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMonth()
+
+	expected := NewCarbon(time.Date(1911, time.December, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to December")
+}
+
+func TestSubMonthsNoOverflowZero(t *testing.T) {
+	c := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMonthsNoOverflow(0)
+
+	expected := NewCarbon(time.Date(2012, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to January")
+}
+
+func TestSubMonthsNoOverflowPositive(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMonthsNoOverflow(2)
+
+	expected := NewCarbon(time.Date(1911, time.November, 30, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to November")
+}
+
+func TestSubMonthsNoOverflowNegative(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMonthsNoOverflow(-2)
+
+	expected := NewCarbon(time.Date(1912, time.March, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to March")
+}
+
+func TestSubMonthNoOverflow(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMonthNoOverflow()
+
+	expected := NewCarbon(time.Date(1911, time.December, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The month should be equal to December")
+}
+
+func TestSubDaysZero(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubDays(0)
+
+	expected := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 31")
+}
+
+func TestSubDaysPositive(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubDays(10)
+
+	expected := NewCarbon(time.Date(1912, time.January, 21, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 21")
+}
+
+func TestSubDaysNegative(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubDays(-10)
+
+	expected := NewCarbon(time.Date(1912, time.February, 10, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 10")
+}
+
+func TestSubDay(t *testing.T) {
+	c := NewCarbon(time.Date(1912, time.January, 31, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubDay()
+
+	expected := NewCarbon(time.Date(1912, time.January, 30, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 30")
+}
+
+func TestSubWeekdayZero(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubWeekdays(0)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 12")
+}
+
+func TestSubWeekdayPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubWeekdays(5)
+
+	expected := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 5")
+}
+
+func TestSubWeekdayNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubWeekdays(-5)
+
+	expected := NewCarbon(time.Date(2016, time.August, 19, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 19")
+}
+
+func TestSubWeekday(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 15, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubWeekday()
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 12")
+}
+
+func TestSubWeeksZero(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubWeeks(0)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 12")
+}
+
+func TestSubWeeksPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubWeeks(2)
+
+	expected := NewCarbon(time.Date(2016, time.July, 29, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 29")
+}
+
+func TestSubWeeksNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubWeeks(-1)
+
+	expected := NewCarbon(time.Date(2016, time.August, 19, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 19")
+}
+
+func TestSubWeek(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubWeek()
+
+	expected := NewCarbon(time.Date(2016, time.August, 5, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The day should be equal to 5")
+}
+
+func TestSubHoursZero(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubHours(0)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The hour should be equal to 10")
+}
+
+func TestSubHoursPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubHours(10)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The hour should be equal to 0")
+}
+
+func TestSubHoursNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubHours(-10)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 20, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The hour should be equal to 20")
+}
+
+func TestSubHour(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubHour()
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 9, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The hour should be equal to 9")
+}
+
+func TestSubMinutesZero(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubMinutes(0)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The hour should be equal to 10")
+}
+
+func TestSubMinutesPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 20, 0, 0, time.UTC))
+
+	d := c.SubMinutes(10)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 10, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The minutes should be equal to 10")
+}
+
+func TestSubMinutesNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 20, 0, 0, time.UTC))
+
+	d := c.SubMinutes(-10)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 30, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The minutes should be equal to 30")
+}
+
+func TestSubMinute(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 20, 0, 0, time.UTC))
+
+	d := c.SubMinute()
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 19, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The minutes should be equal to 19")
+}
+
+func TestSubSecondsZero(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d := c.SubSeconds(0)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 0")
+}
+
+func TestSubSecondsPositive(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	d := c.SubSeconds(10)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 20, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 20")
+}
+
+func TestSubSecondsNegative(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	d := c.SubSeconds(-10)
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 40, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 40")
+}
+func TestSubSecond(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	d := c.SubSecond()
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 29, 0, time.UTC))
+	assert.Equal(t, expected, d, "The seconds should be equal to 29")
+}
