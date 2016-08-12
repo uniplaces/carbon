@@ -1,6 +1,8 @@
 package carbon
 
 import (
+	"errors"
+	"strings"
 	"time"
 )
 
@@ -337,43 +339,65 @@ func (c *Carbon) SetMinute(m int) *Carbon {
 	}
 }
 
-// Set the instance's second
+// SetSecond sets the second of the current time
 func (c *Carbon) SetSecond(s int) *Carbon {
 	return &Carbon{
 		Time: time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), s, c.Nanosecond(), c.Location()),
 	}
 }
 
-// Sets the current date of the DateTime object to a different date.
-// Calls modify as a workaround for a php bug
-func SetDate() {
+// SetDate sets only the date of the current time
+func (c *Carbon) SetDate(y int, m time.Month, d int) *Carbon {
+	return &Carbon{
+		Time: time.Date(y, m, d, c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location()),
+	}
 }
 
-// Set the date and time all together
-func SetDateTime() {
+// SetDateTime sets the date and the time
+func (c *Carbon) SetDateTime(y int, mon time.Month, d, h, m, s int) *Carbon {
+	return &Carbon{
+		Time: time.Date(y, mon, d, h, m, s, c.Nanosecond(), c.Location()),
+	}
 }
 
-// Set the time by time string
-func SetTimeFromTimeString() {
+// SetTimeFromTimeString receives a string and sets the current time
+// It accepts the following formats: "hh:mm:ss", "hh:mm" and "hh"
+func (c *Carbon) SetTimeFromTimeString(timeString string) (*Carbon, error) {
+	layouts := []string{"15", "04", "05"}
+	h, m, s, err := c.parse(layouts, timeString)
+	return c.SetHour(h).SetMinute(m).SetSecond(s), err
+}
+
+func (c *Carbon) parse(layouts []string, timeString string) (int, int, int, error) {
+	currLayout := strings.Join(layouts, ":")
+	parsed, err := time.Parse(currLayout, timeString)
+	size := len(layouts)
+	if err != nil && size > 0 {
+		l := layouts[:size-1]
+		h, m, s, err := c.parse(l, timeString)
+		return h, m, s, err
+	}
+	h, m, s := parsed.Clock()
+	switch len(layouts) {
+	case 3:
+		return h, m, s, nil
+	case 2:
+		return h, m, c.Second(), nil
+	case 1:
+		return h, c.Minute(), c.Second(), nil
+	}
+	return 0, 0, 0, errors.New("only supports hh:mm:ss, hh:mm and hh formats")
 }
 
 // Set the instance's timestamp
 func Timestamp() {
 }
 
-// Alias for setTimezone()
-func Timezone() {
-}
-
-// Alias for setTimezone()
-func Tz() {
-}
-
-// Set the instance's timezone from a string or object
+// SetTimezone the location from a string
 func SetTimezone() {
 }
 
-// Set the last day of week
+// SetWeekEndsAt  the last day of week
 func SetWeekEndsAt() {
 }
 
@@ -382,7 +406,6 @@ func SetWeekStartsAt() {
 }
 
 // Set weekend days
-
 func SetWeekendDays() {
 }
 

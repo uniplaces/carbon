@@ -841,3 +841,67 @@ func TestSetters(t *testing.T) {
 	expected := NewCarbon(time.Date(2010, time.May, 2, 5, 10, 10, 0, time.UTC))
 	assert.Equal(t, expected, d, "The date should be 2010-05-02 5h 10m 10s")
 }
+
+func TestSetDate(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	d := c.SetDate(2015, time.May, 30)
+
+	expected := NewCarbon(time.Date(2015, time.May, 30, 10, 0, 30, 0, time.UTC))
+	assert.Equal(t, expected, d, "The date should be 2015-05-02")
+}
+
+func TestSetDateTime(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	d := c.SetDateTime(2010, time.May, 2, 5, 10, 10)
+
+	expected := NewCarbon(time.Date(2010, time.May, 2, 5, 10, 10, 0, time.UTC))
+	assert.Equal(t, expected, d, "The date should be 2010-05-02 5h 10m 10s")
+}
+
+func TestSetTimeFromTimeStringHour(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	d, err := c.SetTimeFromTimeString("20")
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 20, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, d, "The date should be 2010-05-02 20h 0m 0s")
+	assert.Nil(t, err)
+}
+
+func TestSetTimeFromTimeStringMinute(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	d, err := c.SetTimeFromTimeString("20:20")
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 20, 20, 30, 0, time.UTC))
+	assert.Equal(t, expected, d, "The date should be 2010-05-02 20h 30m 0s")
+	assert.Nil(t, err)
+}
+
+func TestSetTimeFromTimeStringSecond(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	d, err := c.SetTimeFromTimeString("20:20:20")
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 20, 20, 20, 0, time.UTC))
+	assert.Equal(t, expected, d, "The date should be 2010-05-02 20h 20m 20s")
+	assert.Nil(t, err)
+}
+
+func TestSetTimeFromTimeStringEmpty(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	_, err := c.SetTimeFromTimeString("")
+
+	assert.NotNil(t, err)
+}
+
+func TestSetTimeFromTimeStringInvalid(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	_, err := c.SetTimeFromTimeString("10-10-10")
+
+	assert.NotNil(t, err)
+}
