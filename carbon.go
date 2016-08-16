@@ -557,8 +557,9 @@ func (c *Carbon) RssString() string {
 	return c.Format(RssFormat)
 }
 
-// Format the instance as W3C
-func ToW3cString() {
+// W3cString returns the current time for WWW Consortium format
+func (c *Carbon) W3cString() string {
+	return c.Format(RFC3339Format)
 }
 
 // Determines if the instance is a weekday
