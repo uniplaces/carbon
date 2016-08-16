@@ -997,3 +997,27 @@ func TestDayDateTimeString(t *testing.T) {
 
 	assert.Equal(t, "Mon, Aug 8, 2016 1:00 AM", c.DayDateTimeString())
 }
+
+func TestAtomString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 1, 0, 30, 0, time.UTC))
+
+	assert.Equal(t, "2016-08-01T01:00:30+00:00", c.AtomString())
+}
+
+func TestCookieString(t *testing.T) {
+	c := NewCarbon(time.Date(2005, time.August, 15, 15, 52, 1, 0, time.UTC))
+
+	assert.Equal(t, "Monday, 15-Aug-2005 15:52:01 UTC", c.CookieString())
+}
+
+func TestIso8601String(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 1, 0, 30, 0, time.UTC))
+
+	assert.Equal(t, "2016-08-01T01:00:30+00:00", c.Iso8601String())
+}
+
+func TestRfc822String(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
+
+	assert.Equal(t, "Mon, 01 Aug 16 15:28:21 +0000", c.Rfc822String())
+}
