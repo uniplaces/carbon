@@ -15,9 +15,10 @@ const (
 
 // Represent the different string formats for dates
 const (
-	DefaultStringFormat = "2006-01-02 15:04:05"
-	DateStringFormat    = "2006-01-02"
-	FormattedDateString = "Jan 2, 2006"
+	DefaultStringFormat       = "2006-01-02 15:04:05"
+	DateStringFormat          = "2006-01-02"
+	FormattedDateStringFormat = "Jan 2, 2006"
+	TimeStringFormat          = "15:04:05"
 )
 
 // The Carbon type represents a Time instance.
@@ -481,11 +482,12 @@ func (c *Carbon) DateString() string {
 
 // FormattedDateString returns the current time as a readable date
 func (c *Carbon) FormattedDateString() string {
-	return c.Format(FormattedDateString)
+	return c.Format(FormattedDateStringFormat)
 }
 
-// Format the instance as time
-func ToTimeString() {
+// TimeString returns the current time in hh:mm:ss format
+func (c *Carbon) TimeString() string {
+	return c.Format(TimeStringFormat)
 }
 
 // Format the instance as date and time
