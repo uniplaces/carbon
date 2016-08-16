@@ -25,6 +25,7 @@ const (
 	RFC1036Format       = "Mon, 02 Jan 06 15:04:05 -0700"
 	RFC2822Format       = "Mon, 02 Jan 2006 15:04:05 -0700"
 	RFC3339Format       = "2006-01-02T15:04:05-07:00"
+	RssFormat           = "Mon, 02 Jan 2006 15:04:05 -0700"
 )
 
 // The Carbon type represents a Time instance.
@@ -551,8 +552,9 @@ func (c *Carbon) Rfc3339String() string {
 	return c.Format(RFC3339Format)
 }
 
-// Format the instance as RSS
-func ToRssString() {
+// RssString returns the current time for RSS format
+func (c *Carbon) RssString() string {
+	return c.Format(RssFormat)
 }
 
 // Format the instance as W3C

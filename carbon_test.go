@@ -1051,3 +1051,9 @@ func TestRfc3339String(t *testing.T) {
 
 	assert.Equal(t, "2016-08-01T15:28:21+00:00", c.Rfc3339String())
 }
+
+func TestRssString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
+
+	assert.Equal(t, "Mon, 01 Aug 2016 15:28:21 +0000", c.RssString())
+}
