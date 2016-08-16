@@ -20,11 +20,11 @@ const (
 	FormattedDateFormat = "Jan 2, 2006"
 	TimeFormat          = "15:04:05"
 	DayDateTimeFormat   = "Mon, Aug 2, 2006 3:04 PM"
-	AtomFormat          = "2006-01-02T15:04:05-07:00"
 	CookieFormat        = "Monday, 02-Jan-2006 15:04:05 MST"
 	RFC822Format        = "Mon, 02 Jan 06 15:04:05 -0700"
 	RFC1036Format       = "Mon, 02 Jan 06 15:04:05 -0700"
 	RFC2822Format       = "Mon, 02 Jan 2006 15:04:05 -0700"
+	RFC3339Format       = "2006-01-02T15:04:05-07:00"
 )
 
 // The Carbon type represents a Time instance.
@@ -508,7 +508,7 @@ func (c *Carbon) DayDateTimeString() string {
 
 // AtomString formats the current time to a Atom date format
 func (c *Carbon) AtomString() string {
-	return c.Format(AtomFormat)
+	return c.Format(RFC3339Format)
 }
 
 // CookieString formats the current time to a Cookie date format
@@ -518,7 +518,7 @@ func (c *Carbon) CookieString() string {
 
 // Iso8601String returns the current time in ISO8601 format
 func (c *Carbon) Iso8601String() string {
-	return c.AtomString()
+	return c.Format(RFC3339Format)
 }
 
 // Rfc822String returns the current time in RFC 822 format
@@ -546,8 +546,9 @@ func (c *Carbon) Rfc2822String() string {
 	return c.Format(RFC2822Format)
 }
 
-// Format the instance as RFC3339
-func ToRfc3339String() {
+// Rfc3339String returns the current time in RFC 3339 format
+func (c *Carbon) Rfc3339String() string {
+	return c.Format(RFC3339Format)
 }
 
 // Format the instance as RSS
