@@ -991,3 +991,9 @@ func TestDateTimeString(t *testing.T) {
 
 	assert.Equal(t, "2016-08-02 10:00:30", c.DateTimeString())
 }
+
+func TestDayDateTimeString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 8, 1, 0, 30, 0, time.UTC))
+
+	assert.Equal(t, "Mon, Aug 8, 2016 1:00 AM", c.DayDateTimeString())
+}

@@ -19,6 +19,7 @@ const (
 	DateStringFormat          = "2006-01-02"
 	FormattedDateStringFormat = "Jan 2, 2006"
 	TimeStringFormat          = "15:04:05"
+	DayDateTimeStringFormat   = "Mon, Aug 2, 2006 3:04 PM"
 )
 
 // The Carbon type represents a Time instance.
@@ -495,8 +496,9 @@ func (c *Carbon) DateTimeString() string {
 	return c.Format(DefaultStringFormat)
 }
 
-// Format the instance with day, date and time
-func ToDayDateTimeString() {
+// DayDateTimeString returns the current time with a day, date and time format
+func (c *Carbon) DayDateTimeString() string {
+	return c.Format(DayDateTimeStringFormat)
 }
 
 // Format the instance as ATOM
