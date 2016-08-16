@@ -524,8 +524,9 @@ func (c *Carbon) Rfc822String() string {
 	return c.Format(Rfc822StringFormat)
 }
 
-// Format the instance as RFC850
-func ToRfc850String() {
+// Rfc850String returns the current time in RFC 850 format
+func (c *Carbon) Rfc850String() string {
+	return c.Format(time.RFC850)
 }
 
 // Format the instance as RFC1036
