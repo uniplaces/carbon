@@ -933,3 +933,19 @@ func TestSetWeekendDays(t *testing.T) {
 
 	assert.Equal(t, wds, c.WeekendDays(), "The start of the week should be Sunday")
 }
+
+func TestSetTimezone(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetTimezone("Europe/Lisbon")
+
+	assert.Equal(t, "Europe/Lisbon", c.Timezone(), "The start of the week should be Sunday")
+}
+
+func TestSetTimezoneError(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	err := c.SetTimezone("Mars/Wonderland")
+
+	assert.NotNil(t, err)
+}

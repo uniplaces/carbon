@@ -51,6 +51,11 @@ func (c *Carbon) WeekendDays() []time.Weekday {
 	return c.weekendDays
 }
 
+// Timezone gets the current timezone
+func (c *Carbon) Timezone() string {
+	return c.Location().String()
+}
+
 // AddYears adds a year to the current time
 // Positive value travel forward while negative value travel into the past
 func (c *Carbon) AddYears(y int) *Carbon {
@@ -382,14 +387,6 @@ func (c *Carbon) parse(layouts []string, timeString string) (int, int, int, erro
 	return 0, 0, 0, errors.New("only supports hh:mm:ss, hh:mm and hh formats")
 }
 
-// Set the instance's timestamp
-func Timestamp() {
-}
-
-// SetTimezone the location from a string
-func SetTimezone() {
-}
-
 // SetWeekEndsAt sets the last day of week
 func (c *Carbon) SetWeekEndsAt(wd time.Weekday) {
 	c.weekEndsAt = wd
@@ -403,6 +400,28 @@ func (c *Carbon) SetWeekStartsAt(wd time.Weekday) {
 // SetWeekendDays sets the weekend days
 func (c *Carbon) SetWeekendDays(wds []time.Weekday) {
 	c.weekendDays = wds
+}
+
+// Set the instance's timestamp
+func Timestamp() {
+}
+
+// SetTimezone the location from a string
+func (c *Carbon) SetTimezone(name string) error {
+	loc, err := time.LoadLocation(name)
+	if err != nil {
+		return err
+	}
+	c.Time = time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), loc)
+	return nil
+}
+
+// Get the current translator locale
+func GetLocale() {
+}
+
+// Set the current translator locale and indicate if the source locale file exists
+func SetLocale() {
 }
 
 //-----------------------------------------------------------
@@ -486,18 +505,6 @@ func CreateFromTimestampUTC() {
 func Copy() {
 }
 
-// Get the first day of week
-func GetWeekStartsAt() {
-}
-
-// Get the last day of week
-func GetWeekEndsAt() {
-}
-
-// Get weekend days
-func GetWeekendDays() {
-}
-
 // Determine if there is a relative keyword in the time string, this is to
 // create dates relative to now for test instances. e.g.: next tuesday
 func HasRelativeKeywords() {
@@ -513,14 +520,6 @@ func GetTranslator() {
 
 // Set the translator instance to use
 func SetTranslator() {
-}
-
-// Get the current translator locale
-func GetLocale() {
-}
-
-// Set the current translator locale and indicate if the source locale file exists
-func SetLocale() {
 }
 
 // Format the instance with the current locale.  You can set the current
