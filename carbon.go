@@ -13,6 +13,13 @@ const (
 	YearsPerCenturies = 100
 )
 
+// Represent the different string formats for dates
+const (
+	DefaultStringFormat = "2006-01-02 15:04:05"
+	DateStringFormat    = "2006-01-02"
+	FormattedDateString = "Jan 2, 2006"
+)
+
 // The Carbon type represents a Time instance.
 // Provides a simple API extention for Time.
 type Carbon struct {
@@ -20,6 +27,7 @@ type Carbon struct {
 	weekStartsAt time.Weekday
 	weekEndsAt   time.Weekday
 	weekendDays  []time.Weekday
+	stringFormat string
 }
 
 // NewCarbon returns a pointer to a new Carbon instance
@@ -33,6 +41,7 @@ func NewCarbon(t time.Time) *Carbon {
 		weekStartsAt: time.Monday,
 		weekEndsAt:   time.Sunday,
 		weekendDays:  wds,
+		stringFormat: DefaultStringFormat,
 	}
 }
 
@@ -54,6 +63,11 @@ func (c *Carbon) WeekendDays() []time.Weekday {
 // Timezone gets the current timezone
 func (c *Carbon) TimeZone() string {
 	return c.Location().String()
+}
+
+// String gets the current date using the previously set format
+func (c *Carbon) String() string {
+	return c.Format(c.stringFormat)
 }
 
 // AddYears adds a year to the current time
@@ -425,130 +439,49 @@ func (c *Carbon) SetTimezone(name string) error {
 	return nil
 }
 
-// Get the current translator locale
-func GetLocale() {
-}
-
-// Set the current translator locale and indicate if the source locale file exists
-func SetLocale() {
-}
-
-//-----------------------------------------------------------
-// Create a Carbon instance from a DateTime one.
-func Instance() {
-}
-
-// Create a carbon instance from a string.
-func Parse() {
-}
-
-// Get a Carbon instance for the current date and time.
-func Now() {
-}
-
-// Create a Carbon instance for today.
-func Today() {
-}
-
-// Create a Carbon instance for tomorrow.
-func Tomorrow() {
-}
-
-// Create a Carbon instance for yesterday.
-func Yesterday() {
-}
-
-// Create a Carbon instance for the greatest supported date.
-func MaxValue() {
-}
-
-// Create a Carbon instance for the lowest supported date.
-func MinValue() {
-}
-
-// Create a new Carbon instance from a specific date and time.
-// If any of $year, $month or $day are set to null their now() values will
-// be used.
-// If $hour is null it will be set to its now() value and the default
-// values for $minute and $second will be their now() values.
-// If $hour is not null then the default values for $minute and $second
-// will be 0.
-func Create() {
-}
-
-// Create a new safe Carbon instance from a specific date and time.
-// If any of $year, $month or $day are set to null their now() values will
-// be used.
-// If $hour is null it will be set to its now() value and the default
-// values for $minute and $second will be their now() values.
-// If $hour is not null then the default values for $minute and $second
-// will be 0.
-// If one of the set values is not valid, an \InvalidArgumentException
-// will be thrown.
-// @throws \Carbon\Exceptions\InvalidDateException
-func CreateSafe() {
-}
-
-// Create a Carbon instance from just a date. The time portion is set to now.
-func CreateFromDate() {
-}
-
-// Create a Carbon instance from just a time. The date portion is set to today.
-func CreateFromTime() {
-}
-
-// Create a Carbon instance from a specific format.
-// @throws \InvalidArgumentException
-func CreateFromFormat() {
-}
-
-// Create a Carbon instance from a timestamp.
-func CreateFromTimestamp() {
-}
-
-// Create a Carbon instance from an UTC timestamp.
-func CreateFromTimestampUTC() {
-}
-
-// Get a copy of the instance.
-func Copy() {
-}
-
-// Determine if there is a relative keyword in the time string, this is to
-// create dates relative to now for test instances. e.g.: next tuesday
-func HasRelativeKeywords() {
-}
-
-// Intialize the translator instance if necessary.
-func Translator() {
-}
-
 // Get the translator instance in use
 func GetTranslator() {
+	// TODO: Not Implemented
 }
 
 // Set the translator instance to use
 func SetTranslator() {
+	// TODO: Not Implemented
 }
 
-// Format the instance with the current locale.  You can set the current
+// Get the current translator locale
+func GetLocale() {
+	// TODO: Not Implemented
+}
+
+// Set the current translator locale and indicate if the source locale file exists
+func SetLocale() {
+	// TODO: Not Implemented
+}
+
+// Format the instance with the current locale.
 func FormatLocalized() {
+	// TODO: Not Implemented
 }
 
-// Reset the format used to the default when type juggling a Carbon instance to a string
-func ResetToStringFormat() {
+// ResetStringFormat changes the format to the DefaultStringFormat
+func (c *Carbon) ResetStringFormat() {
+	c.stringFormat = DefaultStringFormat
 }
 
-// Set the default format used when type juggling a Carbon instance to a string
-func SetToStringFormat() {
+// SetStringFormat formats the current time with the set format string
+func (c *Carbon) SetStringFormat(format string) {
+	c.stringFormat = format
 }
 
-// Format the instance as date
-func ToDateString() {
+// DateString return the current time in Y-m-d format
+func (c *Carbon) DateString() string {
+	return c.Format(DateStringFormat)
 }
 
-// Format the instance as a readable date
-func ToFormattedDateString() {
+// FormattedDateString returns the current time as a readable date
+func (c *Carbon) FormattedDateString() string {
+	return c.Format(FormattedDateString)
 }
 
 // Format the instance as time
@@ -605,90 +538,6 @@ func ToRssString() {
 
 // Format the instance as W3C
 func ToW3cString() {
-}
-
-// Determines if the instance is equal to another
-func Eq() {
-}
-
-// Determines if the instance is equal to another
-// @see eq()
-func EqualTo() {
-}
-
-// Determines if the instance is not equal to another
-func Ne() {
-}
-
-// Determines if the instance is not equal to another
-// @see ne()
-func NotEqualTo() {
-}
-
-// Determines if the instance is greater (after) than another
-func Gt() {
-}
-
-// Determines if the instance is greater (after) than another
-// @see gt()
-func GreaterThan() {
-}
-
-// Determines if the instance is greater (after) than or equal to another
-func Gte() {
-}
-
-// Determines if the instance is greater (after) than or equal to another
-// @see gte()
-func GreaterThanOrEqualTo() {
-}
-
-// Determines if the instance is less (before) than another
-func Lt() {
-}
-
-// Determines if the instance is less (before) than another
-// @see lt()
-func LessThan() {
-}
-
-// Determines if the instance is less (before) or equal to another
-func Lte() {
-}
-
-// Determines if the instance is less (before) or equal to another
-// @see lte()
-func LessThanOrEqualTo() {
-}
-
-// Determines if the instance is between two others
-func Between() {
-}
-
-// Get the closest date from the instance.
-func Closest() {
-}
-
-// Get the farthest date from the instance.
-func Farthest() {
-}
-
-// Get the minimum instance between a given instance (default now) and the current instance.
-func Min() {
-}
-
-// Get the minimum instance between a given instance (default now) and the current instance.
-// @see min()
-func Minimum() {
-}
-
-// Get the maximum instance between a given instance (default now) and the current instance.
-func Max() {
-}
-
-// Get the maximum instance between a given instance (default now) and the current instance.
-// @see max()
-func Maximum() {
 }
 
 // Determines if the instance is a weekday
@@ -777,6 +626,176 @@ func IsFriday() {
 
 // Checks if this day is a Saturday.
 func IsSaturday() {
+}
+
+//-----------------------------------------------------------
+// Create a carbon instance from a string.
+func Parse() {
+}
+
+// Get a Carbon instance for the current date and time.
+func Now() {
+}
+
+// Create a Carbon instance for today.
+func Today() {
+}
+
+// Create a Carbon instance for tomorrow.
+func Tomorrow() {
+}
+
+// Create a Carbon instance for yesterday.
+func Yesterday() {
+}
+
+// Create a Carbon instance for the greatest supported date.
+func MaxValue() {
+}
+
+// Create a Carbon instance for the lowest supported date.
+func MinValue() {
+}
+
+// Create a new Carbon instance from a specific date and time.
+// If any of $year, $month or $day are set to null their now() values will
+// be used.
+// If $hour is null it will be set to its now() value and the default
+// values for $minute and $second will be their now() values.
+// If $hour is not null then the default values for $minute and $second
+// will be 0.
+func Create() {
+}
+
+// Create a new safe Carbon instance from a specific date and time.
+// If any of $year, $month or $day are set to null their now() values will
+// be used.
+// If $hour is null it will be set to its now() value and the default
+// values for $minute and $second will be their now() values.
+// If $hour is not null then the default values for $minute and $second
+// will be 0.
+// If one of the set values is not valid, an \InvalidArgumentException
+// will be thrown.
+// @throws \Carbon\Exceptions\InvalidDateException
+func CreateSafe() {
+}
+
+// Create a Carbon instance from just a date. The time portion is set to now.
+func CreateFromDate() {
+}
+
+// Create a Carbon instance from just a time. The date portion is set to today.
+func CreateFromTime() {
+}
+
+// Create a Carbon instance from a specific format.
+// @throws \InvalidArgumentException
+func CreateFromFormat() {
+}
+
+// Create a Carbon instance from a timestamp.
+func CreateFromTimestamp() {
+}
+
+// Create a Carbon instance from an UTC timestamp.
+func CreateFromTimestampUTC() {
+}
+
+// Get a copy of the instance.
+func Copy() {
+}
+
+// Determine if there is a relative keyword in the time string, this is to
+// create dates relative to now for test instances. e.g.: next tuesday
+func HasRelativeKeywords() {
+}
+
+// Intialize the translator instance if necessary.
+func Translator() {
+}
+
+// Determines if the instance is equal to another
+func Eq() {
+}
+
+// Determines if the instance is equal to another
+// @see eq()
+func EqualTo() {
+}
+
+// Determines if the instance is not equal to another
+func Ne() {
+}
+
+// Determines if the instance is not equal to another
+// @see ne()
+func NotEqualTo() {
+}
+
+// Determines if the instance is greater (after) than another
+func Gt() {
+}
+
+// Determines if the instance is greater (after) than another
+// @see gt()
+func GreaterThan() {
+}
+
+// Determines if the instance is greater (after) than or equal to another
+func Gte() {
+}
+
+// Determines if the instance is greater (after) than or equal to another
+// @see gte()
+func GreaterThanOrEqualTo() {
+}
+
+// Determines if the instance is less (before) than another
+func Lt() {
+}
+
+// Determines if the instance is less (before) than another
+// @see lt()
+func LessThan() {
+}
+
+// Determines if the instance is less (before) or equal to another
+func Lte() {
+}
+
+// Determines if the instance is less (before) or equal to another
+// @see lte()
+func LessThanOrEqualTo() {
+}
+
+// Determines if the instance is between two others
+func Between() {
+}
+
+// Get the closest date from the instance.
+func Closest() {
+}
+
+// Get the farthest date from the instance.
+func Farthest() {
+}
+
+// Get the minimum instance between a given instance (default now) and the current instance.
+func Min() {
+}
+
+// Get the minimum instance between a given instance (default now) and the current instance.
+// @see min()
+func Minimum() {
+}
+
+// Get the maximum instance between a given instance (default now) and the current instance.
+func Max() {
+}
+
+// Get the maximum instance between a given instance (default now) and the current instance.
+// @see max()
+func Maximum() {
 }
 
 // Get the difference in years
@@ -1002,9 +1021,6 @@ func NthOfYear() {
 
 // Modify the current instance to the average of a given instance (default now) and the current instance.
 func Average() {
-}
-
-func IsBirthday() {
 }
 
 // Consider the timezone when modifying the instance.

@@ -956,5 +956,26 @@ func TestSetTimestamp(t *testing.T) {
 	c.SetTimestamp(1171502725)
 
 	expected := NewCarbon(time.Date(2007, time.February, 15, 1, 25, 25, 0, time.UTC))
-	assert.Equal(t, expected, c, "The date should be 007-02-15 01:25:25")
+	assert.Equal(t, expected, c, "The date should be 07-02-15 01:25:25")
+}
+
+func TestResetStringFormat(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetStringFormat(time.Kitchen)
+	c.ResetStringFormat()
+
+	assert.Equal(t, "2016-08-12 10:00:30", c.String())
+}
+
+func TestDateString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	assert.Equal(t, "2016-08-12", c.DateString())
+}
+
+func TestFormattedDateString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 2, 10, 0, 30, 0, time.UTC))
+
+	assert.Equal(t, "Aug 2, 2016", c.FormattedDateString())
 }
