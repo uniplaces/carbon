@@ -949,3 +949,12 @@ func TestSetTimezoneError(t *testing.T) {
 
 	assert.NotNil(t, err)
 }
+
+func TestSetTimestamp(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetTimestamp(1171502725)
+
+	expected := NewCarbon(time.Date(2007, time.February, 15, 1, 25, 25, 0, time.UTC))
+	assert.Equal(t, expected, c, "The date should be 007-02-15 01:25:25")
+}
