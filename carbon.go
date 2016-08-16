@@ -17,21 +17,44 @@ const (
 // Provides a simple API extention for Time.
 type Carbon struct {
 	time.Time
+	weekStartsAt time.Weekday
+	weekEndsAt   time.Weekday
+	weekendDays  []time.Weekday
 }
 
 // NewCarbon returns a new Carbon instance
 func NewCarbon(t time.Time) *Carbon {
-	return &Carbon{
-		Time: t,
+	wds := []time.Weekday{
+		time.Saturday,
+		time.Sunday,
 	}
+	return &Carbon{
+		Time:         t,
+		weekStartsAt: time.Monday,
+		weekEndsAt:   time.Sunday,
+		weekendDays:  wds,
+	}
+}
+
+// WeekStartsAt get the starting day of the week
+func (c *Carbon) WeekStartsAt() time.Weekday {
+	return c.weekEndsAt
+}
+
+// WeekEndsAt gets the ending day of the week
+func (c *Carbon) WeekEndsAt() time.Weekday {
+	return c.weekEndsAt
+}
+
+// WeekendDays gets the weekend days of the week
+func (c *Carbon) WeekendDays() []time.Weekday {
+	return c.weekendDays
 }
 
 // AddYears adds a year to the current time
 // Positive value travel forward while negative value travel into the past
 func (c *Carbon) AddYears(y int) *Carbon {
-	return &Carbon{
-		Time: c.AddDate(y, 0, 0),
-	}
+	return NewCarbon(c.AddDate(y, 0, 0))
 }
 
 // AddYear adds a year to the current time
@@ -42,9 +65,7 @@ func (c *Carbon) AddYear() *Carbon {
 // AddQuarters adds quarters to the current timePositive $value travels forward while
 // Positive value travel forward while negative value travel into the past
 func (c *Carbon) AddQuarters(q int) *Carbon {
-	return &Carbon{
-		Time: c.AddDate(0, MonthsPerQuarter*q, 0),
-	}
+	return NewCarbon(c.AddDate(0, MonthsPerQuarter*q, 0))
 }
 
 // AddQuarter adds a quarter to the current time
@@ -55,9 +76,7 @@ func (c *Carbon) AddQuarter() *Carbon {
 // AddCenturies adds centuries to the time
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddCenturies(cent int) *Carbon {
-	return &Carbon{
-		c.AddDate(YearsPerCenturies*cent, 0, 0),
-	}
+	return NewCarbon(c.AddDate(YearsPerCenturies*cent, 0, 0))
 }
 
 // AddCentury adds a century to the current time
@@ -68,9 +87,7 @@ func (c *Carbon) AddCentury() *Carbon {
 // AddMonths adds months to the current time
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddMonths(m int) *Carbon {
-	return &Carbon{
-		Time: c.AddDate(0, m, 0),
-	}
+	return NewCarbon(c.AddDate(0, m, 0))
 }
 
 // AddMonth adds a month to the current time
@@ -82,9 +99,7 @@ func (c *Carbon) AddMonth() *Carbon {
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddSeconds(s int) *Carbon {
 	d := time.Duration(s) * time.Second
-	return &Carbon{
-		Time: c.Add(d),
-	}
+	return NewCarbon(c.Add(d))
 }
 
 // AddSecond adds a second to the time
@@ -95,9 +110,7 @@ func (c *Carbon) AddSecond() *Carbon {
 // AddDays adds a day to the current time.
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddDays(d int) *Carbon {
-	return &Carbon{
-		Time: c.AddDate(0, 0, d),
-	}
+	return NewCarbon(c.AddDate(0, 0, d))
 }
 
 // AddDay adds a day to the current time
@@ -120,9 +133,7 @@ func (c *Carbon) AddWeekdays(wd int) *Carbon {
 			wd--
 		}
 	}
-	return &Carbon{
-		Time: t,
-	}
+	return NewCarbon(t)
 }
 
 // AddWeekday adds a weekday to the current time
@@ -133,9 +144,7 @@ func (c *Carbon) AddWeekday() *Carbon {
 // AddWeeks adds a week to the current time
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddWeeks(w int) *Carbon {
-	return &Carbon{
-		Time: c.AddDate(0, 0, DaysPerWeek*w),
-	}
+	return NewCarbon(c.AddDate(0, 0, DaysPerWeek*w))
 }
 
 // AddWeek adds a week to the current time
@@ -147,9 +156,7 @@ func (c *Carbon) AddWeek() *Carbon {
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddHours(h int) *Carbon {
 	d := time.Duration(h) * time.Hour
-	return &Carbon{
-		Time: c.Add(d),
-	}
+	return NewCarbon(c.Add(d))
 }
 
 // AddHour adds an hour to the current time
@@ -161,7 +168,7 @@ func (c *Carbon) AddHour() *Carbon {
 // destination month has less days than the current one.
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddMonthsNoOverflow(m int) *Carbon {
-	addedDate := &Carbon{Time: c.AddDate(0, m, 0)}
+	addedDate := NewCarbon(c.AddDate(0, m, 0))
 	if c.Day() != addedDate.Day() {
 		return addedDate.PreviousMonthLastDay()
 	}
@@ -170,9 +177,7 @@ func (c *Carbon) AddMonthsNoOverflow(m int) *Carbon {
 
 // PreviousMonthLastDay returns the last day of the previous month
 func (c *Carbon) PreviousMonthLastDay() *Carbon {
-	return &Carbon{
-		Time: c.AddDate(0, 0, -c.Day()),
-	}
+	return NewCarbon(c.AddDate(0, 0, -c.Day()))
 }
 
 // AddMonthNoOverflow adds a month with no overflow to the current time
@@ -184,9 +189,7 @@ func (c *Carbon) AddMonthNoOverflow() *Carbon {
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddMinutes(m int) *Carbon {
 	d := time.Duration(m) * time.Minute
-	return &Carbon{
-		Time: c.Add(d),
-	}
+	return NewCarbon(c.Add(d))
 }
 
 // AddMinute adds a minute to the current time
@@ -305,67 +308,57 @@ func (c *Carbon) SubSeconds(s int) *Carbon {
 }
 
 // SetYear sets the year of the current time
-func (c *Carbon) SetYear(y int) *Carbon {
-	return &Carbon{
-		Time: time.Date(y, c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location()),
-	}
+func (c *Carbon) SetYear(y int) {
+	c.Time = time.Date(y, c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
 }
 
 // SetMonth sets the month of the current time
-func (c *Carbon) SetMonth(m time.Month) *Carbon {
-	return &Carbon{
-		Time: time.Date(c.Year(), m, c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location()),
-	}
+func (c *Carbon) SetMonth(m time.Month) {
+	c.Time = time.Date(c.Year(), m, c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
 }
 
 // SetDay sets the day of the current time
-func (c *Carbon) SetDay(d int) *Carbon {
-	return &Carbon{
-		Time: time.Date(c.Year(), c.Month(), d, c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location()),
-	}
+func (c *Carbon) SetDay(d int) {
+	c.Time = time.Date(c.Year(), c.Month(), d, c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
 }
 
 // SetHour sets the hour of the current time
-func (c *Carbon) SetHour(h int) *Carbon {
-	return &Carbon{
-		Time: time.Date(c.Year(), c.Month(), c.Day(), h, c.Minute(), c.Second(), c.Nanosecond(), c.Location()),
-	}
+func (c *Carbon) SetHour(h int) {
+	c.Time = time.Date(c.Year(), c.Month(), c.Day(), h, c.Minute(), c.Second(), c.Nanosecond(), c.Location())
 }
 
 // SetMinute sets the minute of the current time
-func (c *Carbon) SetMinute(m int) *Carbon {
-	return &Carbon{
-		Time: time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), m, c.Second(), c.Nanosecond(), c.Location()),
-	}
+func (c *Carbon) SetMinute(m int) {
+	c.Time = time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), m, c.Second(), c.Nanosecond(), c.Location())
 }
 
 // SetSecond sets the second of the current time
-func (c *Carbon) SetSecond(s int) *Carbon {
-	return &Carbon{
-		Time: time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), s, c.Nanosecond(), c.Location()),
-	}
+func (c *Carbon) SetSecond(s int) {
+	c.Time = time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), s, c.Nanosecond(), c.Location())
 }
 
 // SetDate sets only the date of the current time
-func (c *Carbon) SetDate(y int, m time.Month, d int) *Carbon {
-	return &Carbon{
-		Time: time.Date(y, m, d, c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location()),
-	}
+func (c *Carbon) SetDate(y int, m time.Month, d int) {
+	c.Time = time.Date(y, m, d, c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
 }
 
 // SetDateTime sets the date and the time
-func (c *Carbon) SetDateTime(y int, mon time.Month, d, h, m, s int) *Carbon {
-	return &Carbon{
-		Time: time.Date(y, mon, d, h, m, s, c.Nanosecond(), c.Location()),
-	}
+func (c *Carbon) SetDateTime(y int, mon time.Month, d, h, m, s int) {
+	c.Time = time.Date(y, mon, d, h, m, s, c.Nanosecond(), c.Location())
 }
 
 // SetTimeFromTimeString receives a string and sets the current time
 // It accepts the following formats: "hh:mm:ss", "hh:mm" and "hh"
-func (c *Carbon) SetTimeFromTimeString(timeString string) (*Carbon, error) {
+func (c *Carbon) SetTimeFromTimeString(timeString string) error {
 	layouts := []string{"15", "04", "05"}
 	h, m, s, err := c.parse(layouts, timeString)
-	return c.SetHour(h).SetMinute(m).SetSecond(s), err
+	if err != nil {
+		return err
+	}
+	c.SetHour(h)
+	c.SetMinute(m)
+	c.SetSecond(s)
+	return nil
 }
 
 func (c *Carbon) parse(layouts []string, timeString string) (int, int, int, error) {
@@ -397,16 +390,19 @@ func Timestamp() {
 func SetTimezone() {
 }
 
-// SetWeekEndsAt  the last day of week
-func SetWeekEndsAt() {
+// SetWeekEndsAt sets the last day of week
+func (c *Carbon) SetWeekEndsAt(wd time.Weekday) {
+	c.weekEndsAt = wd
 }
 
-// Set the first day of week
-func SetWeekStartsAt() {
+// SetWeekStartsAt sets the first day of week
+func (c *Carbon) SetWeekStartsAt(wd time.Weekday) {
+	c.weekStartsAt = wd
 }
 
-// Set weekend days
-func SetWeekendDays() {
+// SetWeekendDays sets the weekend days
+func (c *Carbon) SetWeekendDays(wds []time.Weekday) {
+	c.weekendDays = wds
 }
 
 //-----------------------------------------------------------

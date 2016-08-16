@@ -831,69 +831,69 @@ func TestSubSecond(t *testing.T) {
 func TestSetters(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
 
-	d := c.SetYear(2010)
-	d = d.SetMonth(time.May)
-	d = d.SetDay(2)
-	d = d.SetHour(5)
-	d = d.SetMinute(10)
-	d = d.SetSecond(10)
+	c.SetYear(2010)
+	c.SetMonth(time.May)
+	c.SetDay(2)
+	c.SetHour(5)
+	c.SetMinute(10)
+	c.SetSecond(10)
 
 	expected := NewCarbon(time.Date(2010, time.May, 2, 5, 10, 10, 0, time.UTC))
-	assert.Equal(t, expected, d, "The date should be 2010-05-02 5h 10m 10s")
+	assert.Equal(t, expected, c, "The date should be 2010-05-02 5h 10m 10s")
 }
 
 func TestSetDate(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
 
-	d := c.SetDate(2015, time.May, 30)
+	c.SetDate(2015, time.May, 30)
 
 	expected := NewCarbon(time.Date(2015, time.May, 30, 10, 0, 30, 0, time.UTC))
-	assert.Equal(t, expected, d, "The date should be 2015-05-02")
+	assert.Equal(t, expected, c, "The date should be 2015-05-02")
 }
 
 func TestSetDateTime(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
 
-	d := c.SetDateTime(2010, time.May, 2, 5, 10, 10)
+	c.SetDateTime(2010, time.May, 2, 5, 10, 10)
 
 	expected := NewCarbon(time.Date(2010, time.May, 2, 5, 10, 10, 0, time.UTC))
-	assert.Equal(t, expected, d, "The date should be 2010-05-02 5h 10m 10s")
+	assert.Equal(t, expected, c, "The date should be 2010-05-02 5h 10m 10s")
 }
 
 func TestSetTimeFromTimeStringHour(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
 
-	d, err := c.SetTimeFromTimeString("20")
+	err := c.SetTimeFromTimeString("20")
 
 	expected := NewCarbon(time.Date(2016, time.August, 12, 20, 0, 0, 0, time.UTC))
-	assert.Equal(t, expected, d, "The date should be 2010-05-02 20h 0m 0s")
+	assert.Equal(t, expected, c, "The date should be 2010-05-02 20h 0m 0s")
 	assert.Nil(t, err)
 }
 
 func TestSetTimeFromTimeStringMinute(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
 
-	d, err := c.SetTimeFromTimeString("20:20")
+	err := c.SetTimeFromTimeString("20:20")
 
 	expected := NewCarbon(time.Date(2016, time.August, 12, 20, 20, 30, 0, time.UTC))
-	assert.Equal(t, expected, d, "The date should be 2010-05-02 20h 30m 0s")
+	assert.Equal(t, expected, c, "The date should be 2010-05-02 20h 30m 0s")
 	assert.Nil(t, err)
 }
 
 func TestSetTimeFromTimeStringSecond(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
 
-	d, err := c.SetTimeFromTimeString("20:20:20")
+	err := c.SetTimeFromTimeString("20:20:20")
 
 	expected := NewCarbon(time.Date(2016, time.August, 12, 20, 20, 20, 0, time.UTC))
-	assert.Equal(t, expected, d, "The date should be 2010-05-02 20h 20m 20s")
+	assert.Equal(t, expected, c, "The date should be 2010-05-02 20h 20m 20s")
 	assert.Nil(t, err)
 }
 
 func TestSetTimeFromTimeStringEmpty(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
 
-	_, err := c.SetTimeFromTimeString("")
+	err := c.SetTimeFromTimeString("")
 
 	assert.NotNil(t, err)
 }
@@ -901,7 +901,35 @@ func TestSetTimeFromTimeStringEmpty(t *testing.T) {
 func TestSetTimeFromTimeStringInvalid(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
 
-	_, err := c.SetTimeFromTimeString("10-10-10")
+	err := c.SetTimeFromTimeString("10-10-10")
 
 	assert.NotNil(t, err)
+}
+
+func TestSetWeekEndsAt(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetWeekEndsAt(time.Monday)
+
+	assert.Equal(t, time.Monday, c.WeekEndsAt(), "The end of the week should be Monday")
+}
+
+func TestSetWeekStartsAt(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetWeekStartsAt(time.Sunday)
+
+	assert.Equal(t, time.Sunday, c.WeekStartsAt(), "The start of the week should be Sunday")
+}
+
+func TestSetWeekendDays(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+	wds := []time.Weekday{
+		time.Sunday,
+		time.Monday,
+	}
+
+	c.SetWeekendDays(wds)
+
+	assert.Equal(t, wds, c.WeekendDays(), "The start of the week should be Sunday")
 }
