@@ -490,8 +490,9 @@ func (c *Carbon) TimeString() string {
 	return c.Format(TimeStringFormat)
 }
 
-// Format the instance as date and time
-func ToDateTimeString() {
+// DateTimeString returns the current time in Y-m-d hh:mm:ss format
+func (c *Carbon) DateTimeString() string {
+	return c.Format(DefaultStringFormat)
 }
 
 // Format the instance with day, date and time
