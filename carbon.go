@@ -15,14 +15,16 @@ const (
 
 // Represent the different string formats for dates
 const (
-	DefaultStringFormat       = "2006-01-02 15:04:05"
-	DateStringFormat          = "2006-01-02"
-	FormattedDateStringFormat = "Jan 2, 2006"
-	TimeStringFormat          = "15:04:05"
-	DayDateTimeStringFormat   = "Mon, Aug 2, 2006 3:04 PM"
-	AtomStringFormat          = "2006-01-02T15:04:05-07:00"
-	CookieStringFormat        = "Monday, 02-Jan-2006 15:04:05 MST"
-	Rfc822StringFormat        = "Mon, 02 Jan 06 15:04:05 -0700"
+	DefaultFormat       = "2006-01-02 15:04:05"
+	DateFormat          = "2006-01-02"
+	FormattedDateFormat = "Jan 2, 2006"
+	TimeFormat          = "15:04:05"
+	DayDateTimeFormat   = "Mon, Aug 2, 2006 3:04 PM"
+	AtomFormat          = "2006-01-02T15:04:05-07:00"
+	CookieFormat        = "Monday, 02-Jan-2006 15:04:05 MST"
+	RFC822Format        = "Mon, 02 Jan 06 15:04:05 -0700"
+	RFC1036Format       = "Mon, 02 Jan 06 15:04:05 -0700"
+	RFC1123Format       = "Mon, 02 Jan 2006 15:04:05 -0700"
 )
 
 // The Carbon type represents a Time instance.
@@ -46,7 +48,7 @@ func NewCarbon(t time.Time) *Carbon {
 		weekStartsAt: time.Monday,
 		weekEndsAt:   time.Sunday,
 		weekendDays:  wds,
-		stringFormat: DefaultStringFormat,
+		stringFormat: DefaultFormat,
 	}
 }
 
@@ -471,7 +473,7 @@ func FormatLocalized() {
 
 // ResetStringFormat changes the format to the DefaultStringFormat
 func (c *Carbon) ResetStringFormat() {
-	c.stringFormat = DefaultStringFormat
+	c.stringFormat = DefaultFormat
 }
 
 // SetStringFormat formats the current time with the set format string
@@ -481,37 +483,37 @@ func (c *Carbon) SetStringFormat(format string) {
 
 // DateString return the current time in Y-m-d format
 func (c *Carbon) DateString() string {
-	return c.Format(DateStringFormat)
+	return c.Format(DateFormat)
 }
 
 // FormattedDateString returns the current time as a readable date
 func (c *Carbon) FormattedDateString() string {
-	return c.Format(FormattedDateStringFormat)
+	return c.Format(FormattedDateFormat)
 }
 
 // TimeString returns the current time in hh:mm:ss format
 func (c *Carbon) TimeString() string {
-	return c.Format(TimeStringFormat)
+	return c.Format(TimeFormat)
 }
 
 // DateTimeString returns the current time in Y-m-d hh:mm:ss format
 func (c *Carbon) DateTimeString() string {
-	return c.Format(DefaultStringFormat)
+	return c.Format(DefaultFormat)
 }
 
 // DayDateTimeString returns the current time with a day, date and time format
 func (c *Carbon) DayDateTimeString() string {
-	return c.Format(DayDateTimeStringFormat)
+	return c.Format(DayDateTimeFormat)
 }
 
 // AtomString formats the current time to a Atom date format
 func (c *Carbon) AtomString() string {
-	return c.Format(AtomStringFormat)
+	return c.Format(AtomFormat)
 }
 
 // CookieString formats the current time to a Cookie date format
 func (c *Carbon) CookieString() string {
-	return c.Format(CookieStringFormat)
+	return c.Format(CookieFormat)
 }
 
 // Iso8601String returns the current time in ISO8601 format
@@ -521,7 +523,7 @@ func (c *Carbon) Iso8601String() string {
 
 // Rfc822String returns the current time in RFC 822 format
 func (c *Carbon) Rfc822String() string {
-	return c.Format(Rfc822StringFormat)
+	return c.Format(RFC822Format)
 }
 
 // Rfc850String returns the current time in RFC 850 format
@@ -529,12 +531,14 @@ func (c *Carbon) Rfc850String() string {
 	return c.Format(time.RFC850)
 }
 
-// Format the instance as RFC1036
-func ToRfc1036String() {
+// Rfc1036String returns the current time in RFC 1036 format
+func (c *Carbon) Rfc1036String() string {
+	return c.Format(RFC1036Format)
 }
 
-// Format the instance as RFC1123
-func ToRfc1123String() {
+// Rfc1123String returns the current time in RFC 1123 format
+func (c *Carbon) Rfc1123String() string {
+	return c.Format(RFC1123Format)
 }
 
 // Format the instance as RFC2822
