@@ -24,7 +24,7 @@ const (
 	CookieFormat        = "Monday, 02-Jan-2006 15:04:05 MST"
 	RFC822Format        = "Mon, 02 Jan 06 15:04:05 -0700"
 	RFC1036Format       = "Mon, 02 Jan 06 15:04:05 -0700"
-	RFC1123Format       = "Mon, 02 Jan 2006 15:04:05 -0700"
+	RFC2822Format       = "Mon, 02 Jan 2006 15:04:05 -0700"
 )
 
 // The Carbon type represents a Time instance.
@@ -538,11 +538,12 @@ func (c *Carbon) Rfc1036String() string {
 
 // Rfc1123String returns the current time in RFC 1123 format
 func (c *Carbon) Rfc1123String() string {
-	return c.Format(RFC1123Format)
+	return c.Format(time.RFC1123Z)
 }
 
-// Format the instance as RFC2822
-func ToRfc2822String() {
+// Rfc2822String returns the current time in RFC 2822 format
+func (c *Carbon) Rfc2822String() string {
+	return c.Format(RFC2822Format)
 }
 
 // Format the instance as RFC3339
