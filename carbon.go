@@ -807,8 +807,13 @@ func (c *Carbon) Closest(a, b *Carbon) *Carbon {
 	return b
 }
 
-// Get the farthest date from the instance.
-func Farthest() {
+// Farthest returns the farthest date from the current time
+func (c *Carbon) Farthest(a, b *Carbon) *Carbon {
+	if c.DiffInSeconds(a) > c.DiffInSeconds(b) {
+		return a
+	}
+
+	return b
 }
 
 // Get the minimum instance between a given instance (default now) and the current instance.

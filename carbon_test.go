@@ -1570,3 +1570,27 @@ func TestClosestBeforeAndAfterDates(t *testing.T) {
 
 	assert.Equal(t, b, c.Closest(a, b))
 }
+
+func TestFarthestFirstArgument(t *testing.T) {
+	c := Now()
+	a := c.AddYear()
+	b := c.AddMonth()
+
+	assert.Equal(t, a, c.Farthest(a, b))
+}
+
+func TestFarthestLastArgument(t *testing.T) {
+	c := Now()
+	a := c.AddSecond()
+	b := c.AddMinute()
+
+	assert.Equal(t, b, c.Farthest(a, b))
+}
+
+func TestFarthestBeforeAndAfterDates(t *testing.T) {
+	c := Now()
+	a := c.SubHour()
+	b := c.AddMinute()
+
+	assert.Equal(t, a, c.Farthest(a, b))
+}
