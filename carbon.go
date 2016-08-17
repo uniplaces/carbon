@@ -73,7 +73,7 @@ func (c *Carbon) WeekendDays() []time.Weekday {
 	return c.weekendDays
 }
 
-// Timezone gets the current timezone
+// TimeZone gets the current timezone
 func (c *Carbon) TimeZone() string {
 	return c.Location().String()
 }
@@ -816,7 +816,7 @@ func (c *Carbon) Farthest(a, b *Carbon) *Carbon {
 	return b
 }
 
-// Min returns the minimum instance between a given instance and the current instance.
+// Min returns the minimum instance between a given instance and the current instance
 func (c *Carbon) Min(d *Carbon) *Carbon {
 	if d == nil {
 		d = Now()
@@ -829,18 +829,27 @@ func (c *Carbon) Min(d *Carbon) *Carbon {
 	return d
 }
 
-// Minimum returns the minimum instance between a given instance and the current instance.
+// Minimum returns the minimum instance between a given instance and the current instance
 func (c *Carbon) Minimum(d *Carbon) *Carbon {
 	return c.Min(d)
 }
 
-// Get the maximum instance between a given instance (default now) and the current instance.
-func Max() {
+// Max returns the maximum instance between a given instance and the current instance
+func (c *Carbon) Max(d *Carbon) *Carbon {
+	if d == nil {
+		d = Now()
+	}
+
+	if c.Gt(d) {
+		return c
+	}
+
+	return d
 }
 
-// Get the maximum instance between a given instance (default now) and the current instance.
-// @see max()
-func Maximum() {
+// Maximum returns the maximum instance between a given instance and the current instance
+func (c *Carbon) Maximum(d *Carbon) *Carbon {
+	return c.Max(d)
 }
 
 //-----------------------------------------------------------

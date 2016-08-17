@@ -1617,3 +1617,26 @@ func TestMinNil(t *testing.T) {
 	assert.Equal(t, a, a.Min(nil))
 	assert.Equal(t, a, a.Minimum(nil))
 }
+
+func TestMaxLesser(t *testing.T) {
+	a := Now()
+	b := a.SubMinute()
+
+	assert.Equal(t, a, a.Max(b))
+	assert.Equal(t, a, a.Maximum(b))
+}
+
+func TestMaxGreater(t *testing.T) {
+	a := Now()
+	b := a.AddMinute()
+
+	assert.Equal(t, b, a.Max(b))
+	assert.Equal(t, b, a.Maximum(b))
+}
+
+func TestMaxNil(t *testing.T) {
+	a := Now().AddYear()
+
+	assert.Equal(t, a, a.Max(nil))
+	assert.Equal(t, a, a.Maximum(nil))
+}
