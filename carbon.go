@@ -22,7 +22,7 @@ type Carbon struct {
 	weekendDays  []time.Weekday
 }
 
-// NewCarbon returns a new Carbon instance
+// NewCarbon returns a pointer to a new Carbon instance
 func NewCarbon(t time.Time) *Carbon {
 	wds := []time.Weekday{
 		time.Saturday,
@@ -38,7 +38,7 @@ func NewCarbon(t time.Time) *Carbon {
 
 // WeekStartsAt get the starting day of the week
 func (c *Carbon) WeekStartsAt() time.Weekday {
-	return c.weekEndsAt
+	return c.weekStartsAt
 }
 
 // WeekEndsAt gets the ending day of the week
@@ -52,7 +52,7 @@ func (c *Carbon) WeekendDays() []time.Weekday {
 }
 
 // Timezone gets the current timezone
-func (c *Carbon) Timezone() string {
+func (c *Carbon) TimeZone() string {
 	return c.Location().String()
 }
 
@@ -138,6 +138,7 @@ func (c *Carbon) AddWeekdays(wd int) *Carbon {
 			wd--
 		}
 	}
+
 	return NewCarbon(t)
 }
 
@@ -161,6 +162,7 @@ func (c *Carbon) AddWeek() *Carbon {
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddHours(h int) *Carbon {
 	d := time.Duration(h) * time.Hour
+
 	return NewCarbon(c.Add(d))
 }
 
@@ -177,6 +179,7 @@ func (c *Carbon) AddMonthsNoOverflow(m int) *Carbon {
 	if c.Day() != addedDate.Day() {
 		return addedDate.PreviousMonthLastDay()
 	}
+
 	return addedDate
 }
 
@@ -194,6 +197,7 @@ func (c *Carbon) AddMonthNoOverflow() *Carbon {
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddMinutes(m int) *Carbon {
 	d := time.Duration(m) * time.Minute
+
 	return NewCarbon(c.Add(d))
 }
 
@@ -363,6 +367,7 @@ func (c *Carbon) SetTimeFromTimeString(timeString string) error {
 	c.SetHour(h)
 	c.SetMinute(m)
 	c.SetSecond(s)
+
 	return nil
 }
 
@@ -384,6 +389,7 @@ func (c *Carbon) parse(layouts []string, timeString string) (int, int, int, erro
 	case 1:
 		return h, c.Minute(), c.Second(), nil
 	}
+
 	return 0, 0, 0, errors.New("only supports hh:mm:ss, hh:mm and hh formats")
 }
 
@@ -415,6 +421,7 @@ func (c *Carbon) SetTimezone(name string) error {
 		return err
 	}
 	c.Time = time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), loc)
+
 	return nil
 }
 

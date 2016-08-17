@@ -939,7 +939,7 @@ func TestSetTimezone(t *testing.T) {
 
 	c.SetTimezone("Europe/Lisbon")
 
-	assert.Equal(t, "Europe/Lisbon", c.Timezone(), "The start of the week should be Sunday")
+	assert.Equal(t, "Europe/Lisbon", c.TimeZone(), "The start of the week should be Sunday")
 }
 
 func TestSetTimezoneError(t *testing.T) {
