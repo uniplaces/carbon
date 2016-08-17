@@ -678,32 +678,39 @@ func (c *Carbon) IsSameDay(d *Carbon) bool {
 	return c.Year() == n.Year() && c.Month() == n.Month() && c.Day() == n.Day()
 }
 
-// Checks if this day is a Sunday.
-func IsSunday() {
+// IsSunday checks if this day is a Sunday.
+func (c *Carbon) IsSunday() bool {
+	return c.Weekday() == time.Sunday
 }
 
-// Checks if this day is a Monday.
-func IsMonday() {
+// IsMonday checks if this day is a Monday.
+func (c *Carbon) IsMonday() bool {
+	return c.Weekday() == time.Monday
 }
 
-// Checks if this day is a Tuesday.
-func IsTuesday() {
+// IsTuesday checks if this day is a Tuesday.
+func (c *Carbon) IsTuesday() bool {
+	return c.Weekday() == time.Tuesday
 }
 
-// Checks if this day is a Wednesday.
-func IsWednesday() {
+// IsWednesday checks if this day is a Wednesday.
+func (c *Carbon) IsWednesday() bool {
+	return c.Weekday() == time.Wednesday
 }
 
-// Checks if this day is a Thursday.
-func IsThursday() {
+// IsThursday checks if this day is a Thursday.
+func (c *Carbon) IsThursday() bool {
+	return c.Weekday() == time.Thursday
 }
 
-// Checks if this day is a Friday.
-func IsFriday() {
+// IsFriday checks if this day is a Friday.
+func (c *Carbon) IsFriday() bool {
+	return c.Weekday() == time.Friday
 }
 
-// Checks if this day is a Saturday.
-func IsSaturday() {
+// IsSaturday checks if this day is a Saturday.
+func (c *Carbon) IsSaturday() bool {
+	return c.Weekday() == time.Saturday
 }
 
 //-----------------------------------------------------------
