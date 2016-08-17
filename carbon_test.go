@@ -956,5 +956,431 @@ func TestSetTimestamp(t *testing.T) {
 	c.SetTimestamp(1171502725)
 
 	expected := NewCarbon(time.Date(2007, time.February, 15, 1, 25, 25, 0, time.UTC))
-	assert.Equal(t, expected, c, "The date should be 007-02-15 01:25:25")
+	assert.Equal(t, expected, c, "The date should be 07-02-15 01:25:25")
+}
+
+func TestResetStringFormat(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetStringFormat(time.Kitchen)
+	c.ResetStringFormat()
+
+	assert.Equal(t, "2016-08-12 10:00:30", c.String())
+}
+
+func TestDateString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	assert.Equal(t, "2016-08-12", c.DateString())
+}
+
+func TestFormattedDateString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 2, 10, 0, 30, 0, time.UTC))
+
+	assert.Equal(t, "Aug 2, 2016", c.FormattedDateString())
+}
+
+func TestTimeString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 2, 10, 0, 30, 0, time.UTC))
+
+	assert.Equal(t, "10:00:30", c.TimeString())
+}
+
+func TestDateTimeString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 2, 10, 0, 30, 0, time.UTC))
+
+	assert.Equal(t, "2016-08-02 10:00:30", c.DateTimeString())
+}
+
+func TestDayDateTimeString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 8, 1, 0, 30, 0, time.UTC))
+
+	assert.Equal(t, "Mon, Aug 8, 2016 1:00 AM", c.DayDateTimeString())
+}
+
+func TestAtomString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 1, 0, 30, 0, time.UTC))
+
+	assert.Equal(t, "2016-08-01T01:00:30+00:00", c.AtomString())
+}
+
+func TestCookieString(t *testing.T) {
+	c := NewCarbon(time.Date(2005, time.August, 15, 15, 52, 1, 0, time.UTC))
+
+	assert.Equal(t, "Monday, 15-Aug-2005 15:52:01 UTC", c.CookieString())
+}
+
+func TestIso8601String(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 1, 0, 30, 0, time.UTC))
+
+	assert.Equal(t, "2016-08-01T01:00:30+00:00", c.ISO8601String())
+}
+
+func TestRfc822String(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
+
+	assert.Equal(t, "Mon, 01 Aug 16 15:28:21 +0000", c.RFC822String())
+}
+
+func TestRfc850String(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
+
+	assert.Equal(t, "Monday, 01-Aug-16 15:28:21 UTC", c.RFC850String())
+}
+
+func TestRfc1036String(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
+
+	assert.Equal(t, "Mon, 01 Aug 16 15:28:21 +0000", c.RFC1036String())
+}
+
+func TestRfc1123String(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
+
+	assert.Equal(t, "Mon, 01 Aug 2016 15:28:21 +0000", c.RFC1123String())
+}
+
+func TestRfc2822String(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
+
+	assert.Equal(t, "Mon, 01 Aug 2016 15:28:21 +0000", c.RFC2822String())
+}
+
+func TestRfc3339String(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
+
+	assert.Equal(t, "2016-08-01T15:28:21+00:00", c.RFC3339String())
+}
+
+func TestRssString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
+
+	assert.Equal(t, "Mon, 01 Aug 2016 15:28:21 +0000", c.RSSString())
+}
+
+func TestW3cString(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
+
+	assert.Equal(t, "2016-08-01T15:28:21+00:00", c.W3CString())
+}
+
+func TestIsWeekendTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 14, 15, 28, 21, 0, time.UTC))
+
+	assert.True(t, c.IsWeekend())
+}
+
+func TestIsWeekendFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 17, 15, 28, 21, 0, time.UTC))
+
+	assert.False(t, c.IsWeekend())
+}
+
+func TestIsWeekdayFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 14, 15, 28, 21, 0, time.UTC))
+
+	assert.False(t, c.IsWeekday())
+}
+
+func TestIsWeekdayTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 17, 15, 28, 21, 0, time.UTC))
+
+	assert.True(t, c.IsWeekday())
+}
+
+func TestIsYesterdayTrue(t *testing.T) {
+	n := Now().SubDay()
+
+	assert.True(t, n.IsYesterday())
+}
+
+func TestIsYesterdayFalse(t *testing.T) {
+	n := Now()
+
+	assert.False(t, n.IsYesterday())
+}
+
+func TestIsTodayTrue(t *testing.T) {
+	n := Now()
+
+	assert.True(t, n.IsToday())
+}
+
+func TestIsTodayFalse(t *testing.T) {
+	n := Now().SubDay()
+
+	assert.False(t, n.IsToday())
+}
+
+func TestIsTomorrowTrue(t *testing.T) {
+	n := Now().AddDay()
+
+	assert.True(t, n.IsTomorrow())
+}
+
+func TestIsTomorrowFalse(t *testing.T) {
+	n := Now()
+
+	assert.False(t, n.IsTomorrow())
+}
+
+func TestIsFutureTrue(t *testing.T) {
+	n := Now().AddSecond()
+
+	assert.True(t, n.IsFuture())
+}
+
+func TestIsFutureFalse(t *testing.T) {
+	n := Now()
+
+	assert.False(t, n.IsFuture())
+}
+
+func TestIsPastTrue(t *testing.T) {
+	n := Now().SubSecond()
+
+	assert.True(t, n.IsPast())
+}
+
+func TestIsPastFalse(t *testing.T) {
+	n := Now()
+	n.SetYear(n.Year() + 1)
+
+	assert.False(t, n.IsPast())
+}
+
+func TestIsLeapYearTrue(t *testing.T) {
+	n := Now()
+	n.SetYear(2016)
+
+	assert.True(t, n.IsLeapYear())
+}
+
+func TestIsLeapYearFalse(t *testing.T) {
+	n := Now()
+	n.SetYear(2015)
+
+	assert.False(t, n.IsLeapYear())
+}
+
+func TestIsLongYearTrue(t *testing.T) {
+	n := Now()
+	n.SetYear(2015)
+
+	assert.True(t, n.IsLongYear())
+}
+
+func TestIsLongYearFalse(t *testing.T) {
+	n := Now()
+	n.SetYear(2016)
+
+	assert.False(t, n.IsLongYear())
+}
+
+func TestIsSameAsTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsSameAs(DefaultFormat, d))
+}
+
+func TestIsSameAsFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2009, time.November, 11, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameAs(DefaultFormat, d))
+}
+
+func TestIsSameAsNil(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameAs(DefaultFormat, nil))
+}
+
+func TestIsCurrentYearTrue(t *testing.T) {
+	c := Now()
+
+	assert.True(t, c.IsCurrentYear())
+}
+
+func TestIsCurrentYearFalse(t *testing.T) {
+	c := Now().SubYear()
+
+	assert.False(t, c.IsCurrentYear())
+}
+
+func TestIsCurrentMonthTrue(t *testing.T) {
+	c := Now()
+
+	assert.True(t, c.IsCurrentMonth())
+}
+
+func TestIsCurrentMonthFalse(t *testing.T) {
+	c := Now().SubMonth()
+
+	assert.False(t, c.IsCurrentMonth())
+}
+
+func TestIsSameYearTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2009, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsSameYear(d))
+}
+
+func TestIsSameYearFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2019, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameYear(d))
+}
+
+func TestIsSameYearNil(t *testing.T) {
+	c := NewCarbon(time.Date(1970, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameYear(nil))
+}
+
+func TestIsSameMonthNotYearTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsSameMonth(d, false))
+}
+
+func TestIsSameMonthNotYearFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2019, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameMonth(d, false))
+}
+
+func TestIsSameMonthNotYearNil(t *testing.T) {
+	c := Now().AddMonth()
+
+	assert.False(t, c.IsSameMonth(nil, false))
+}
+
+func TestIsSameMonthSameYearTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsSameMonth(d, true))
+}
+
+func TestIsSameMonthSameYearFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2019, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameMonth(d, true))
+}
+
+func TestIsSameMonthSameYearNil(t *testing.T) {
+	c := Now().AddMonth()
+
+	assert.False(t, c.IsSameMonth(nil, true))
+}
+
+func TestIsSameDayTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsSameDay(d))
+}
+
+func TestIsSameDayFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2019, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameDay(d))
+}
+
+func TestIsSameDayNil(t *testing.T) {
+	c := Now().AddMonth()
+
+	assert.False(t, c.IsSameDay(nil))
+}
+
+func TestIsSundayTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 14, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsSunday())
+}
+
+func TestIsSundayFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 15, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSunday())
+}
+
+func TestIsMondayTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 15, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsMonday())
+}
+
+func TestIsMondayFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 16, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsMonday())
+}
+
+func TestIsTuesdayTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 16, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsTuesday())
+}
+
+func TestIsTuesdayFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 17, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsTuesday())
+}
+
+func TestIsWednesdayTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 17, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsWednesday())
+}
+
+func TestIsWednesdayFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 18, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsWednesday())
+}
+
+func TestIsThursdayTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 18, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsThursday())
+}
+
+func TestIsThursdayFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 19, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsThursday())
+}
+
+func TestIsFridayTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 19, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsFriday())
+}
+
+func TestIsFridayFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 20, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsFriday())
+}
+
+func TestIsSaturdayTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 20, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsSaturday())
+}
+
+func TestIsSaturdayFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSaturday())
 }

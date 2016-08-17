@@ -13,6 +13,21 @@ const (
 	YearsPerCenturies = 100
 )
 
+// Represent the different string formats for dates
+const (
+	DefaultFormat       = "2006-01-02 15:04:05"
+	DateFormat          = "2006-01-02"
+	FormattedDateFormat = "Jan 2, 2006"
+	TimeFormat          = "15:04:05"
+	DayDateTimeFormat   = "Mon, Aug 2, 2006 3:04 PM"
+	CookieFormat        = "Monday, 02-Jan-2006 15:04:05 MST"
+	RFC822Format        = "Mon, 02 Jan 06 15:04:05 -0700"
+	RFC1036Format       = "Mon, 02 Jan 06 15:04:05 -0700"
+	RFC2822Format       = "Mon, 02 Jan 2006 15:04:05 -0700"
+	RFC3339Format       = "2006-01-02T15:04:05-07:00"
+	RSSFormat           = "Mon, 02 Jan 2006 15:04:05 -0700"
+)
+
 // The Carbon type represents a Time instance.
 // Provides a simple API extention for Time.
 type Carbon struct {
@@ -20,6 +35,7 @@ type Carbon struct {
 	weekStartsAt time.Weekday
 	weekEndsAt   time.Weekday
 	weekendDays  []time.Weekday
+	stringFormat string
 }
 
 // NewCarbon returns a pointer to a new Carbon instance
@@ -33,7 +49,13 @@ func NewCarbon(t time.Time) *Carbon {
 		weekStartsAt: time.Monday,
 		weekEndsAt:   time.Sunday,
 		weekendDays:  wds,
+		stringFormat: DefaultFormat,
 	}
+}
+
+// Now returns a new Carbon instance for right now
+func Now() *Carbon {
+	return NewCarbon(time.Now())
 }
 
 // WeekStartsAt get the starting day of the week
@@ -54,6 +76,11 @@ func (c *Carbon) WeekendDays() []time.Weekday {
 // Timezone gets the current timezone
 func (c *Carbon) TimeZone() string {
 	return c.Location().String()
+}
+
+// String gets the current date using the previously set format
+func (c *Carbon) String() string {
+	return c.Format(c.stringFormat)
 }
 
 // AddYears adds a year to the current time
@@ -425,25 +452,280 @@ func (c *Carbon) SetTimezone(name string) error {
 	return nil
 }
 
+// Get the translator instance in use
+func GetTranslator() {
+	// TODO: Not Implemented
+}
+
+// Set the translator instance to use
+func SetTranslator() {
+	// TODO: Not Implemented
+}
+
 // Get the current translator locale
 func GetLocale() {
+	// TODO: Not Implemented
 }
 
 // Set the current translator locale and indicate if the source locale file exists
 func SetLocale() {
+	// TODO: Not Implemented
+}
+
+// Format the instance with the current locale.
+func FormatLocalized() {
+	// TODO: Not Implemented
+}
+
+// ResetStringFormat changes the format to the DefaultFormat
+func (c *Carbon) ResetStringFormat() {
+	c.stringFormat = DefaultFormat
+}
+
+// SetStringFormat formats the current time with the set format string
+func (c *Carbon) SetStringFormat(format string) {
+	c.stringFormat = format
+}
+
+// DateString return the current time in Y-m-d format
+func (c *Carbon) DateString() string {
+	return c.Format(DateFormat)
+}
+
+// FormattedDateString returns the current time as a readable date
+func (c *Carbon) FormattedDateString() string {
+	return c.Format(FormattedDateFormat)
+}
+
+// TimeString returns the current time in hh:mm:ss format
+func (c *Carbon) TimeString() string {
+	return c.Format(TimeFormat)
+}
+
+// DateTimeString returns the current time in Y-m-d hh:mm:ss format
+func (c *Carbon) DateTimeString() string {
+	return c.Format(DefaultFormat)
+}
+
+// DayDateTimeString returns the current time with a day, date and time format
+func (c *Carbon) DayDateTimeString() string {
+	return c.Format(DayDateTimeFormat)
+}
+
+// AtomString formats the current time to a Atom date format
+func (c *Carbon) AtomString() string {
+	return c.Format(RFC3339Format)
+}
+
+// CookieString formats the current time to a Cookie date format
+func (c *Carbon) CookieString() string {
+	return c.Format(CookieFormat)
+}
+
+// ISO8601String returns the current time in ISO8601 format
+func (c *Carbon) ISO8601String() string {
+	return c.Format(RFC3339Format)
+}
+
+// RFC822String returns the current time in RFC 822 format
+func (c *Carbon) RFC822String() string {
+	return c.Format(RFC822Format)
+}
+
+// RFC850String returns the current time in RFC 850 format
+func (c *Carbon) RFC850String() string {
+	return c.Format(time.RFC850)
+}
+
+// RFC1036String returns the current time in RFC 1036 format
+func (c *Carbon) RFC1036String() string {
+	return c.Format(RFC1036Format)
+}
+
+// RFC1123String returns the current time in RFC 1123 format
+func (c *Carbon) RFC1123String() string {
+	return c.Format(time.RFC1123Z)
+}
+
+// RFC2822String returns the current time in RFC 2822 format
+func (c *Carbon) RFC2822String() string {
+	return c.Format(RFC2822Format)
+}
+
+// RFC3339String returns the current time in RFC 3339 format
+func (c *Carbon) RFC3339String() string {
+	return c.Format(RFC3339Format)
+}
+
+// RSSString returns the current time for RSS format
+func (c *Carbon) RSSString() string {
+	return c.Format(RSSFormat)
+}
+
+// W3CString returns the current time for WWW Consortium format
+func (c *Carbon) W3CString() string {
+	return c.Format(RFC3339Format)
+}
+
+// IsWeekday determines if the current time is a weekday
+func (c *Carbon) IsWeekday() bool {
+	return !c.IsWeekend()
+}
+
+// IsWeekend determines if the current time is a weekend day
+func (c *Carbon) IsWeekend() bool {
+	d := c.Weekday()
+	for _, wd := range c.WeekendDays() {
+		if d == wd {
+			return true
+		}
+	}
+
+	return false
+}
+
+// IsYesterday determines if the current time is yesterday
+func (c *Carbon) IsYesterday() bool {
+	n := Now().SubDay()
+
+	return c.IsSameDay(n)
+}
+
+// IsToday determines if the current time is today
+func (c *Carbon) IsToday() bool {
+	n := Now()
+
+	return c.IsSameDay(n)
+}
+
+// IsTomorrow determines if the current time is tomorrow
+func (c *Carbon) IsTomorrow() bool {
+	n := Now().AddDay()
+
+	return c.IsSameDay(n)
+}
+
+// IsFuture determines if the current time is in the future, ie. greater (after) than now
+func (c *Carbon) IsFuture() bool {
+	return c.After(time.Now())
+}
+
+// IsPast determines if the current time is in the past, ie. less (before) than now
+func (c *Carbon) IsPast() bool {
+	return c.Before(time.Now())
+}
+
+// IsLeapYear determines if current current time is a leap year
+func (c *Carbon) IsLeapYear() bool {
+	y := c.Year()
+	if (y%4 == 0 && c.Year()%100 != 0) || y%400 == 0 {
+		return true
+	}
+
+	return false
+}
+
+// IsLongYear determines if the instance is a long year
+func (c *Carbon) IsLongYear() bool {
+	d := NewCarbon(time.Date(c.Year(), time.December, 31, 0, 0, 0, 0, time.UTC))
+	_, w := d.ISOWeek()
+
+	return w == 53
+}
+
+// IsSameAs compares the formatted values of the two dates.
+// If passed date is nil, compares against today
+func (c *Carbon) IsSameAs(format string, t *Carbon) bool {
+	if t == nil {
+		return c.Format(DefaultFormat) == Now().Format(DefaultFormat)
+	}
+
+	return c.Format(DefaultFormat) == t.Format(DefaultFormat)
+}
+
+// IsCurrentYear determines if the current time is in the current year
+func (c *Carbon) IsCurrentYear() bool {
+	return c.Year() == Now().Year()
+}
+
+// IsSameYear checks if the passed in date is in the same year as the current time year.
+// If passed date is nil, compares against today
+func (c *Carbon) IsSameYear(d *Carbon) bool {
+	if d == nil {
+		return c.Year() == Now().Year()
+	}
+
+	return c.Year() == d.Year()
+}
+
+// IsCurrentMonth determines if the current time is in the current month
+func (c *Carbon) IsCurrentMonth() bool {
+	return c.Month() == Now().Month()
+}
+
+// IsSameMonth checks if the passed in date is in the same month as the current month
+// If passed date is nil, compares against today
+func (c *Carbon) IsSameMonth(d *Carbon, sameYear bool) bool {
+	m := Now().Month()
+	if d != nil {
+		m = d.Month()
+	}
+	if sameYear {
+		return c.IsSameYear(d) && c.Month() == m
+	}
+
+	return c.Month() == m
+}
+
+// IsSameDay checks if the passed in date is the same day as the current day.
+// If passed date is nil, compares against today
+func (c *Carbon) IsSameDay(d *Carbon) bool {
+	n := Now()
+	if d != nil {
+		n = d
+	}
+
+	return c.Year() == n.Year() && c.Month() == n.Month() && c.Day() == n.Day()
+}
+
+// IsSunday checks if this day is a Sunday.
+func (c *Carbon) IsSunday() bool {
+	return c.Weekday() == time.Sunday
+}
+
+// IsMonday checks if this day is a Monday.
+func (c *Carbon) IsMonday() bool {
+	return c.Weekday() == time.Monday
+}
+
+// IsTuesday checks if this day is a Tuesday.
+func (c *Carbon) IsTuesday() bool {
+	return c.Weekday() == time.Tuesday
+}
+
+// IsWednesday checks if this day is a Wednesday.
+func (c *Carbon) IsWednesday() bool {
+	return c.Weekday() == time.Wednesday
+}
+
+// IsThursday checks if this day is a Thursday.
+func (c *Carbon) IsThursday() bool {
+	return c.Weekday() == time.Thursday
+}
+
+// IsFriday checks if this day is a Friday.
+func (c *Carbon) IsFriday() bool {
+	return c.Weekday() == time.Friday
+}
+
+// IsSaturday checks if this day is a Saturday.
+func (c *Carbon) IsSaturday() bool {
+	return c.Weekday() == time.Saturday
 }
 
 //-----------------------------------------------------------
-// Create a Carbon instance from a DateTime one.
-func Instance() {
-}
-
 // Create a carbon instance from a string.
 func Parse() {
-}
-
-// Get a Carbon instance for the current date and time.
-func Now() {
 }
 
 // Create a Carbon instance for today.
@@ -521,90 +803,6 @@ func HasRelativeKeywords() {
 
 // Intialize the translator instance if necessary.
 func Translator() {
-}
-
-// Get the translator instance in use
-func GetTranslator() {
-}
-
-// Set the translator instance to use
-func SetTranslator() {
-}
-
-// Format the instance with the current locale.  You can set the current
-func FormatLocalized() {
-}
-
-// Reset the format used to the default when type juggling a Carbon instance to a string
-func ResetToStringFormat() {
-}
-
-// Set the default format used when type juggling a Carbon instance to a string
-func SetToStringFormat() {
-}
-
-// Format the instance as date
-func ToDateString() {
-}
-
-// Format the instance as a readable date
-func ToFormattedDateString() {
-}
-
-// Format the instance as time
-func ToTimeString() {
-}
-
-// Format the instance as date and time
-func ToDateTimeString() {
-}
-
-// Format the instance with day, date and time
-func ToDayDateTimeString() {
-}
-
-// Format the instance as ATOM
-func ToAtomString() {
-}
-
-// Format the instance as COOKIE
-func ToCookieString() {
-}
-
-// Format the instance as ISO8601
-func ToIso8601String() {
-}
-
-// Format the instance as RFC822
-func ToRfc822String() {
-}
-
-// Format the instance as RFC850
-func ToRfc850String() {
-}
-
-// Format the instance as RFC1036
-func ToRfc1036String() {
-}
-
-// Format the instance as RFC1123
-func ToRfc1123String() {
-}
-
-// Format the instance as RFC2822
-func ToRfc2822String() {
-}
-
-// Format the instance as RFC3339
-func ToRfc3339String() {
-}
-
-// Format the instance as RSS
-func ToRssString() {
-}
-
-// Format the instance as W3C
-func ToW3cString() {
 }
 
 // Determines if the instance is equal to another
@@ -689,94 +887,6 @@ func Max() {
 // Get the maximum instance between a given instance (default now) and the current instance.
 // @see max()
 func Maximum() {
-}
-
-// Determines if the instance is a weekday
-func IsWeekday() {
-}
-
-// Determines if the instance is a weekend day
-func IsWeekend() {
-}
-
-// Determines if the instance is yesterday
-func IsYesterday() {
-}
-
-// Determines if the instance is today
-func IsToday() {
-}
-
-// Determines if the instance is tomorrow
-func IsTomorrow() {
-}
-
-// Determines if the instance is in the future, ie. greater (after) than now
-func IsFuture() {
-}
-
-// Determines if the instance is in the past, ie. less (before) than now
-func IsPast() {
-}
-
-// Determines if the instance is a leap year
-func IsLeapYear() {
-}
-
-// Determines if the instance is a long year
-func IsLongYear() {
-}
-
-// Compares the formatted values of the two dates.
-func IsSameAs() {
-}
-
-// Determines if the instance is in the current year
-func IsCurrentYear() {
-}
-
-// Checks if the passed in date is in the same year as the instance year.
-func IsSameYear() {
-}
-
-// Determines if the instance is in the current month
-func IsCurrentMonth() {
-}
-
-// Checks if the passed in date is in the same month as the instance month (and year if needed).
-func IsSameMonth() {
-}
-
-// Checks if the passed in date is the same day as the instance current day.
-func IsSameDay() {
-}
-
-// Checks if this day is a Sunday.
-func IsSunday() {
-}
-
-// Checks if this day is a Monday.
-func IsMonday() {
-}
-
-// Checks if this day is a Tuesday.
-func IsTuesday() {
-}
-
-// Checks if this day is a Wednesday.
-func IsWednesday() {
-}
-
-// Checks if this day is a Thursday.
-func IsThursday() {
-}
-
-// Checks if this day is a Friday.
-func IsFriday() {
-}
-
-// Checks if this day is a Saturday.
-func IsSaturday() {
 }
 
 // Get the difference in years
@@ -1002,9 +1112,6 @@ func NthOfYear() {
 
 // Modify the current instance to the average of a given instance (default now) and the current instance.
 func Average() {
-}
-
-func IsBirthday() {
 }
 
 // Consider the timezone when modifying the instance.
