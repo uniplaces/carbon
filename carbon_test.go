@@ -1240,3 +1240,43 @@ func TestIsSameYearNil(t *testing.T) {
 
 	assert.False(t, c.IsSameYear(nil))
 }
+
+func TestIsSameMonthNotYearTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsSameMonth(d, false))
+}
+
+func TestIsSameMonthNotYearFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2019, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameMonth(d, false))
+}
+
+func TestIsSameMonthNotYearNil(t *testing.T) {
+	c := Now().AddMonth()
+
+	assert.False(t, c.IsSameMonth(nil, false))
+}
+
+func TestIsSameMonthSameYearTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsSameMonth(d, true))
+}
+
+func TestIsSameMonthSameYearFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2019, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameMonth(d, true))
+}
+
+func TestIsSameMonthSameYearNil(t *testing.T) {
+	c := Now().AddMonth()
+
+	assert.False(t, c.IsSameMonth(nil, true))
+}

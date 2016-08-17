@@ -633,6 +633,7 @@ func (c *Carbon) IsLongYear() bool {
 }
 
 // IsSameAs compares the formatted values of the two dates.
+// If passed date is nil, compares against today
 func (c *Carbon) IsSameAs(format string, t *Carbon) bool {
 	if t == nil {
 		return c.Format(DefaultFormat) == Now().Format(DefaultFormat)
@@ -645,7 +646,8 @@ func (c *Carbon) IsCurrentYear() bool {
 	return c.Year() == Now().Year()
 }
 
-// IsSameYear checks if the passed in date is in the same year as the instance year.
+// IsSameYear checks if the passed in date is in the same year as the current time year.
+// If passed date is nil, compares against today
 func (c *Carbon) IsSameYear(d *Carbon) bool {
 	if d == nil {
 		return c.Year() == Now().Year()
@@ -658,8 +660,17 @@ func (c *Carbon) IsCurrentMonth() bool {
 	return c.Month() == Now().Month()
 }
 
-// Checks if the passed in date is in the same month as the instance month (and year if needed).
-func IsSameMonth() {
+// IsSameMonth checks if the passed in date is in the same month as the current time month
+// If passed date is nil, compares against today
+func (c *Carbon) IsSameMonth(d *Carbon, sameYear bool) bool {
+	m := Now().Month()
+	if d != nil {
+		m = d.Month()
+	}
+	if sameYear {
+		return c.IsSameYear(d) && c.Month() == m
+	}
+	return c.Month() == m
 }
 
 // Checks if the passed in date is the same day as the instance current day.
