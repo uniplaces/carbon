@@ -1512,3 +1512,37 @@ func TestLteFalseLesser(t *testing.T) {
 	assert.False(t, c.Lte(d))
 	assert.False(t, c.LessThanOrEqualTo(d))
 }
+
+func TestBetweenTrue(t *testing.T) {
+	c := Now()
+	d := c.SubMonth()
+	b := c.AddMonth()
+
+	assert.True(t, c.Between(d, b, false))
+}
+
+func TestBetweenEqualTrue(t *testing.T) {
+	c := Now()
+	d := c.SubMonth()
+	b := c.AddMonth()
+	c = c.SubMonth()
+
+	assert.True(t, c.Between(d, b, true))
+}
+
+func TestBetweenSwapedTrue(t *testing.T) {
+	c := Now()
+	a := c.SubMonth()
+	b := c.AddMonth()
+
+	assert.True(t, c.Between(b, a, false))
+}
+
+func TestBetweenFalse(t *testing.T) {
+	c := Now()
+	d := c.SubMonth()
+	b := c.AddMonth()
+	c = c.SubMonth()
+
+	assert.False(t, c.Between(d, b, false))
+}

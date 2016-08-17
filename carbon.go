@@ -783,8 +783,19 @@ func (c *Carbon) LessThanOrEqualTo(d *Carbon) bool {
 	return c.Lte(d)
 }
 
-// Determines if the instance is between two others
-func Between() {
+// Between determines if the current instance is between two others
+// eq Indicates if a > and < comparison should be used or <= or >=
+func (c *Carbon) Between(a, b *Carbon, eq bool) bool {
+	if a.Gt(b) {
+		tmp := b
+		b = a
+		a = tmp
+	}
+	if eq {
+		return c.Gte(a) && c.Lte(b)
+	}
+
+	return c.Gt(a) && c.Lt(b)
 }
 
 // Get the closest date from the instance.
