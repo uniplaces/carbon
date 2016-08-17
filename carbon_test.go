@@ -1546,3 +1546,27 @@ func TestBetweenFalse(t *testing.T) {
 
 	assert.False(t, c.Between(d, b, false))
 }
+
+func TestClosestFirstArgument(t *testing.T) {
+	c := Now()
+	a := c.AddHour()
+	b := c.AddMonth()
+
+	assert.Equal(t, a, c.Closest(a, b))
+}
+
+func TestClosestLastArgument(t *testing.T) {
+	c := Now()
+	a := c.AddHour()
+	b := c.AddSecond()
+
+	assert.Equal(t, b, c.Closest(a, b))
+}
+
+func TestClosestBeforeAndAfterDates(t *testing.T) {
+	c := Now()
+	a := c.SubHour()
+	b := c.AddMinute()
+
+	assert.Equal(t, b, c.Closest(a, b))
+}

@@ -798,8 +798,13 @@ func (c *Carbon) Between(a, b *Carbon, eq bool) bool {
 	return c.Gt(a) && c.Lt(b)
 }
 
-// Get the closest date from the instance.
-func Closest() {
+// Closest returns the the closest date from the current time
+func (c *Carbon) Closest(a, b *Carbon) *Carbon {
+	if c.DiffInSeconds(a) < c.DiffInSeconds(b) {
+		return a
+	}
+
+	return b
 }
 
 // Get the farthest date from the instance.
@@ -950,8 +955,14 @@ func DiffInHours() {
 func DiffInMinutes() {
 }
 
-// Get the difference in seconds
-func DiffInSeconds() {
+// DiffInSeconds return the difference in seconds
+func (c *Carbon) DiffInSeconds(d *Carbon) int64 {
+	diff := d.Unix() - c.Unix()
+	if diff < 0 {
+		return -diff
+	}
+
+	return diff
 }
 
 // The number of seconds since midnight.
