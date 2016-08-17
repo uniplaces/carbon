@@ -1064,26 +1064,87 @@ func TestW3cString(t *testing.T) {
 	assert.Equal(t, "2016-08-01T15:28:21+00:00", c.W3cString())
 }
 
-func TestIWeekendTrue(t *testing.T) {
+func TestIsWeekendTrue(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 14, 15, 28, 21, 0, time.UTC))
 
 	assert.True(t, c.IsWeekend())
 }
 
-func TestIWeekendFalse(t *testing.T) {
+func TestIsWeekendFalse(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 17, 15, 28, 21, 0, time.UTC))
 
 	assert.False(t, c.IsWeekend())
 }
 
-func TestIWeekdayFalse(t *testing.T) {
+func TestIsWeekdayFalse(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 14, 15, 28, 21, 0, time.UTC))
 
 	assert.False(t, c.IsWeekday())
 }
 
-func TestIWeekdayTrue(t *testing.T) {
+func TestIsWeekdayTrue(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 17, 15, 28, 21, 0, time.UTC))
 
 	assert.True(t, c.IsWeekday())
+}
+
+func TestIsYesterdayTrue(t *testing.T) {
+	n := Now().SubDay()
+
+	assert.True(t, n.IsYesterday())
+}
+
+func TestIsYesterdayFalse(t *testing.T) {
+	n := Now()
+
+	assert.False(t, n.IsYesterday())
+}
+
+func TestIsTodayTrue(t *testing.T) {
+	n := Now()
+
+	assert.True(t, n.IsToday())
+}
+
+func TestIsTodayFalse(t *testing.T) {
+	n := Now().SubDay()
+
+	assert.False(t, n.IsToday())
+}
+
+func TestIsTomorrowTrue(t *testing.T) {
+	n := Now().AddDay()
+
+	assert.True(t, n.IsTomorrow())
+}
+
+func TestIsTomorrowFalse(t *testing.T) {
+	n := Now()
+
+	assert.False(t, n.IsTomorrow())
+}
+
+func TestIsFutureTrue(t *testing.T) {
+	n := Now().AddSecond()
+
+	assert.True(t, n.IsFuture())
+}
+
+func TestIsFutureFalse(t *testing.T) {
+	n := Now()
+
+	assert.False(t, n.IsFuture())
+}
+
+func TestIsPastTrue(t *testing.T) {
+	n := Now().SubSecond()
+
+	assert.True(t, n.IsPast())
+}
+
+func TestIsPastFalse(t *testing.T) {
+	n := Now()
+	n.SetYear(n.Year() + 1)
+
+	assert.False(t, n.IsPast())
 }

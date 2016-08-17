@@ -53,6 +53,11 @@ func NewCarbon(t time.Time) *Carbon {
 	}
 }
 
+// Now returns a new Carbon instance for right now
+func Now() *Carbon {
+	return NewCarbon(time.Now())
+}
+
 // WeekStartsAt get the starting day of the week
 func (c *Carbon) WeekStartsAt() time.Weekday {
 	return c.weekStartsAt
@@ -578,24 +583,37 @@ func (c *Carbon) IsWeekend() bool {
 	return false
 }
 
-// Determines if the instance is yesterday
-func IsYesterday() {
+// isSameDay checks if two carbon instances are on the same day
+func isSameDay(a, b *Carbon) bool {
+	return a.Year() == b.Year() && a.Month() == b.Month() && a.Day() == b.Day()
 }
 
-// Determines if the instance is today
-func IsToday() {
+// IsYesterday determines if the current time is yesterday
+func (c *Carbon) IsYesterday() bool {
+	n := Now().SubDay()
+	return isSameDay(n, c)
 }
 
-// Determines if the instance is tomorrow
-func IsTomorrow() {
+// IsToday determines if the current time is today
+func (c *Carbon) IsToday() bool {
+	n := Now()
+	return isSameDay(n, c)
 }
 
-// Determines if the instance is in the future, ie. greater (after) than now
-func IsFuture() {
+// IsTomorrow determines if the current time is tomorrow
+func (c *Carbon) IsTomorrow() bool {
+	n := Now().AddDay()
+	return isSameDay(n, c)
 }
 
-// Determines if the instance is in the past, ie. less (before) than now
-func IsPast() {
+// IsFuture determines if the current time is in the future, ie. greater (after) than now
+func (c *Carbon) IsFuture() bool {
+	return c.After(time.Now())
+}
+
+// IsPast determines if the current time is in the past, ie. less (before) than now
+func (c *Carbon) IsPast() bool {
+	return c.Before(time.Now())
 }
 
 // Determines if the instance is a leap year
@@ -661,10 +679,6 @@ func IsSaturday() {
 //-----------------------------------------------------------
 // Create a carbon instance from a string.
 func Parse() {
-}
-
-// Get a Carbon instance for the current date and time.
-func Now() {
 }
 
 // Create a Carbon instance for today.
