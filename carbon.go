@@ -1,6 +1,8 @@
 package carbon
 
 import (
+	"errors"
+	"strings"
 	"time"
 )
 
@@ -15,21 +17,49 @@ const (
 // Provides a simple API extention for Time.
 type Carbon struct {
 	time.Time
+	weekStartsAt time.Weekday
+	weekEndsAt   time.Weekday
+	weekendDays  []time.Weekday
 }
 
-// NewCarbon returns a new Carbon instance
+// NewCarbon returns a pointer to a new Carbon instance
 func NewCarbon(t time.Time) *Carbon {
-	return &Carbon{
-		Time: t,
+	wds := []time.Weekday{
+		time.Saturday,
+		time.Sunday,
 	}
+	return &Carbon{
+		Time:         t,
+		weekStartsAt: time.Monday,
+		weekEndsAt:   time.Sunday,
+		weekendDays:  wds,
+	}
+}
+
+// WeekStartsAt get the starting day of the week
+func (c *Carbon) WeekStartsAt() time.Weekday {
+	return c.weekStartsAt
+}
+
+// WeekEndsAt gets the ending day of the week
+func (c *Carbon) WeekEndsAt() time.Weekday {
+	return c.weekEndsAt
+}
+
+// WeekendDays gets the weekend days of the week
+func (c *Carbon) WeekendDays() []time.Weekday {
+	return c.weekendDays
+}
+
+// Timezone gets the current timezone
+func (c *Carbon) TimeZone() string {
+	return c.Location().String()
 }
 
 // AddYears adds a year to the current time
 // Positive value travel forward while negative value travel into the past
 func (c *Carbon) AddYears(y int) *Carbon {
-	return &Carbon{
-		Time: c.AddDate(y, 0, 0),
-	}
+	return NewCarbon(c.AddDate(y, 0, 0))
 }
 
 // AddYear adds a year to the current time
@@ -40,9 +70,7 @@ func (c *Carbon) AddYear() *Carbon {
 // AddQuarters adds quarters to the current timePositive $value travels forward while
 // Positive value travel forward while negative value travel into the past
 func (c *Carbon) AddQuarters(q int) *Carbon {
-	return &Carbon{
-		Time: c.AddDate(0, MonthsPerQuarter*q, 0),
-	}
+	return NewCarbon(c.AddDate(0, MonthsPerQuarter*q, 0))
 }
 
 // AddQuarter adds a quarter to the current time
@@ -53,9 +81,7 @@ func (c *Carbon) AddQuarter() *Carbon {
 // AddCenturies adds centuries to the time
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddCenturies(cent int) *Carbon {
-	return &Carbon{
-		c.AddDate(YearsPerCenturies*cent, 0, 0),
-	}
+	return NewCarbon(c.AddDate(YearsPerCenturies*cent, 0, 0))
 }
 
 // AddCentury adds a century to the current time
@@ -66,9 +92,7 @@ func (c *Carbon) AddCentury() *Carbon {
 // AddMonths adds months to the current time
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddMonths(m int) *Carbon {
-	return &Carbon{
-		Time: c.AddDate(0, m, 0),
-	}
+	return NewCarbon(c.AddDate(0, m, 0))
 }
 
 // AddMonth adds a month to the current time
@@ -80,9 +104,7 @@ func (c *Carbon) AddMonth() *Carbon {
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddSeconds(s int) *Carbon {
 	d := time.Duration(s) * time.Second
-	return &Carbon{
-		Time: c.Add(d),
-	}
+	return NewCarbon(c.Add(d))
 }
 
 // AddSecond adds a second to the time
@@ -93,9 +115,7 @@ func (c *Carbon) AddSecond() *Carbon {
 // AddDays adds a day to the current time.
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddDays(d int) *Carbon {
-	return &Carbon{
-		Time: c.AddDate(0, 0, d),
-	}
+	return NewCarbon(c.AddDate(0, 0, d))
 }
 
 // AddDay adds a day to the current time
@@ -118,9 +138,8 @@ func (c *Carbon) AddWeekdays(wd int) *Carbon {
 			wd--
 		}
 	}
-	return &Carbon{
-		Time: t,
-	}
+
+	return NewCarbon(t)
 }
 
 // AddWeekday adds a weekday to the current time
@@ -131,9 +150,7 @@ func (c *Carbon) AddWeekday() *Carbon {
 // AddWeeks adds a week to the current time
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddWeeks(w int) *Carbon {
-	return &Carbon{
-		Time: c.AddDate(0, 0, DaysPerWeek*w),
-	}
+	return NewCarbon(c.AddDate(0, 0, DaysPerWeek*w))
 }
 
 // AddWeek adds a week to the current time
@@ -145,9 +162,8 @@ func (c *Carbon) AddWeek() *Carbon {
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddHours(h int) *Carbon {
 	d := time.Duration(h) * time.Hour
-	return &Carbon{
-		Time: c.Add(d),
-	}
+
+	return NewCarbon(c.Add(d))
 }
 
 // AddHour adds an hour to the current time
@@ -159,18 +175,17 @@ func (c *Carbon) AddHour() *Carbon {
 // destination month has less days than the current one.
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddMonthsNoOverflow(m int) *Carbon {
-	addedDate := &Carbon{Time: c.AddDate(0, m, 0)}
+	addedDate := NewCarbon(c.AddDate(0, m, 0))
 	if c.Day() != addedDate.Day() {
 		return addedDate.PreviousMonthLastDay()
 	}
+
 	return addedDate
 }
 
 // PreviousMonthLastDay returns the last day of the previous month
 func (c *Carbon) PreviousMonthLastDay() *Carbon {
-	return &Carbon{
-		Time: c.AddDate(0, 0, -c.Day()),
-	}
+	return NewCarbon(c.AddDate(0, 0, -c.Day()))
 }
 
 // AddMonthNoOverflow adds a month with no overflow to the current time
@@ -182,9 +197,8 @@ func (c *Carbon) AddMonthNoOverflow() *Carbon {
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddMinutes(m int) *Carbon {
 	d := time.Duration(m) * time.Minute
-	return &Carbon{
-		Time: c.Add(d),
-	}
+
+	return NewCarbon(c.Add(d))
 }
 
 // AddMinute adds a minute to the current time
@@ -302,6 +316,123 @@ func (c *Carbon) SubSeconds(s int) *Carbon {
 	return c.AddSeconds(-s)
 }
 
+// SetYear sets the year of the current time
+func (c *Carbon) SetYear(y int) {
+	c.Time = time.Date(y, c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
+}
+
+// SetMonth sets the month of the current time
+func (c *Carbon) SetMonth(m time.Month) {
+	c.Time = time.Date(c.Year(), m, c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
+}
+
+// SetDay sets the day of the current time
+func (c *Carbon) SetDay(d int) {
+	c.Time = time.Date(c.Year(), c.Month(), d, c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
+}
+
+// SetHour sets the hour of the current time
+func (c *Carbon) SetHour(h int) {
+	c.Time = time.Date(c.Year(), c.Month(), c.Day(), h, c.Minute(), c.Second(), c.Nanosecond(), c.Location())
+}
+
+// SetMinute sets the minute of the current time
+func (c *Carbon) SetMinute(m int) {
+	c.Time = time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), m, c.Second(), c.Nanosecond(), c.Location())
+}
+
+// SetSecond sets the second of the current time
+func (c *Carbon) SetSecond(s int) {
+	c.Time = time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), s, c.Nanosecond(), c.Location())
+}
+
+// SetDate sets only the date of the current time
+func (c *Carbon) SetDate(y int, m time.Month, d int) {
+	c.Time = time.Date(y, m, d, c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
+}
+
+// SetDateTime sets the date and the time
+func (c *Carbon) SetDateTime(y int, mon time.Month, d, h, m, s int) {
+	c.Time = time.Date(y, mon, d, h, m, s, c.Nanosecond(), c.Location())
+}
+
+// SetTimeFromTimeString receives a string and sets the current time
+// It accepts the following formats: "hh:mm:ss", "hh:mm" and "hh"
+func (c *Carbon) SetTimeFromTimeString(timeString string) error {
+	layouts := []string{"15", "04", "05"}
+	h, m, s, err := c.parse(layouts, timeString)
+	if err != nil {
+		return err
+	}
+	c.SetHour(h)
+	c.SetMinute(m)
+	c.SetSecond(s)
+
+	return nil
+}
+
+func (c *Carbon) parse(layouts []string, timeString string) (int, int, int, error) {
+	currLayout := strings.Join(layouts, ":")
+	parsed, err := time.Parse(currLayout, timeString)
+	size := len(layouts)
+	if err != nil && size > 0 {
+		l := layouts[:size-1]
+		h, m, s, err := c.parse(l, timeString)
+		return h, m, s, err
+	}
+	h, m, s := parsed.Clock()
+	switch len(layouts) {
+	case 3:
+		return h, m, s, nil
+	case 2:
+		return h, m, c.Second(), nil
+	case 1:
+		return h, c.Minute(), c.Second(), nil
+	}
+
+	return 0, 0, 0, errors.New("only supports hh:mm:ss, hh:mm and hh formats")
+}
+
+// SetWeekEndsAt sets the last day of week
+func (c *Carbon) SetWeekEndsAt(wd time.Weekday) {
+	c.weekEndsAt = wd
+}
+
+// SetWeekStartsAt sets the first day of week
+func (c *Carbon) SetWeekStartsAt(wd time.Weekday) {
+	c.weekStartsAt = wd
+}
+
+// SetWeekendDays sets the weekend days
+func (c *Carbon) SetWeekendDays(wds []time.Weekday) {
+	c.weekendDays = wds
+}
+
+// SetTimestamp sets the current time given a timestamp
+func (c *Carbon) SetTimestamp(sec int64) {
+	t := time.Unix(sec, 0)
+	c.Time = time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), c.Location())
+}
+
+// SetTimezone the location from a string
+func (c *Carbon) SetTimezone(name string) error {
+	loc, err := time.LoadLocation(name)
+	if err != nil {
+		return err
+	}
+	c.Time = time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), loc)
+
+	return nil
+}
+
+// Get the current translator locale
+func GetLocale() {
+}
+
+// Set the current translator locale and indicate if the source locale file exists
+func SetLocale() {
+}
+
 //-----------------------------------------------------------
 // Create a Carbon instance from a DateTime one.
 func Instance() {
@@ -371,14 +502,6 @@ func CreateFromTime() {
 func CreateFromFormat() {
 }
 
-// Set last errors.
-func SetLastErrors() {
-}
-
-// {@inheritdoc}
-func GetLastErrors() {
-}
-
 // Create a Carbon instance from a timestamp.
 func CreateFromTimestamp() {
 }
@@ -389,106 +512,6 @@ func CreateFromTimestampUTC() {
 
 // Get a copy of the instance.
 func Copy() {
-}
-
-// Set the instance's year
-func Year() {
-}
-
-// Set the instance's month
-func Month() {
-}
-
-// Set the instance's day
-func Day() {
-}
-
-// Set the instance's hour
-func Hour() {
-}
-
-// Set the instance's minute
-func Minute() {
-}
-
-// Set the instance's second
-func Second() {
-}
-
-// Sets the current date of the DateTime object to a different date.
-// Calls modify as a workaround for a php bug
-func SetDate() {
-}
-
-// Set the date and time all together
-func SetDateTime() {
-}
-
-// Set the time by time string
-func SetTimeFromTimeString() {
-}
-
-// Set the instance's timestamp
-func Timestamp() {
-}
-
-// Alias for setTimezone()
-func Timezone() {
-}
-
-// Alias for setTimezone()
-func Tz() {
-}
-
-// Set the instance's timezone from a string or object
-func SetTimezone() {
-}
-
-// Get the first day of week
-func GetWeekStartsAt() {
-}
-
-// Set the first day of week
-func SetWeekStartsAt() {
-}
-
-// Get the last day of week
-func GetWeekEndsAt() {
-}
-
-// Set the last day of week
-func SetWeekEndsAt() {
-}
-
-// Get weekend days
-func GetWeekendDays() {
-}
-
-// Set weekend days
-func SetWeekendDays() {
-}
-
-// Set a Carbon instance (real or mock) to be returned when a "now"
-// instance is created.  The provided instance will be returned
-// specifically under the following conditions:
-//   - A call to the static now() method, ex. Carbon::now()
-//   - When a null (or blank string) is passed to the constructor or parse(), ex. new Carbon(null)
-//   - When the string "now" is passed to the constructor or parse(), ex. new Carbon('now')
-// Note the timezone parameter was left out of the examples above and
-// has no affect as the mock value will be returned regardless of its value.
-// To clear the test instance call this method using the default
-// parameter of null.
-func SetTestNow() {
-}
-
-// Get the Carbon instance (real or mock) to be returned when a "now"
-// instance is created.
-func GetTestNow() {
-}
-
-// Determine if there is a valid test instance set. A valid test instance
-// is anything that is not null.
-func HasTestNow() {
 }
 
 // Determine if there is a relative keyword in the time string, this is to
@@ -506,14 +529,6 @@ func GetTranslator() {
 
 // Set the translator instance to use
 func SetTranslator() {
-}
-
-// Get the current translator locale
-func GetLocale() {
-}
-
-// Set the current translator locale and indicate if the source locale file exists
-func SetLocale() {
 }
 
 // Format the instance with the current locale.  You can set the current

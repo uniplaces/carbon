@@ -818,6 +818,7 @@ func TestSubSecondsNegative(t *testing.T) {
 	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 40, 0, time.UTC))
 	assert.Equal(t, expected, d, "The seconds should be equal to 40")
 }
+
 func TestSubSecond(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
 
@@ -825,4 +826,135 @@ func TestSubSecond(t *testing.T) {
 
 	expected := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 29, 0, time.UTC))
 	assert.Equal(t, expected, d, "The seconds should be equal to 29")
+}
+
+func TestSetters(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetYear(2010)
+	c.SetMonth(time.May)
+	c.SetDay(2)
+	c.SetHour(5)
+	c.SetMinute(10)
+	c.SetSecond(10)
+
+	expected := NewCarbon(time.Date(2010, time.May, 2, 5, 10, 10, 0, time.UTC))
+	assert.Equal(t, expected, c, "The date should be 2010-05-02 5h 10m 10s")
+}
+
+func TestSetDate(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetDate(2015, time.May, 30)
+
+	expected := NewCarbon(time.Date(2015, time.May, 30, 10, 0, 30, 0, time.UTC))
+	assert.Equal(t, expected, c, "The date should be 2015-05-02")
+}
+
+func TestSetDateTime(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetDateTime(2010, time.May, 2, 5, 10, 10)
+
+	expected := NewCarbon(time.Date(2010, time.May, 2, 5, 10, 10, 0, time.UTC))
+	assert.Equal(t, expected, c, "The date should be 2010-05-02 5h 10m 10s")
+}
+
+func TestSetTimeFromTimeStringHour(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 0, 0, time.UTC))
+
+	err := c.SetTimeFromTimeString("20")
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 20, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, c, "The date should be 2010-05-02 20h 0m 0s")
+	assert.Nil(t, err)
+}
+
+func TestSetTimeFromTimeStringMinute(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	err := c.SetTimeFromTimeString("20:20")
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 20, 20, 30, 0, time.UTC))
+	assert.Equal(t, expected, c, "The date should be 2010-05-02 20h 30m 0s")
+	assert.Nil(t, err)
+}
+
+func TestSetTimeFromTimeStringSecond(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	err := c.SetTimeFromTimeString("20:20:20")
+
+	expected := NewCarbon(time.Date(2016, time.August, 12, 20, 20, 20, 0, time.UTC))
+	assert.Equal(t, expected, c, "The date should be 2010-05-02 20h 20m 20s")
+	assert.Nil(t, err)
+}
+
+func TestSetTimeFromTimeStringEmpty(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	err := c.SetTimeFromTimeString("")
+
+	assert.NotNil(t, err)
+}
+
+func TestSetTimeFromTimeStringInvalid(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	err := c.SetTimeFromTimeString("10-10-10")
+
+	assert.NotNil(t, err)
+}
+
+func TestSetWeekEndsAt(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetWeekEndsAt(time.Monday)
+
+	assert.Equal(t, time.Monday, c.WeekEndsAt(), "The end of the week should be Monday")
+}
+
+func TestSetWeekStartsAt(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetWeekStartsAt(time.Sunday)
+
+	assert.Equal(t, time.Sunday, c.WeekStartsAt(), "The start of the week should be Sunday")
+}
+
+func TestSetWeekendDays(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+	wds := []time.Weekday{
+		time.Sunday,
+		time.Monday,
+	}
+
+	c.SetWeekendDays(wds)
+
+	assert.Equal(t, wds, c.WeekendDays(), "The start of the week should be Sunday")
+}
+
+func TestSetTimezone(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetTimezone("Europe/Lisbon")
+
+	assert.Equal(t, "Europe/Lisbon", c.TimeZone(), "The start of the week should be Sunday")
+}
+
+func TestSetTimezoneError(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	err := c.SetTimezone("Mars/Wonderland")
+
+	assert.NotNil(t, err)
+}
+
+func TestSetTimestamp(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 12, 10, 0, 30, 0, time.UTC))
+
+	c.SetTimestamp(1171502725)
+
+	expected := NewCarbon(time.Date(2007, time.February, 15, 1, 25, 25, 0, time.UTC))
+	assert.Equal(t, expected, c, "The date should be 007-02-15 01:25:25")
 }
