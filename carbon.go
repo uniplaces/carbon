@@ -625,8 +625,11 @@ func (c *Carbon) IsLeapYear() bool {
 	return false
 }
 
-// Determines if the instance is a long year
-func IsLongYear() {
+// IsLongYear determines if the instance is a long year
+func (c *Carbon) IsLongYear() bool {
+	d := NewCarbon(time.Date(c.Year(), time.December, 31, 0, 0, 0, 0, time.UTC))
+	_, w := d.ISOWeek()
+	return w == 53
 }
 
 // Compares the formatted values of the two dates.
