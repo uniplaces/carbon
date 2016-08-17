@@ -1440,3 +1440,27 @@ func TestGtFalseLesser(t *testing.T) {
 	assert.False(t, c.Gt(d))
 	assert.False(t, c.GreaterThan(d))
 }
+
+func TestGteTrue(t *testing.T) {
+	c := Now()
+	d := Now().SubMonth()
+
+	assert.True(t, c.Gte(d))
+	assert.True(t, c.GreaterThanOrEqualTo(d))
+}
+
+func TestGteTrueEqual(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.Gte(d))
+	assert.True(t, c.GreaterThanOrEqualTo(d))
+}
+
+func TestGteFalseLesser(t *testing.T) {
+	c := Now()
+	d := Now().AddMonth()
+
+	assert.False(t, c.Gte(d))
+	assert.False(t, c.GreaterThanOrEqualTo(d))
+}

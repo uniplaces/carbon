@@ -753,13 +753,14 @@ func (c *Carbon) GreaterThan(d *Carbon) bool {
 	return c.Gt(d)
 }
 
-// Determines if the instance is greater (after) than or equal to another
-func Gte() {
+// Gte determines if the instance is greater (after) than or equal to another
+func (c *Carbon) Gte(d *Carbon) bool {
+	return c.Gt(d) || c.Eq(d)
 }
 
-// Determines if the instance is greater (after) than or equal to another
-// @see gte()
-func GreaterThanOrEqualTo() {
+// GreaterThanOrEqualTo determines if the instance is greater (after) than or equal to another
+func (c *Carbon) GreaterThanOrEqualTo(d *Carbon) bool {
+	return c.Gte(d) || c.Eq(d)
 }
 
 // Determines if the instance is less (before) than another
