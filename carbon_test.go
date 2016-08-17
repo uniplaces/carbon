@@ -1176,3 +1176,23 @@ func TestIsLongYearFalse(t *testing.T) {
 
 	assert.False(t, n.IsLongYear())
 }
+
+func TestIsSameAsTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsSameAs(DefaultFormat, d))
+}
+
+func TestIsSameAsFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2009, time.November, 11, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameAs(DefaultFormat, d))
+}
+
+func TestIsSameAsNil(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameAs(DefaultFormat, nil))
+}

@@ -477,7 +477,7 @@ func FormatLocalized() {
 	// TODO: Not Implemented
 }
 
-// ResetStringFormat changes the format to the DefaultStringFormat
+// ResetStringFormat changes the format to the DefaultFormat
 func (c *Carbon) ResetStringFormat() {
 	c.stringFormat = DefaultFormat
 }
@@ -632,8 +632,12 @@ func (c *Carbon) IsLongYear() bool {
 	return w == 53
 }
 
-// Compares the formatted values of the two dates.
-func IsSameAs() {
+// IsSameAs compares the formatted values of the two dates.
+func (c *Carbon) IsSameAs(format string, t *Carbon) bool {
+	if t == nil {
+		return c.Format(DefaultFormat) == Now().Format(DefaultFormat)
+	}
+	return c.Format(DefaultFormat) == t.Format(DefaultFormat)
 }
 
 // Determines if the instance is in the current year
