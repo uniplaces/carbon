@@ -1594,3 +1594,26 @@ func TestFarthestBeforeAndAfterDates(t *testing.T) {
 
 	assert.Equal(t, a, c.Farthest(a, b))
 }
+
+func TestMinLesser(t *testing.T) {
+	a := Now()
+	b := a.AddMinute()
+
+	assert.Equal(t, a, a.Min(b))
+	assert.Equal(t, a, a.Minimum(b))
+}
+
+func TestMinGreater(t *testing.T) {
+	a := Now()
+	b := a.SubMinute()
+
+	assert.Equal(t, b, a.Min(b))
+	assert.Equal(t, b, a.Minimum(b))
+}
+
+func TestMinNil(t *testing.T) {
+	a := Now().SubYear()
+
+	assert.Equal(t, a, a.Min(nil))
+	assert.Equal(t, a, a.Minimum(nil))
+}

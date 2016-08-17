@@ -816,13 +816,22 @@ func (c *Carbon) Farthest(a, b *Carbon) *Carbon {
 	return b
 }
 
-// Get the minimum instance between a given instance (default now) and the current instance.
-func Min() {
+// Min returns the minimum instance between a given instance and the current instance.
+func (c *Carbon) Min(d *Carbon) *Carbon {
+	if d == nil {
+		d = Now()
+	}
+
+	if c.Lt(d) {
+		return c
+	}
+
+	return d
 }
 
-// Get the minimum instance between a given instance (default now) and the current instance.
-// @see min()
-func Minimum() {
+// Minimum returns the minimum instance between a given instance and the current instance.
+func (c *Carbon) Minimum(d *Carbon) *Carbon {
+	return c.Min(d)
 }
 
 // Get the maximum instance between a given instance (default now) and the current instance.
