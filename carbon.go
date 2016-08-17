@@ -616,8 +616,13 @@ func (c *Carbon) IsPast() bool {
 	return c.Before(time.Now())
 }
 
-// Determines if the instance is a leap year
-func IsLeapYear() {
+// IsLeapYear determines if current current time is a leap year
+func (c *Carbon) IsLeapYear() bool {
+	y := c.Year()
+	if (y%4 == 0 && c.Year()%100 != 0) || y%400 == 0 {
+		return true
+	}
+	return false
 }
 
 // Determines if the instance is a long year

@@ -1148,3 +1148,17 @@ func TestIsPastFalse(t *testing.T) {
 
 	assert.False(t, n.IsPast())
 }
+
+func TestIsLeapYearTrue(t *testing.T) {
+	n := Now()
+	n.SetYear(2016)
+
+	assert.True(t, n.IsLeapYear())
+}
+
+func TestIsLeapYearFalse(t *testing.T) {
+	n := Now()
+	n.SetYear(2015)
+
+	assert.False(t, n.IsLeapYear())
+}
