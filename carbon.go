@@ -763,13 +763,14 @@ func (c *Carbon) GreaterThanOrEqualTo(d *Carbon) bool {
 	return c.Gte(d) || c.Eq(d)
 }
 
-// Determines if the instance is less (before) than another
-func Lt() {
+// Lt determines if the instance is less (before) than another
+func (c *Carbon) Lt(d *Carbon) bool {
+	return c.Before(d.Time)
 }
 
-// Determines if the instance is less (before) than another
-// @see lt()
-func LessThan() {
+// LessThan determines if the instance is less (before) than another
+func (c *Carbon) LessThan(d *Carbon) bool {
+	return c.Lt(d)
 }
 
 // Determines if the instance is less (before) or equal to another
