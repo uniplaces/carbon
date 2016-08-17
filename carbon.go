@@ -723,6 +723,92 @@ func (c *Carbon) IsSaturday() bool {
 	return c.Weekday() == time.Saturday
 }
 
+// Eq determines if the current carbon is equal to another
+func (c *Carbon) Eq(d *Carbon) bool {
+	return c.Equal(d.Time)
+}
+
+// EqualTo determines if the current carbon is equal to another
+func (c *Carbon) EqualTo(d *Carbon) bool {
+	return c.Eq(d)
+}
+
+// Ne determines if the current carbon is not equal to another
+func (c *Carbon) Ne(d *Carbon) bool {
+	return !c.Eq(d)
+}
+
+// NotEqualTo determines if the current carbon is not equal to another
+func (c *Carbon) NotEqualTo(d *Carbon) bool {
+	return c.Ne(d)
+}
+
+// Determines if the instance is greater (after) than another
+func Gt() {
+}
+
+// Determines if the instance is greater (after) than another
+// @see gt()
+func GreaterThan() {
+}
+
+// Determines if the instance is greater (after) than or equal to another
+func Gte() {
+}
+
+// Determines if the instance is greater (after) than or equal to another
+// @see gte()
+func GreaterThanOrEqualTo() {
+}
+
+// Determines if the instance is less (before) than another
+func Lt() {
+}
+
+// Determines if the instance is less (before) than another
+// @see lt()
+func LessThan() {
+}
+
+// Determines if the instance is less (before) or equal to another
+func Lte() {
+}
+
+// Determines if the instance is less (before) or equal to another
+// @see lte()
+func LessThanOrEqualTo() {
+}
+
+// Determines if the instance is between two others
+func Between() {
+}
+
+// Get the closest date from the instance.
+func Closest() {
+}
+
+// Get the farthest date from the instance.
+func Farthest() {
+}
+
+// Get the minimum instance between a given instance (default now) and the current instance.
+func Min() {
+}
+
+// Get the minimum instance between a given instance (default now) and the current instance.
+// @see min()
+func Minimum() {
+}
+
+// Get the maximum instance between a given instance (default now) and the current instance.
+func Max() {
+}
+
+// Get the maximum instance between a given instance (default now) and the current instance.
+// @see max()
+func Maximum() {
+}
+
 //-----------------------------------------------------------
 // Create a carbon instance from a string.
 func Parse() {
@@ -803,90 +889,6 @@ func HasRelativeKeywords() {
 
 // Intialize the translator instance if necessary.
 func Translator() {
-}
-
-// Determines if the instance is equal to another
-func Eq() {
-}
-
-// Determines if the instance is equal to another
-// @see eq()
-func EqualTo() {
-}
-
-// Determines if the instance is not equal to another
-func Ne() {
-}
-
-// Determines if the instance is not equal to another
-// @see ne()
-func NotEqualTo() {
-}
-
-// Determines if the instance is greater (after) than another
-func Gt() {
-}
-
-// Determines if the instance is greater (after) than another
-// @see gt()
-func GreaterThan() {
-}
-
-// Determines if the instance is greater (after) than or equal to another
-func Gte() {
-}
-
-// Determines if the instance is greater (after) than or equal to another
-// @see gte()
-func GreaterThanOrEqualTo() {
-}
-
-// Determines if the instance is less (before) than another
-func Lt() {
-}
-
-// Determines if the instance is less (before) than another
-// @see lt()
-func LessThan() {
-}
-
-// Determines if the instance is less (before) or equal to another
-func Lte() {
-}
-
-// Determines if the instance is less (before) or equal to another
-// @see lte()
-func LessThanOrEqualTo() {
-}
-
-// Determines if the instance is between two others
-func Between() {
-}
-
-// Get the closest date from the instance.
-func Closest() {
-}
-
-// Get the farthest date from the instance.
-func Farthest() {
-}
-
-// Get the minimum instance between a given instance (default now) and the current instance.
-func Min() {
-}
-
-// Get the minimum instance between a given instance (default now) and the current instance.
-// @see min()
-func Minimum() {
-}
-
-// Get the maximum instance between a given instance (default now) and the current instance.
-func Max() {
-}
-
-// Get the maximum instance between a given instance (default now) and the current instance.
-// @see max()
-func Maximum() {
 }
 
 // Get the difference in years

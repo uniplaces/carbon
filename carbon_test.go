@@ -1384,3 +1384,35 @@ func TestIsSaturdayFalse(t *testing.T) {
 
 	assert.False(t, c.IsSaturday())
 }
+
+func TestEqTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.Eq(d))
+	assert.True(t, c.EqualTo(d))
+}
+
+func TestEqFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2015, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.Eq(d))
+	assert.False(t, c.EqualTo(d))
+}
+
+func TestNeTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2015, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.Ne(d))
+	assert.True(t, c.NotEqualTo(d))
+}
+
+func TestNeFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.Ne(d))
+	assert.False(t, c.NotEqualTo(d))
+}
