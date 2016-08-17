@@ -583,27 +583,22 @@ func (c *Carbon) IsWeekend() bool {
 	return false
 }
 
-// isSameDay checks if two carbon instances are on the same day
-func isSameDay(a, b *Carbon) bool {
-	return a.Year() == b.Year() && a.Month() == b.Month() && a.Day() == b.Day()
-}
-
 // IsYesterday determines if the current time is yesterday
 func (c *Carbon) IsYesterday() bool {
 	n := Now().SubDay()
-	return isSameDay(n, c)
+	return c.IsSameDay(n)
 }
 
 // IsToday determines if the current time is today
 func (c *Carbon) IsToday() bool {
 	n := Now()
-	return isSameDay(n, c)
+	return c.IsSameDay(n)
 }
 
 // IsTomorrow determines if the current time is tomorrow
 func (c *Carbon) IsTomorrow() bool {
 	n := Now().AddDay()
-	return isSameDay(n, c)
+	return c.IsSameDay(n)
 }
 
 // IsFuture determines if the current time is in the future, ie. greater (after) than now
@@ -660,7 +655,7 @@ func (c *Carbon) IsCurrentMonth() bool {
 	return c.Month() == Now().Month()
 }
 
-// IsSameMonth checks if the passed in date is in the same month as the current time month
+// IsSameMonth checks if the passed in date is in the same month as the current month
 // If passed date is nil, compares against today
 func (c *Carbon) IsSameMonth(d *Carbon, sameYear bool) bool {
 	m := Now().Month()
@@ -673,8 +668,14 @@ func (c *Carbon) IsSameMonth(d *Carbon, sameYear bool) bool {
 	return c.Month() == m
 }
 
-// Checks if the passed in date is the same day as the instance current day.
-func IsSameDay() {
+// IsSameDay checks if the passed in date is the same day as the current day.
+// If passed date is nil, compares against today
+func (c *Carbon) IsSameDay(d *Carbon) bool {
+	n := Now()
+	if d != nil {
+		n = d
+	}
+	return c.Year() == n.Year() && c.Month() == n.Month() && c.Day() == n.Day()
 }
 
 // Checks if this day is a Sunday.
