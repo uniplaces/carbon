@@ -645,8 +645,12 @@ func (c *Carbon) IsCurrentYear() bool {
 	return c.Year() == Now().Year()
 }
 
-// Checks if the passed in date is in the same year as the instance year.
-func IsSameYear() {
+// IsSameYear checks if the passed in date is in the same year as the instance year.
+func (c *Carbon) IsSameYear(d *Carbon) bool {
+	if d == nil {
+		return c.Year() == Now().Year()
+	}
+	return c.Year() == d.Year()
 }
 
 // IsCurrentMonth determines if the current time is in the current month

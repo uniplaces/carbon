@@ -1220,3 +1220,23 @@ func TestIsCurrentMonthFalse(t *testing.T) {
 
 	assert.False(t, c.IsCurrentMonth())
 }
+
+func TestIsSameYearTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2009, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.IsSameYear(d))
+}
+
+func TestIsSameYearFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2019, time.January, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameYear(d))
+}
+
+func TestIsSameYearNil(t *testing.T) {
+	c := NewCarbon(time.Date(1970, time.November, 10, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.IsSameYear(nil))
+}
