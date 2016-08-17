@@ -1013,55 +1013,55 @@ func TestCookieString(t *testing.T) {
 func TestIso8601String(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 1, 1, 0, 30, 0, time.UTC))
 
-	assert.Equal(t, "2016-08-01T01:00:30+00:00", c.Iso8601String())
+	assert.Equal(t, "2016-08-01T01:00:30+00:00", c.ISO8601String())
 }
 
 func TestRfc822String(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
 
-	assert.Equal(t, "Mon, 01 Aug 16 15:28:21 +0000", c.Rfc822String())
+	assert.Equal(t, "Mon, 01 Aug 16 15:28:21 +0000", c.RFC822String())
 }
 
 func TestRfc850String(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
 
-	assert.Equal(t, "Monday, 01-Aug-16 15:28:21 UTC", c.Rfc850String())
+	assert.Equal(t, "Monday, 01-Aug-16 15:28:21 UTC", c.RFC850String())
 }
 
 func TestRfc1036String(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
 
-	assert.Equal(t, "Mon, 01 Aug 16 15:28:21 +0000", c.Rfc1036String())
+	assert.Equal(t, "Mon, 01 Aug 16 15:28:21 +0000", c.RFC1036String())
 }
 
 func TestRfc1123String(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
 
-	assert.Equal(t, "Mon, 01 Aug 2016 15:28:21 +0000", c.Rfc1123String())
+	assert.Equal(t, "Mon, 01 Aug 2016 15:28:21 +0000", c.RFC1123String())
 }
 
 func TestRfc2822String(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
 
-	assert.Equal(t, "Mon, 01 Aug 2016 15:28:21 +0000", c.Rfc2822String())
+	assert.Equal(t, "Mon, 01 Aug 2016 15:28:21 +0000", c.RFC2822String())
 }
 
 func TestRfc3339String(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
 
-	assert.Equal(t, "2016-08-01T15:28:21+00:00", c.Rfc3339String())
+	assert.Equal(t, "2016-08-01T15:28:21+00:00", c.RFC3339String())
 }
 
 func TestRssString(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
 
-	assert.Equal(t, "Mon, 01 Aug 2016 15:28:21 +0000", c.RssString())
+	assert.Equal(t, "Mon, 01 Aug 2016 15:28:21 +0000", c.RSSString())
 }
 
 func TestW3cString(t *testing.T) {
 	c := NewCarbon(time.Date(2016, time.August, 1, 15, 28, 21, 0, time.UTC))
 
-	assert.Equal(t, "2016-08-01T15:28:21+00:00", c.W3cString())
+	assert.Equal(t, "2016-08-01T15:28:21+00:00", c.W3CString())
 }
 
 func TestIsWeekendTrue(t *testing.T) {

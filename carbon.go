@@ -25,7 +25,7 @@ const (
 	RFC1036Format       = "Mon, 02 Jan 06 15:04:05 -0700"
 	RFC2822Format       = "Mon, 02 Jan 2006 15:04:05 -0700"
 	RFC3339Format       = "2006-01-02T15:04:05-07:00"
-	RssFormat           = "Mon, 02 Jan 2006 15:04:05 -0700"
+	RSSFormat           = "Mon, 02 Jan 2006 15:04:05 -0700"
 )
 
 // The Carbon type represents a Time instance.
@@ -522,48 +522,48 @@ func (c *Carbon) CookieString() string {
 	return c.Format(CookieFormat)
 }
 
-// Iso8601String returns the current time in ISO8601 format
-func (c *Carbon) Iso8601String() string {
+// ISO8601String returns the current time in ISO8601 format
+func (c *Carbon) ISO8601String() string {
 	return c.Format(RFC3339Format)
 }
 
-// Rfc822String returns the current time in RFC 822 format
-func (c *Carbon) Rfc822String() string {
+// RFC822String returns the current time in RFC 822 format
+func (c *Carbon) RFC822String() string {
 	return c.Format(RFC822Format)
 }
 
-// Rfc850String returns the current time in RFC 850 format
-func (c *Carbon) Rfc850String() string {
+// RFC850String returns the current time in RFC 850 format
+func (c *Carbon) RFC850String() string {
 	return c.Format(time.RFC850)
 }
 
-// Rfc1036String returns the current time in RFC 1036 format
-func (c *Carbon) Rfc1036String() string {
+// RFC1036String returns the current time in RFC 1036 format
+func (c *Carbon) RFC1036String() string {
 	return c.Format(RFC1036Format)
 }
 
-// Rfc1123String returns the current time in RFC 1123 format
-func (c *Carbon) Rfc1123String() string {
+// RFC1123String returns the current time in RFC 1123 format
+func (c *Carbon) RFC1123String() string {
 	return c.Format(time.RFC1123Z)
 }
 
-// Rfc2822String returns the current time in RFC 2822 format
-func (c *Carbon) Rfc2822String() string {
+// RFC2822String returns the current time in RFC 2822 format
+func (c *Carbon) RFC2822String() string {
 	return c.Format(RFC2822Format)
 }
 
-// Rfc3339String returns the current time in RFC 3339 format
-func (c *Carbon) Rfc3339String() string {
+// RFC3339String returns the current time in RFC 3339 format
+func (c *Carbon) RFC3339String() string {
 	return c.Format(RFC3339Format)
 }
 
-// RssString returns the current time for RSS format
-func (c *Carbon) RssString() string {
-	return c.Format(RssFormat)
+// RSSString returns the current time for RSS format
+func (c *Carbon) RSSString() string {
+	return c.Format(RSSFormat)
 }
 
-// W3cString returns the current time for WWW Consortium format
-func (c *Carbon) W3cString() string {
+// W3CString returns the current time for WWW Consortium format
+func (c *Carbon) W3CString() string {
 	return c.Format(RFC3339Format)
 }
 
@@ -580,24 +580,28 @@ func (c *Carbon) IsWeekend() bool {
 			return true
 		}
 	}
+
 	return false
 }
 
 // IsYesterday determines if the current time is yesterday
 func (c *Carbon) IsYesterday() bool {
 	n := Now().SubDay()
+
 	return c.IsSameDay(n)
 }
 
 // IsToday determines if the current time is today
 func (c *Carbon) IsToday() bool {
 	n := Now()
+
 	return c.IsSameDay(n)
 }
 
 // IsTomorrow determines if the current time is tomorrow
 func (c *Carbon) IsTomorrow() bool {
 	n := Now().AddDay()
+
 	return c.IsSameDay(n)
 }
 
@@ -617,6 +621,7 @@ func (c *Carbon) IsLeapYear() bool {
 	if (y%4 == 0 && c.Year()%100 != 0) || y%400 == 0 {
 		return true
 	}
+
 	return false
 }
 
@@ -624,6 +629,7 @@ func (c *Carbon) IsLeapYear() bool {
 func (c *Carbon) IsLongYear() bool {
 	d := NewCarbon(time.Date(c.Year(), time.December, 31, 0, 0, 0, 0, time.UTC))
 	_, w := d.ISOWeek()
+
 	return w == 53
 }
 
@@ -633,6 +639,7 @@ func (c *Carbon) IsSameAs(format string, t *Carbon) bool {
 	if t == nil {
 		return c.Format(DefaultFormat) == Now().Format(DefaultFormat)
 	}
+
 	return c.Format(DefaultFormat) == t.Format(DefaultFormat)
 }
 
@@ -647,6 +654,7 @@ func (c *Carbon) IsSameYear(d *Carbon) bool {
 	if d == nil {
 		return c.Year() == Now().Year()
 	}
+
 	return c.Year() == d.Year()
 }
 
@@ -665,6 +673,7 @@ func (c *Carbon) IsSameMonth(d *Carbon, sameYear bool) bool {
 	if sameYear {
 		return c.IsSameYear(d) && c.Month() == m
 	}
+
 	return c.Month() == m
 }
 
@@ -675,6 +684,7 @@ func (c *Carbon) IsSameDay(d *Carbon) bool {
 	if d != nil {
 		n = d
 	}
+
 	return c.Year() == n.Year() && c.Month() == n.Month() && c.Day() == n.Day()
 }
 
