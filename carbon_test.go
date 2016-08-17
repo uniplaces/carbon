@@ -1063,3 +1063,27 @@ func TestW3cString(t *testing.T) {
 
 	assert.Equal(t, "2016-08-01T15:28:21+00:00", c.W3cString())
 }
+
+func TestIWeekendTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 14, 15, 28, 21, 0, time.UTC))
+
+	assert.True(t, c.IsWeekend())
+}
+
+func TestIWeekendFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 17, 15, 28, 21, 0, time.UTC))
+
+	assert.False(t, c.IsWeekend())
+}
+
+func TestIWeekdayFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 14, 15, 28, 21, 0, time.UTC))
+
+	assert.False(t, c.IsWeekday())
+}
+
+func TestIWeekdayTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 17, 15, 28, 21, 0, time.UTC))
+
+	assert.True(t, c.IsWeekday())
+}

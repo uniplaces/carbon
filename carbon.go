@@ -562,12 +562,20 @@ func (c *Carbon) W3cString() string {
 	return c.Format(RFC3339Format)
 }
 
-// Determines if the instance is a weekday
-func IsWeekday() {
+// IsWeekday determines if the current time is a weekday
+func (c *Carbon) IsWeekday() bool {
+	return !c.IsWeekend()
 }
 
-// Determines if the instance is a weekend day
-func IsWeekend() {
+// IsWeekend determines if the current time is a weekend day
+func (c *Carbon) IsWeekend() bool {
+	d := c.Weekday()
+	for _, wd := range c.WeekendDays() {
+		if d == wd {
+			return true
+		}
+	}
+	return false
 }
 
 // Determines if the instance is yesterday
