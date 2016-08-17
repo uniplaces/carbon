@@ -640,16 +640,18 @@ func (c *Carbon) IsSameAs(format string, t *Carbon) bool {
 	return c.Format(DefaultFormat) == t.Format(DefaultFormat)
 }
 
-// Determines if the instance is in the current year
-func IsCurrentYear() {
+// IsCurrentYear determines if the current time is in the current year
+func (c *Carbon) IsCurrentYear() bool {
+	return c.Year() == Now().Year()
 }
 
 // Checks if the passed in date is in the same year as the instance year.
 func IsSameYear() {
 }
 
-// Determines if the instance is in the current month
-func IsCurrentMonth() {
+// IsCurrentMonth determines if the current time is in the current month
+func (c *Carbon) IsCurrentMonth() bool {
+	return c.Month() == Now().Month()
 }
 
 // Checks if the passed in date is in the same month as the instance month (and year if needed).

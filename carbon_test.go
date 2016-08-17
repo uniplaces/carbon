@@ -1196,3 +1196,27 @@ func TestIsSameAsNil(t *testing.T) {
 
 	assert.False(t, c.IsSameAs(DefaultFormat, nil))
 }
+
+func TestIsCurrentYearTrue(t *testing.T) {
+	c := Now()
+
+	assert.True(t, c.IsCurrentYear())
+}
+
+func TestIsCurrentYearFalse(t *testing.T) {
+	c := Now().SubYear()
+
+	assert.False(t, c.IsCurrentYear())
+}
+
+func TestIsCurrentMonthTrue(t *testing.T) {
+	c := Now()
+
+	assert.True(t, c.IsCurrentMonth())
+}
+
+func TestIsCurrentMonthFalse(t *testing.T) {
+	c := Now().SubMonth()
+
+	assert.False(t, c.IsCurrentMonth())
+}
