@@ -743,13 +743,14 @@ func (c *Carbon) NotEqualTo(d *Carbon) bool {
 	return c.Ne(d)
 }
 
-// Determines if the instance is greater (after) than another
-func Gt() {
+// Gt determines if the current carbon is greater (after) than another
+func (c *Carbon) Gt(d *Carbon) bool {
+	return c.After(d.Time)
 }
 
-// Determines if the instance is greater (after) than another
-// @see gt()
-func GreaterThan() {
+// GreaterThan determines if the current carbon is greater (after) than another
+func (c *Carbon) GreaterThan(d *Carbon) bool {
+	return c.Gt(d)
 }
 
 // Determines if the instance is greater (after) than or equal to another
