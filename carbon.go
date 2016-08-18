@@ -9,8 +9,12 @@ import (
 
 // Represent the number of elements in a given period
 const (
+	SecondsPerMinute  = 60
+	MinutesPerHour    = 60
+	HoursPerDay       = 24
 	DaysPerWeek       = 7
 	MonthsPerQuarter  = 3
+	MonthsPerYear     = 12
 	YearsPerCenturies = 100
 )
 
@@ -858,7 +862,7 @@ func (c *Carbon) Between(a, b *Carbon, eq bool) bool {
 
 // Closest returns the the closest date from the current time
 func (c *Carbon) Closest(a, b *Carbon) *Carbon {
-	if c.DiffInSeconds(a) < c.DiffInSeconds(b) {
+	if c.DiffInSeconds(a, true) < c.DiffInSeconds(b, true) {
 		return a
 	}
 
@@ -867,7 +871,7 @@ func (c *Carbon) Closest(a, b *Carbon) *Carbon {
 
 // Farthest returns the farthest date from the current time
 func (c *Carbon) Farthest(a, b *Carbon) *Carbon {
-	if c.DiffInSeconds(a) > c.DiffInSeconds(b) {
+	if c.DiffInSeconds(a, true) > c.DiffInSeconds(b, true) {
 		return a
 	}
 
@@ -908,6 +912,106 @@ func (c *Carbon) Max(d *Carbon) *Carbon {
 // Maximum returns the maximum instance between a given instance and the current instance
 func (c *Carbon) Maximum(d *Carbon) *Carbon {
 	return c.Max(d)
+}
+
+// DiffInYears returns the difference in years
+func (c *Carbon) DiffInYears(d *Carbon, abs bool) int {
+	t1, t2 := d.In(time.UTC), c.In(time.UTC)
+	diff := t1.Year() - t2.Year()
+	if abs && diff < 0 {
+		return -diff
+	}
+
+	return diff
+}
+
+// DiffInMonths returns the difference in months
+func (c *Carbon) DiffInMonths(d *Carbon, abs bool) int {
+	t1, t2 := d.In(time.UTC), c.In(time.UTC)
+	diff := c.DiffInYears(d, abs)*MonthsPerYear + int(t1.Month()-t2.Month())
+	if abs && diff < 0 {
+		return -diff
+	}
+
+	return diff
+}
+
+// DiffInWeeks returns the difference in weeks
+func (c *Carbon) DiffInWeeks(d *Carbon, abs bool) int64 {
+	return c.DiffInDays(d, abs) / DaysPerWeek
+}
+
+// DiffInDays returns the difference in days
+func (c *Carbon) DiffInDays(d *Carbon, abs bool) int64 {
+	return c.DiffInHours(d, abs) / HoursPerDay
+}
+
+// DiffInDaysFiltered returns the difference in days using a filter
+func DiffInDaysFiltered() {
+}
+
+// DiffInHoursFiltered returns the difference in hours using a filter
+func DiffInHoursFiltered() {
+}
+
+// DiffFiltered returns the difference by the given interval using a filter
+func DiffFiltered() {
+}
+
+// DiffInWeekdays returns the difference in weekdays
+func DiffInWeekdays() {
+}
+
+// DiffInWeekendDays returns the difference in weekend days using a filter
+func DiffInWeekendDays() {
+}
+
+// DiffInHours returns the difference in hours
+func (c *Carbon) DiffInHours(d *Carbon, abs bool) int64 {
+	return c.DiffInMinutes(d, abs) / MinutesPerHour
+}
+
+// DiffInMinutes returns the difference in minutes
+func (c *Carbon) DiffInMinutes(d *Carbon, abs bool) int64 {
+	return c.DiffInSeconds(d, abs) / SecondsPerMinute
+}
+
+// DiffInSeconds returns the difference in seconds
+func (c *Carbon) DiffInSeconds(d *Carbon, abs bool) int64 {
+	diff := d.Unix() - c.Unix()
+	if abs && diff < 0 {
+		return -diff
+	}
+
+	return diff
+}
+
+// SecondsSinceMidnight the number of seconds since midnight.
+func (c *Carbon) SecondsSinceMidnight() int {
+	midnight := NewCarbon(time.Date(c.Year(), c.Month(), c.Day(), 0, 0, 0, 0, c.Location()))
+	return int(c.DiffInSeconds(midnight, true))
+}
+
+// SecondsUntilEndOfDay The number of seconds until 23:59:59.
+func (c *Carbon) SecondsUntilEndOfDay() int {
+	dayEnd := NewCarbon(time.Date(c.Year(), c.Month(), c.Day(), 23, 59, 59, 999999999, c.Location()))
+	return int(c.DiffInSeconds(dayEnd, true))
+}
+
+// DiffForHumans returns the difference in a human readable format in the current locale.
+// When comparing a value in the past to default now:
+// 1 hour ago
+// 5 months ago
+// When comparing a value in the future to default now:
+// 1 hour from now
+// 5 months from now
+// When comparing a value in the past to another value:
+// 1 hour before
+// 5 months before
+// When comparing a value in the future to another value:
+// 1 hour after
+// 5 months after
+func DiffForHumans() {
 }
 
 //-----------------------------------------------------------
@@ -963,84 +1067,6 @@ func HasRelativeKeywords() {
 
 // Intialize the translator instance if necessary.
 func Translator() {
-}
-
-// Get the difference in years
-func DiffInYears() {
-}
-
-// Get the difference in months
-func DiffInMonths() {
-}
-
-// Get the difference in weeks
-func DiffInWeeks() {
-}
-
-// Get the difference in days
-func DiffInDays() {
-}
-
-// Get the difference in days using a filter closure
-func DiffInDaysFiltered() {
-}
-
-// Get the difference in hours using a filter closure
-func DiffInHoursFiltered() {
-}
-
-// Get the difference by the given interval using a filter closure
-func DiffFiltered() {
-}
-
-// Get the difference in weekdays
-func DiffInWeekdays() {
-}
-
-// Get the difference in weekend days using a filter
-func DiffInWeekendDays() {
-}
-
-// Get the difference in hours
-func DiffInHours() {
-}
-
-// Get the difference in minutes
-func DiffInMinutes() {
-}
-
-// DiffInSeconds return the difference in seconds
-func (c *Carbon) DiffInSeconds(d *Carbon) int64 {
-	diff := d.Unix() - c.Unix()
-	if diff < 0 {
-		return -diff
-	}
-
-	return diff
-}
-
-// The number of seconds since midnight.
-func SecondsSinceMidnight() {
-}
-
-// The number of seconds until 23:23:59.
-func SecondsUntilEndOfDay() {
-}
-
-// Get the difference in a human readable format in the current locale.
-// When comparing a value in the past to default now:
-// 1 hour ago
-// 5 months ago
-// When comparing a value in the future to default now:
-// 1 hour from now
-// 5 months from now
-// When comparing a value in the past to another value:
-// 1 hour before
-// 5 months before
-// When comparing a value in the future to another value:
-// 1 hour after
-// 5 months after
-func DiffForHumans() {
 }
 
 // Resets the time to 00:00:00
