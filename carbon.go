@@ -798,7 +798,7 @@ func (c *Carbon) Between(a, b *Carbon, eq bool) bool {
 	return c.Gt(a) && c.Lt(b)
 }
 
-// Closest returns the the closest date from the current time
+// Closest returns the closest date from the current time
 func (c *Carbon) Closest(a, b *Carbon) *Carbon {
 	if c.DiffInSeconds(a) < c.DiffInSeconds(b) {
 		return a
