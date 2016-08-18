@@ -53,6 +53,48 @@ func NewCarbon(t time.Time) *Carbon {
 	}
 }
 
+// Parse returns a pointer to a new carbon instance from a string
+func Parse() {
+}
+
+// Today returns a pointer to a new carbon instance for today
+func Today(l string) (*Carbon, error) {
+	loc, err := time.LoadLocation(l)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewCarbon(Now().In(loc)), err
+}
+
+// Tommorrow returns a pointer to a new carbon instance for tomorrow
+func Tomorrow(loc string) (*Carbon, error) {
+	c, err := Today(loc)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.AddDay(), nil
+}
+
+// Yesterday returns a pointer to a new carbon instance for yesterday
+func Yesterday(loc string) (*Carbon, error) {
+	c, err := Today(loc)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.SubDay(), nil
+}
+
+// MaxValue returns a pointer to a new carbon instance for greatest supported date
+func MaxValue() {
+}
+
+// MinValue returns a pointer to a new carbon instance for lowest supported date
+func MinValue() {
+}
+
 // Now returns a new Carbon instance for right now
 func Now() *Carbon {
 	return NewCarbon(time.Now())
@@ -853,29 +895,6 @@ func (c *Carbon) Maximum(d *Carbon) *Carbon {
 }
 
 //-----------------------------------------------------------
-// Create a carbon instance from a string.
-func Parse() {
-}
-
-// Create a Carbon instance for today.
-func Today() {
-}
-
-// Create a Carbon instance for tomorrow.
-func Tomorrow() {
-}
-
-// Create a Carbon instance for yesterday.
-func Yesterday() {
-}
-
-// Create a Carbon instance for the greatest supported date.
-func MaxValue() {
-}
-
-// Create a Carbon instance for the lowest supported date.
-func MinValue() {
-}
 
 // Create a new Carbon instance from a specific date and time.
 // If any of $year, $month or $day are set to null their now() values will
