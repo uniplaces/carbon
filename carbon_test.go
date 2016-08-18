@@ -1680,3 +1680,19 @@ func TestYesterdayUnknown(t *testing.T) {
 
 	assert.NotNil(t, err)
 }
+
+func TestParse(t *testing.T) {
+	d, _ := Parse(DefaultFormat, "2015-11-02 16:10:22", "Africa/Cairo")
+
+	loc, _ := time.LoadLocation("Africa/Cairo")
+	expected := NewCarbon(time.Date(2015, time.November, 2, 16, 10, 22, 0, loc))
+	assert.Equal(t, expected, d)
+}
+
+func TestParseUnknown(t *testing.T) {
+	d, _ := Parse(DefaultFormat, "2015-11-02 16:10:22", "Africa/Cairo")
+
+	loc, _ := time.LoadLocation("Africa/Cairo")
+	expected := NewCarbon(time.Date(2015, time.November, 2, 16, 10, 22, 0, loc))
+	assert.Equal(t, expected, d)
+}
