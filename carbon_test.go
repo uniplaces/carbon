@@ -1640,3 +1640,59 @@ func TestMaxNil(t *testing.T) {
 	assert.Equal(t, a, a.Max(nil))
 	assert.Equal(t, a, a.Maximum(nil))
 }
+
+func TestTodayEET(t *testing.T) {
+	today, _ := Today("Africa/Cairo")
+
+	assert.Equal(t, "Africa/Cairo", today.TimeZone())
+}
+
+func TestTodayUnknown(t *testing.T) {
+	_, err := Today("Jupiter/Wondertown")
+
+	assert.NotNil(t, err)
+}
+
+func TestTomorrowEET(t *testing.T) {
+	today, _ := Today("Africa/Cairo")
+	tomorrow, _ := Tomorrow("Africa/Cairo")
+
+	assert.Equal(t, "Africa/Cairo", tomorrow.TimeZone())
+	assert.Equal(t, today.Day()+1, tomorrow.Day())
+}
+
+func TestTomorrowUnknown(t *testing.T) {
+	_, err := Tomorrow("Jupiter/Wondertown")
+
+	assert.NotNil(t, err)
+}
+
+func TestYesterdayEET(t *testing.T) {
+	today, _ := Today("Africa/Cairo")
+	yesterday, _ := Yesterday("Africa/Cairo")
+
+	assert.Equal(t, "Africa/Cairo", yesterday.TimeZone())
+	assert.Equal(t, today.Day()-1, yesterday.Day())
+}
+
+func TestYesterdayUnknown(t *testing.T) {
+	_, err := Yesterday("Jupiter/Wondertown")
+
+	assert.NotNil(t, err)
+}
+
+func TestParse(t *testing.T) {
+	d, _ := Parse(DefaultFormat, "2015-11-02 16:10:22", "Africa/Cairo")
+
+	loc, _ := time.LoadLocation("Africa/Cairo")
+	expected := NewCarbon(time.Date(2015, time.November, 2, 16, 10, 22, 0, loc))
+	assert.Equal(t, expected, d)
+}
+
+func TestParseUnknown(t *testing.T) {
+	d, _ := Parse(DefaultFormat, "2015-11-02 16:10:22", "Africa/Cairo")
+
+	loc, _ := time.LoadLocation("Africa/Cairo")
+	expected := NewCarbon(time.Date(2015, time.November, 2, 16, 10, 22, 0, loc))
+	assert.Equal(t, expected, d)
+}

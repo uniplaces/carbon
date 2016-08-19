@@ -2,6 +2,7 @@ package carbon
 
 import (
 	"errors"
+	"math"
 	"strings"
 	"time"
 )
@@ -51,6 +52,63 @@ func NewCarbon(t time.Time) *Carbon {
 		weekendDays:  wds,
 		stringFormat: DefaultFormat,
 	}
+}
+
+// Parse returns a pointer to a new carbon instance from a string
+func Parse(layout, value, location string) (*Carbon, error) {
+	loc, err := time.LoadLocation(location)
+	if err != nil {
+		return nil, err
+	}
+	t, err := time.ParseInLocation(layout, value, loc)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewCarbon(t), nil
+}
+
+// Today returns a pointer to a new carbon instance for today
+func Today(l string) (*Carbon, error) {
+	loc, err := time.LoadLocation(l)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewCarbon(Now().In(loc)), err
+}
+
+// Tomorrow returns a pointer to a new carbon instance for tomorrow
+func Tomorrow(loc string) (*Carbon, error) {
+	c, err := Today(loc)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.AddDay(), nil
+}
+
+// Yesterday returns a pointer to a new carbon instance for yesterday
+func Yesterday(loc string) (*Carbon, error) {
+	c, err := Today(loc)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.SubDay(), nil
+}
+
+// UnixTimeInSeconds represents the number of seconds between Year 1 and 1970
+const UnixTimeInSeconds = 62135596801
+
+// MaxValue returns a pointer to a new carbon instance for greatest supported date
+func MaxValue() *Carbon {
+	return NewCarbon(time.Unix(math.MaxInt64-UnixTimeInSeconds, 999999999))
+}
+
+// MinValue returns a pointer to a new carbon instance for lowest supported date
+func MinValue() *Carbon {
+	return NewCarbon(time.Unix(math.MinInt64+UnixTimeInSeconds, 0))
 }
 
 // Now returns a new Carbon instance for right now
@@ -853,29 +911,6 @@ func (c *Carbon) Maximum(d *Carbon) *Carbon {
 }
 
 //-----------------------------------------------------------
-// Create a carbon instance from a string.
-func Parse() {
-}
-
-// Create a Carbon instance for today.
-func Today() {
-}
-
-// Create a Carbon instance for tomorrow.
-func Tomorrow() {
-}
-
-// Create a Carbon instance for yesterday.
-func Yesterday() {
-}
-
-// Create a Carbon instance for the greatest supported date.
-func MaxValue() {
-}
-
-// Create a Carbon instance for the lowest supported date.
-func MinValue() {
-}
 
 // Create a new Carbon instance from a specific date and time.
 // If any of $year, $month or $day are set to null their now() values will
@@ -919,10 +954,6 @@ func CreateFromTimestamp() {
 
 // Create a Carbon instance from an UTC timestamp.
 func CreateFromTimestampUTC() {
-}
-
-// Get a copy of the instance.
-func Copy() {
 }
 
 // Determine if there is a relative keyword in the time string, this is to
