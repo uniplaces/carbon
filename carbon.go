@@ -73,7 +73,7 @@ func (c *Carbon) WeekendDays() []time.Weekday {
 	return c.weekendDays
 }
 
-// Timezone gets the current timezone
+// TimeZone gets the current timezone
 func (c *Carbon) TimeZone() string {
 	return c.Location().String()
 }
@@ -723,6 +723,135 @@ func (c *Carbon) IsSaturday() bool {
 	return c.Weekday() == time.Saturday
 }
 
+// Eq determines if the current carbon is equal to another
+func (c *Carbon) Eq(d *Carbon) bool {
+	return c.Equal(d.Time)
+}
+
+// EqualTo determines if the current carbon is equal to another
+func (c *Carbon) EqualTo(d *Carbon) bool {
+	return c.Eq(d)
+}
+
+// Ne determines if the current carbon is not equal to another
+func (c *Carbon) Ne(d *Carbon) bool {
+	return !c.Eq(d)
+}
+
+// NotEqualTo determines if the current carbon is not equal to another
+func (c *Carbon) NotEqualTo(d *Carbon) bool {
+	return c.Ne(d)
+}
+
+// Gt determines if the current carbon is greater (after) than another
+func (c *Carbon) Gt(d *Carbon) bool {
+	return c.After(d.Time)
+}
+
+// GreaterThan determines if the current carbon is greater (after) than another
+func (c *Carbon) GreaterThan(d *Carbon) bool {
+	return c.Gt(d)
+}
+
+// Gte determines if the instance is greater (after) than or equal to another
+func (c *Carbon) Gte(d *Carbon) bool {
+	return c.Gt(d) || c.Eq(d)
+}
+
+// GreaterThanOrEqualTo determines if the instance is greater (after) than or equal to another
+func (c *Carbon) GreaterThanOrEqualTo(d *Carbon) bool {
+	return c.Gte(d) || c.Eq(d)
+}
+
+// Lt determines if the instance is less (before) than another
+func (c *Carbon) Lt(d *Carbon) bool {
+	return c.Before(d.Time)
+}
+
+// LessThan determines if the instance is less (before) than another
+func (c *Carbon) LessThan(d *Carbon) bool {
+	return c.Lt(d)
+}
+
+// Lte determines if the instance is less (before) or equal to another
+func (c *Carbon) Lte(d *Carbon) bool {
+	return c.Lt(d) || c.Eq(d)
+}
+
+// LessThanOrEqualTo determines if the instance is less (before) or equal to another
+func (c *Carbon) LessThanOrEqualTo(d *Carbon) bool {
+	return c.Lte(d)
+}
+
+// Between determines if the current instance is between two others
+// eq Indicates if a > and < comparison should be used or <= or >=
+func (c *Carbon) Between(a, b *Carbon, eq bool) bool {
+	if a.Gt(b) {
+		tmp := b
+		b = a
+		a = tmp
+	}
+	if eq {
+		return c.Gte(a) && c.Lte(b)
+	}
+
+	return c.Gt(a) && c.Lt(b)
+}
+
+// Closest returns the closest date from the current time
+func (c *Carbon) Closest(a, b *Carbon) *Carbon {
+	if c.DiffInSeconds(a) < c.DiffInSeconds(b) {
+		return a
+	}
+
+	return b
+}
+
+// Farthest returns the farthest date from the current time
+func (c *Carbon) Farthest(a, b *Carbon) *Carbon {
+	if c.DiffInSeconds(a) > c.DiffInSeconds(b) {
+		return a
+	}
+
+	return b
+}
+
+// Min returns the minimum instance between a given instance and the current instance
+func (c *Carbon) Min(d *Carbon) *Carbon {
+	if d == nil {
+		d = Now()
+	}
+
+	if c.Lt(d) {
+		return c
+	}
+
+	return d
+}
+
+// Minimum returns the minimum instance between a given instance and the current instance
+func (c *Carbon) Minimum(d *Carbon) *Carbon {
+	return c.Min(d)
+}
+
+// Max returns the maximum instance between a given instance and the current instance
+func (c *Carbon) Max(d *Carbon) *Carbon {
+	if d == nil {
+		d = Now()
+	}
+
+	if c.Gt(d) {
+		return c
+	}
+
+	return d
+}
+
+// Maximum returns the maximum instance between a given instance and the current instance
+func (c *Carbon) Maximum(d *Carbon) *Carbon {
+	return c.Max(d)
+}
+
 //-----------------------------------------------------------
 // Create a carbon instance from a string.
 func Parse() {
@@ -805,90 +934,6 @@ func HasRelativeKeywords() {
 func Translator() {
 }
 
-// Determines if the instance is equal to another
-func Eq() {
-}
-
-// Determines if the instance is equal to another
-// @see eq()
-func EqualTo() {
-}
-
-// Determines if the instance is not equal to another
-func Ne() {
-}
-
-// Determines if the instance is not equal to another
-// @see ne()
-func NotEqualTo() {
-}
-
-// Determines if the instance is greater (after) than another
-func Gt() {
-}
-
-// Determines if the instance is greater (after) than another
-// @see gt()
-func GreaterThan() {
-}
-
-// Determines if the instance is greater (after) than or equal to another
-func Gte() {
-}
-
-// Determines if the instance is greater (after) than or equal to another
-// @see gte()
-func GreaterThanOrEqualTo() {
-}
-
-// Determines if the instance is less (before) than another
-func Lt() {
-}
-
-// Determines if the instance is less (before) than another
-// @see lt()
-func LessThan() {
-}
-
-// Determines if the instance is less (before) or equal to another
-func Lte() {
-}
-
-// Determines if the instance is less (before) or equal to another
-// @see lte()
-func LessThanOrEqualTo() {
-}
-
-// Determines if the instance is between two others
-func Between() {
-}
-
-// Get the closest date from the instance.
-func Closest() {
-}
-
-// Get the farthest date from the instance.
-func Farthest() {
-}
-
-// Get the minimum instance between a given instance (default now) and the current instance.
-func Min() {
-}
-
-// Get the minimum instance between a given instance (default now) and the current instance.
-// @see min()
-func Minimum() {
-}
-
-// Get the maximum instance between a given instance (default now) and the current instance.
-func Max() {
-}
-
-// Get the maximum instance between a given instance (default now) and the current instance.
-// @see max()
-func Maximum() {
-}
-
 // Get the difference in years
 func DiffInYears() {
 }
@@ -933,8 +978,14 @@ func DiffInHours() {
 func DiffInMinutes() {
 }
 
-// Get the difference in seconds
-func DiffInSeconds() {
+// DiffInSeconds return the difference in seconds
+func (c *Carbon) DiffInSeconds(d *Carbon) int64 {
+	diff := d.Unix() - c.Unix()
+	if diff < 0 {
+		return -diff
+	}
+
+	return diff
 }
 
 // The number of seconds since midnight.

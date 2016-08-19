@@ -1384,3 +1384,259 @@ func TestIsSaturdayFalse(t *testing.T) {
 
 	assert.False(t, c.IsSaturday())
 }
+
+func TestEqTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.Eq(d))
+	assert.True(t, c.EqualTo(d))
+}
+
+func TestEqFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2015, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.Eq(d))
+	assert.False(t, c.EqualTo(d))
+}
+
+func TestNeTrue(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2015, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.Ne(d))
+	assert.True(t, c.NotEqualTo(d))
+}
+
+func TestNeFalse(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.Ne(d))
+	assert.False(t, c.NotEqualTo(d))
+}
+
+func TestGtTrue(t *testing.T) {
+	c := Now()
+	d := Now().SubMonth()
+
+	assert.True(t, c.Gt(d))
+	assert.True(t, c.GreaterThan(d))
+}
+
+func TestGtFalseEqual(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.Gt(d))
+	assert.False(t, c.GreaterThan(d))
+}
+
+func TestGtFalseLesser(t *testing.T) {
+	c := Now()
+	d := Now().AddMonth()
+
+	assert.False(t, c.Gt(d))
+	assert.False(t, c.GreaterThan(d))
+}
+
+func TestGteTrue(t *testing.T) {
+	c := Now()
+	d := Now().SubMonth()
+
+	assert.True(t, c.Gte(d))
+	assert.True(t, c.GreaterThanOrEqualTo(d))
+}
+
+func TestGteTrueEqual(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.Gte(d))
+	assert.True(t, c.GreaterThanOrEqualTo(d))
+}
+
+func TestGteFalseLesser(t *testing.T) {
+	c := Now()
+	d := Now().AddMonth()
+
+	assert.False(t, c.Gte(d))
+	assert.False(t, c.GreaterThanOrEqualTo(d))
+}
+
+func TestLtTrue(t *testing.T) {
+	c := Now()
+	d := Now().AddMonth()
+
+	assert.True(t, c.Lt(d))
+	assert.True(t, c.LessThan(d))
+}
+
+func TestLtFalseEqual(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.False(t, c.Lt(d))
+	assert.False(t, c.LessThan(d))
+}
+
+func TestLtFalseLesser(t *testing.T) {
+	c := Now()
+	d := Now().SubMonth()
+
+	assert.False(t, c.Lt(d))
+	assert.False(t, c.LessThan(d))
+}
+
+func TestLteTrue(t *testing.T) {
+	c := Now()
+	d := Now().AddMonth()
+
+	assert.True(t, c.Lte(d))
+	assert.True(t, c.LessThanOrEqualTo(d))
+}
+
+func TestLteTrueEqual(t *testing.T) {
+	c := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+	d := NewCarbon(time.Date(2016, time.August, 21, 23, 0, 0, 0, time.UTC))
+
+	assert.True(t, c.Lte(d))
+	assert.True(t, c.LessThanOrEqualTo(d))
+}
+
+func TestLteFalseLesser(t *testing.T) {
+	c := Now()
+	d := Now().SubMonth()
+
+	assert.False(t, c.Lte(d))
+	assert.False(t, c.LessThanOrEqualTo(d))
+}
+
+func TestBetweenTrue(t *testing.T) {
+	c := Now()
+	d := c.SubMonth()
+	b := c.AddMonth()
+
+	assert.True(t, c.Between(d, b, false))
+}
+
+func TestBetweenEqualTrue(t *testing.T) {
+	c := Now()
+	d := c.SubMonth()
+	b := c.AddMonth()
+	c = c.SubMonth()
+
+	assert.True(t, c.Between(d, b, true))
+}
+
+func TestBetweenSwapedTrue(t *testing.T) {
+	c := Now()
+	a := c.SubMonth()
+	b := c.AddMonth()
+
+	assert.True(t, c.Between(b, a, false))
+}
+
+func TestBetweenFalse(t *testing.T) {
+	c := Now()
+	d := c.SubMonth()
+	b := c.AddMonth()
+	c = c.SubMonth()
+
+	assert.False(t, c.Between(d, b, false))
+}
+
+func TestClosestFirstArgument(t *testing.T) {
+	c := Now()
+	a := c.AddHour()
+	b := c.AddMonth()
+
+	assert.Equal(t, a, c.Closest(a, b))
+}
+
+func TestClosestLastArgument(t *testing.T) {
+	c := Now()
+	a := c.AddHour()
+	b := c.AddSecond()
+
+	assert.Equal(t, b, c.Closest(a, b))
+}
+
+func TestClosestBeforeAndAfterDates(t *testing.T) {
+	c := Now()
+	a := c.SubHour()
+	b := c.AddMinute()
+
+	assert.Equal(t, b, c.Closest(a, b))
+}
+
+func TestFarthestFirstArgument(t *testing.T) {
+	c := Now()
+	a := c.AddYear()
+	b := c.AddMonth()
+
+	assert.Equal(t, a, c.Farthest(a, b))
+}
+
+func TestFarthestLastArgument(t *testing.T) {
+	c := Now()
+	a := c.AddSecond()
+	b := c.AddMinute()
+
+	assert.Equal(t, b, c.Farthest(a, b))
+}
+
+func TestFarthestBeforeAndAfterDates(t *testing.T) {
+	c := Now()
+	a := c.SubHour()
+	b := c.AddMinute()
+
+	assert.Equal(t, a, c.Farthest(a, b))
+}
+
+func TestMinLesser(t *testing.T) {
+	a := Now()
+	b := a.AddMinute()
+
+	assert.Equal(t, a, a.Min(b))
+	assert.Equal(t, a, a.Minimum(b))
+}
+
+func TestMinGreater(t *testing.T) {
+	a := Now()
+	b := a.SubMinute()
+
+	assert.Equal(t, b, a.Min(b))
+	assert.Equal(t, b, a.Minimum(b))
+}
+
+func TestMinNil(t *testing.T) {
+	a := Now().SubYear()
+
+	assert.Equal(t, a, a.Min(nil))
+	assert.Equal(t, a, a.Minimum(nil))
+}
+
+func TestMaxLesser(t *testing.T) {
+	a := Now()
+	b := a.SubMinute()
+
+	assert.Equal(t, a, a.Max(b))
+	assert.Equal(t, a, a.Maximum(b))
+}
+
+func TestMaxGreater(t *testing.T) {
+	a := Now()
+	b := a.AddMinute()
+
+	assert.Equal(t, b, a.Max(b))
+	assert.Equal(t, b, a.Maximum(b))
+}
+
+func TestMaxNil(t *testing.T) {
+	a := Now().AddYear()
+
+	assert.Equal(t, a, a.Max(nil))
+	assert.Equal(t, a, a.Maximum(nil))
+}
