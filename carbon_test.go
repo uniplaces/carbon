@@ -1852,28 +1852,28 @@ func TestDiffInYearsTimeZone(t *testing.T) {
 	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
 	t2 := NewCarbon(time.Date(2016, time.August, 18, 12, 0, 0, 0, loc))
 
-	assert.Equal(t, 0, t1.DiffInYears(t2, true))
+	assert.EqualValues(t, 0, t1.DiffInYears(t2, true))
 }
 
 func TestDiffInYears(t *testing.T) {
 	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
 	t2 := NewCarbon(time.Date(1016, time.July, 29, 12, 0, 0, 0, time.UTC))
 
-	assert.Equal(t, 1000, t1.DiffInYears(t2, true))
+	assert.EqualValues(t, 1000, t1.DiffInYears(t2, true))
 }
 
 func TestDiffInYearsAbs(t *testing.T) {
 	t1 := Now()
 	t2 := t1.AddYear()
 
-	assert.Equal(t, 1, t1.DiffInYears(t2, true))
+	assert.EqualValues(t, 1, t1.DiffInYears(t2, true))
 }
 
 func TestDiffInYearsNoAbs(t *testing.T) {
 	t1 := Now()
 	t2 := t1.AddYear()
 
-	assert.Equal(t, -1, t2.DiffInYears(t1, false))
+	assert.EqualValues(t, -1, t2.DiffInYears(t1, false))
 }
 
 func TestDiffInMonthsTimeZone(t *testing.T) {
@@ -1881,14 +1881,14 @@ func TestDiffInMonthsTimeZone(t *testing.T) {
 	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
 	t2 := NewCarbon(time.Date(2016, time.January, 18, 12, 0, 0, 0, loc))
 
-	assert.Equal(t, 7, t1.DiffInMonths(t2, true))
+	assert.EqualValues(t, 7, t1.DiffInMonths(t2, true))
 }
 
 func TestDiffInMonths(t *testing.T) {
 	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
 	t2 := NewCarbon(time.Date(2015, time.July, 29, 12, 0, 0, 0, time.UTC))
 
-	assert.Equal(t, 11, t1.DiffInMonths(t2, true))
+	assert.EqualValues(t, 11, t1.DiffInMonths(t2, true))
 }
 
 func TestSecondsSinceMidnight(t *testing.T) {
@@ -1899,4 +1899,60 @@ func TestSecondsSinceMidnight(t *testing.T) {
 func TestSecondsUntildEndOfDay(t *testing.T) {
 	t1 := NewCarbon(time.Date(2016, time.August, 18, 0, 0, 0, 0, time.UTC))
 	assert.Equal(t, 24*3600-1, t1.SecondsUntilEndOfDay())
+}
+
+func TestDiffInWeekdaysSameDay(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 0, t1.DiffInWeekdays(t2, true))
+}
+
+func TestDiffInWeekdaysOverWeekend(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 19, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 22, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 1, t1.DiffInWeekdays(t2, true))
+}
+
+func TestDiffInWeekdaysWithoutAbs(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, -2, t1.DiffInWeekdays(t2, false))
+}
+
+func TestDiffInWeekdaysWithAbs(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 2, t1.DiffInWeekdays(t2, true))
+}
+
+func TestDiffInWeekdaysOnWeekend(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 20, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 21, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 0, t1.DiffInWeekdays(t2, true))
+}
+
+func TestDiffInWeekendDays(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 20, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 20, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 0, t1.DiffInWeekendDays(t2, true))
+}
+
+func TestDiffInWeekendDaysOnWeekend(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 20, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 21, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 1, t1.DiffInWeekendDays(t2, true))
+}
+
+func TestDiffInWeekendDaysOnWeekendNegative(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 21, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 20, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, -1, t1.DiffInWeekendDays(t2, false))
 }

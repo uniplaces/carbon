@@ -16,6 +16,7 @@ const (
 	MonthsPerQuarter  = 3
 	MonthsPerYear     = 12
 	YearsPerCenturies = 100
+	WeeksPerLongYear  = 53
 )
 
 // Represent the different string formats for dates
@@ -118,6 +119,13 @@ func MinValue() *Carbon {
 // Now returns a new Carbon instance for right now
 func Now() *Carbon {
 	return NewCarbon(time.Now())
+}
+
+// Copy returns a new copy of the current Carbon instance
+func (c *Carbon) Copy() *Carbon {
+	t := time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
+
+	return NewCarbon(t)
 }
 
 // WeekStartsAt get the starting day of the week
@@ -692,7 +700,7 @@ func (c *Carbon) IsLongYear() bool {
 	d := NewCarbon(time.Date(c.Year(), time.December, 31, 0, 0, 0, 0, time.UTC))
 	_, w := d.ISOWeek()
 
-	return w == 53
+	return w == WeeksPerLongYear
 }
 
 // IsSameAs compares the formatted values of the two dates.
@@ -915,25 +923,19 @@ func (c *Carbon) Maximum(d *Carbon) *Carbon {
 }
 
 // DiffInYears returns the difference in years
-func (c *Carbon) DiffInYears(d *Carbon, abs bool) int {
+func (c *Carbon) DiffInYears(d *Carbon, abs bool) int64 {
 	t1, t2 := d.In(time.UTC), c.In(time.UTC)
 	diff := t1.Year() - t2.Year()
-	if abs && diff < 0 {
-		return -diff
-	}
 
-	return diff
+	return absValue(abs, int64(diff))
 }
 
 // DiffInMonths returns the difference in months
-func (c *Carbon) DiffInMonths(d *Carbon, abs bool) int {
+func (c *Carbon) DiffInMonths(d *Carbon, abs bool) int64 {
 	t1, t2 := d.In(time.UTC), c.In(time.UTC)
-	diff := c.DiffInYears(d, abs)*MonthsPerYear + int(t1.Month()-t2.Month())
-	if abs && diff < 0 {
-		return -diff
-	}
+	diff := c.DiffInYears(d, abs)*MonthsPerYear + int64(t1.Month()-t2.Month())
 
-	return diff
+	return absValue(abs, diff)
 }
 
 // DiffInWeeks returns the difference in weeks
@@ -959,11 +961,49 @@ func DiffFiltered() {
 }
 
 // DiffInWeekdays returns the difference in weekdays
-func DiffInWeekdays() {
+func (c *Carbon) DiffInWeekdays(d *Carbon, abs bool) int64 {
+	f := func(d *Carbon) bool {
+		return d.IsWeekday()
+	}
+	diff := c.countDiffDays(d, f)
+
+	return absValue(abs, diff)
 }
 
 // DiffInWeekendDays returns the difference in weekend days using a filter
-func DiffInWeekendDays() {
+func (c *Carbon) DiffInWeekendDays(d *Carbon, abs bool) int64 {
+	f := func(d *Carbon) bool {
+		return d.IsWeekend()
+	}
+	diff := c.countDiffDays(d, f)
+
+	return absValue(abs, diff)
+}
+
+func (c *Carbon) countDiffDays(d *Carbon, pred func(*Carbon) bool) int64 {
+	if c.IsSameDay(d) {
+		return 0
+	}
+
+	inc := 1
+	start, end := c.Copy(), d.Copy()
+	if start.Gt(end) {
+		tmp := start
+		start = end
+		end = tmp
+		inc = -1
+	}
+
+	var num int64
+	num = 0
+	for start.DiffInDays(end, true) > 0 {
+		if pred(end) {
+			num += int64(inc)
+		}
+		end = end.SubDay()
+	}
+
+	return num
 }
 
 // DiffInHours returns the difference in hours
@@ -979,11 +1019,17 @@ func (c *Carbon) DiffInMinutes(d *Carbon, abs bool) int64 {
 // DiffInSeconds returns the difference in seconds
 func (c *Carbon) DiffInSeconds(d *Carbon, abs bool) int64 {
 	diff := d.Unix() - c.Unix()
-	if abs && diff < 0 {
-		return -diff
+
+	return absValue(abs, diff)
+}
+
+// absValue returns the abs value if needed
+func absValue(needsAbs bool, value int64) int64 {
+	if needsAbs && value < 0 {
+		return -value
 	}
 
-	return diff
+	return value
 }
 
 // SecondsSinceMidnight the number of seconds since midnight.
