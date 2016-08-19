@@ -3,7 +3,6 @@ package carbon
 import (
 	"errors"
 	"math"
-	"strings"
 	"time"
 )
 
@@ -25,6 +24,8 @@ const (
 	DateFormat          = "2006-01-02"
 	FormattedDateFormat = "Jan 2, 2006"
 	TimeFormat          = "15:04:05"
+	HourMinuteFormat    = "15:04"
+	HourFormat          = "15"
 	DayDateTimeFormat   = "Mon, Aug 2, 2006 3:04 PM"
 	CookieFormat        = "Monday, 02-Jan-2006 15:04:05 MST"
 	RFC822Format        = "Mon, 02 Jan 06 15:04:05 -0700"
@@ -106,9 +107,11 @@ func Yesterday(loc string) (*Carbon, error) {
 // UnixTimeInSeconds represents the number of seconds between Year 1 and 1970
 const UnixTimeInSeconds = 62135596801
 
+const maxNSecs = 999999999
+
 // MaxValue returns a pointer to a new carbon instance for greatest supported date
 func MaxValue() *Carbon {
-	return NewCarbon(time.Unix(math.MaxInt64-UnixTimeInSeconds, 999999999))
+	return NewCarbon(time.Unix(math.MaxInt64-UnixTimeInSeconds, maxNSecs))
 }
 
 // MinValue returns a pointer to a new carbon instance for lowest supported date
@@ -225,18 +228,17 @@ func (c *Carbon) AddDay() *Carbon {
 func (c *Carbon) AddWeekdays(wd int) *Carbon {
 	d := 1
 	if wd < 0 {
-		d = -1
-		wd *= -1
+		wd, d = -wd, -d
 	}
-	t := c.Time
+	t := c.Copy()
 	for wd > 0 {
-		t = t.AddDate(0, 0, d)
-		if t.Weekday() != time.Saturday && t.Weekday() != time.Sunday {
+		t = t.AddDays(d)
+		if t.IsWeekday() {
 			wd--
 		}
 	}
 
-	return NewCarbon(t)
+	return t
 }
 
 // AddWeekday adds a weekday to the current time
@@ -456,38 +458,32 @@ func (c *Carbon) SetDateTime(y int, mon time.Month, d, h, m, s int) {
 // SetTimeFromTimeString receives a string and sets the current time
 // It accepts the following formats: "hh:mm:ss", "hh:mm" and "hh"
 func (c *Carbon) SetTimeFromTimeString(timeString string) error {
-	layouts := []string{"15", "04", "05"}
-	h, m, s, err := c.parse(layouts, timeString)
-	if err != nil {
-		return err
-	}
-	c.SetHour(h)
-	c.SetMinute(m)
-	c.SetSecond(s)
-
-	return nil
-}
-
-func (c *Carbon) parse(layouts []string, timeString string) (int, int, int, error) {
-	currLayout := strings.Join(layouts, ":")
-	parsed, err := time.Parse(currLayout, timeString)
-	size := len(layouts)
-	if err != nil && size > 0 {
-		l := layouts[:size-1]
-		h, m, s, err := c.parse(l, timeString)
-		return h, m, s, err
-	}
-	h, m, s := parsed.Clock()
-	switch len(layouts) {
-	case 3:
-		return h, m, s, nil
-	case 2:
-		return h, m, c.Second(), nil
-	case 1:
-		return h, c.Minute(), c.Second(), nil
+	layouts := []string{
+		TimeFormat,
+		HourMinuteFormat,
+		HourFormat,
 	}
 
-	return 0, 0, 0, errors.New("only supports hh:mm:ss, hh:mm and hh formats")
+	var t time.Time
+	var err error
+	for i, layout := range layouts {
+		t, err = time.Parse(layout, timeString)
+		if err == nil {
+			h, m, s := t.Clock()
+			switch i {
+			case 1:
+				s = c.Second()
+			case 2:
+				m, s = c.Minute(), c.Second()
+			}
+			c.SetHour(h)
+			c.SetMinute(m)
+			c.SetSecond(s)
+			return nil
+		}
+	}
+
+	return errors.New("only supports hh:mm:ss, hh:mm and hh formats")
 }
 
 // SetWeekEndsAt sets the last day of week
@@ -663,9 +659,7 @@ func (c *Carbon) IsYesterday() bool {
 
 // IsToday determines if the current time is today
 func (c *Carbon) IsToday() bool {
-	n := Now()
-
-	return c.IsSameDay(n)
+	return c.IsSameDay(Now())
 }
 
 // IsTomorrow determines if the current time is tomorrow
@@ -688,7 +682,7 @@ func (c *Carbon) IsPast() bool {
 // IsLeapYear determines if current current time is a leap year
 func (c *Carbon) IsLeapYear() bool {
 	y := c.Year()
-	if (y%4 == 0 && c.Year()%100 != 0) || y%400 == 0 {
+	if (y%4 == 0 && y%100 != 0) || y%400 == 0 {
 		return true
 	}
 
@@ -857,9 +851,7 @@ func (c *Carbon) LessThanOrEqualTo(d *Carbon) bool {
 // eq Indicates if a > and < comparison should be used or <= or >=
 func (c *Carbon) Between(a, b *Carbon, eq bool) bool {
 	if a.Gt(b) {
-		tmp := b
-		b = a
-		a = tmp
+		a, b = swap(a, b)
 	}
 	if eq {
 		return c.Gte(a) && c.Lte(b)
@@ -948,16 +940,20 @@ func (c *Carbon) DiffInDays(d *Carbon, abs bool) int64 {
 	return c.DiffInHours(d, abs) / HoursPerDay
 }
 
+// Filter represents a predicate used for filtering diffs
+type Filter func(*Carbon) bool
+
+// dayDuration reprensets a day in time.Duration format
+const dayDuration = time.Hour * HoursPerDay
+
 // DiffInDaysFiltered returns the difference in days using a filter
-func DiffInDaysFiltered() {
+func (c *Carbon) DiffInDaysFiltered(f Filter, d *Carbon, abs bool) int64 {
+	return c.DiffFiltered(dayDuration, f, d, abs)
 }
 
 // DiffInHoursFiltered returns the difference in hours using a filter
-func DiffInHoursFiltered() {
-}
-
-// DiffFiltered returns the difference by the given interval using a filter
-func DiffFiltered() {
+func (c *Carbon) DiffInHoursFiltered(f Filter, d *Carbon, abs bool) int64 {
+	return c.DiffFiltered(time.Hour, f, d, abs)
 }
 
 // DiffInWeekdays returns the difference in weekdays
@@ -965,9 +961,8 @@ func (c *Carbon) DiffInWeekdays(d *Carbon, abs bool) int64 {
 	f := func(d *Carbon) bool {
 		return d.IsWeekday()
 	}
-	diff := c.countDiffDays(d, f)
 
-	return absValue(abs, diff)
+	return c.DiffFiltered(dayDuration, f, d, abs)
 }
 
 // DiffInWeekendDays returns the difference in weekend days using a filter
@@ -975,35 +970,35 @@ func (c *Carbon) DiffInWeekendDays(d *Carbon, abs bool) int64 {
 	f := func(d *Carbon) bool {
 		return d.IsWeekend()
 	}
-	diff := c.countDiffDays(d, f)
 
-	return absValue(abs, diff)
+	return c.DiffFiltered(dayDuration, f, d, abs)
 }
 
-func (c *Carbon) countDiffDays(d *Carbon, pred func(*Carbon) bool) int64 {
+// DiffFiltered returns the difference by the given duration using a filter
+func (c *Carbon) DiffFiltered(duration time.Duration, f Filter, d *Carbon, abs bool) int64 {
 	if c.IsSameDay(d) {
 		return 0
 	}
 
-	inc := 1
+	inverse := false
+	var counter int64
+	s := int64(duration.Seconds())
 	start, end := c.Copy(), d.Copy()
 	if start.Gt(end) {
-		tmp := start
-		start = end
-		end = tmp
-		inc = -1
+		start, end = swap(start, end)
+		inverse = true
 	}
-
-	var num int64
-	num = 0
-	for start.DiffInDays(end, true) > 0 {
-		if pred(end) {
-			num += int64(inc)
+	for start.DiffInSeconds(end, true)/s > 0 {
+		if f(end) {
+			counter++
 		}
-		end = end.SubDay()
+		end = NewCarbon(end.Add(-duration))
+	}
+	if inverse {
+		counter = -counter
 	}
 
-	return num
+	return absValue(abs, counter)
 }
 
 // DiffInHours returns the difference in hours
@@ -1023,6 +1018,18 @@ func (c *Carbon) DiffInSeconds(d *Carbon, abs bool) int64 {
 	return absValue(abs, diff)
 }
 
+// SecondsSinceMidnight the number of seconds since midnight.
+func (c *Carbon) SecondsSinceMidnight() int {
+	midnight := NewCarbon(time.Date(c.Year(), c.Month(), c.Day(), 0, 0, 0, 0, c.Location()))
+	return int(c.DiffInSeconds(midnight, true))
+}
+
+// SecondsUntilEndOfDay The number of seconds until 23:59:59.
+func (c *Carbon) SecondsUntilEndOfDay() int {
+	dayEnd := NewCarbon(time.Date(c.Year(), c.Month(), c.Day(), 23, 59, 59, maxNSecs, c.Location()))
+	return int(c.DiffInSeconds(dayEnd, true))
+}
+
 // absValue returns the abs value if needed
 func absValue(needsAbs bool, value int64) int64 {
 	if needsAbs && value < 0 {
@@ -1032,16 +1039,8 @@ func absValue(needsAbs bool, value int64) int64 {
 	return value
 }
 
-// SecondsSinceMidnight the number of seconds since midnight.
-func (c *Carbon) SecondsSinceMidnight() int {
-	midnight := NewCarbon(time.Date(c.Year(), c.Month(), c.Day(), 0, 0, 0, 0, c.Location()))
-	return int(c.DiffInSeconds(midnight, true))
-}
-
-// SecondsUntilEndOfDay The number of seconds until 23:59:59.
-func (c *Carbon) SecondsUntilEndOfDay() int {
-	dayEnd := NewCarbon(time.Date(c.Year(), c.Month(), c.Day(), 23, 59, 59, 999999999, c.Location()))
-	return int(c.DiffInSeconds(dayEnd, true))
+func swap(a, b *Carbon) (*Carbon, *Carbon) {
+	return b, a
 }
 
 // DiffForHumans returns the difference in a human readable format in the current locale.

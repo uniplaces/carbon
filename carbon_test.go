@@ -1956,3 +1956,43 @@ func TestDiffInWeekendDaysOnWeekendNegative(t *testing.T) {
 
 	assert.EqualValues(t, -1, t1.DiffInWeekendDays(t2, false))
 }
+
+func TestDiffInDaysFiltered(t *testing.T) {
+	t1 := NewCarbon(time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2000, time.January, 31, 0, 0, 0, 0, time.UTC))
+	f := func(c *Carbon) bool {
+		return c.Weekday() == time.Sunday
+	}
+
+	assert.EqualValues(t, 5, t1.DiffInDaysFiltered(f, t2, true))
+}
+
+func TestDiffInDaysFilteredNegative(t *testing.T) {
+	t1 := NewCarbon(time.Date(2000, time.January, 31, 0, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC))
+	f := func(c *Carbon) bool {
+		return c.Weekday() == time.Sunday
+	}
+
+	assert.EqualValues(t, -5, t1.DiffInDaysFiltered(f, t2, false))
+}
+
+func TestDiffInHoursFiltered(t *testing.T) {
+	t1 := NewCarbon(time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2000, time.January, 31, 23, 59, 59, 0, time.UTC))
+	f := func(c *Carbon) bool {
+		return c.Hour() == 9
+	}
+
+	assert.EqualValues(t, 31, t1.DiffInHoursFiltered(f, t2, true))
+}
+
+func TestDiffInHoursFilteredNegative(t *testing.T) {
+	t1 := NewCarbon(time.Date(2000, time.January, 31, 23, 59, 59, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC))
+	f := func(c *Carbon) bool {
+		return c.Hour() == 9
+	}
+
+	assert.EqualValues(t, -31, t1.DiffInHoursFiltered(f, t2, false))
+}
