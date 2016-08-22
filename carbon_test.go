@@ -1696,3 +1696,303 @@ func TestParseUnknown(t *testing.T) {
 	expected := NewCarbon(time.Date(2015, time.November, 2, 16, 10, 22, 0, loc))
 	assert.Equal(t, expected, d)
 }
+
+func TestDiffInSecondsTimeZoneSameTime(t *testing.T) {
+	loc, _ := time.LoadLocation("Europe/Madrid")
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 12, 0, 0, 0, loc))
+
+	assert.Equal(t, int64(0), t1.DiffInSeconds(t2, true))
+}
+
+func TestDiffInSecondsTimeZoneDifferentTime(t *testing.T) {
+	loc, _ := time.LoadLocation("Europe/Madrid")
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 13, 0, 0, 0, loc))
+
+	assert.Equal(t, int64(3600), t1.DiffInSeconds(t2, true))
+}
+
+func TestDiffInSecondsAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddSecond()
+
+	assert.Equal(t, int64(1), t1.DiffInSeconds(t2, true))
+}
+
+func TestDiffInSecondsNoAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddSecond()
+
+	assert.Equal(t, int64(-1), t2.DiffInSeconds(t1, false))
+}
+
+func TestDiffInMinutesTimeZone(t *testing.T) {
+	loc, _ := time.LoadLocation("Europe/Madrid")
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 12, 0, 0, 0, loc))
+
+	assert.Equal(t, int64(0), t1.DiffInMinutes(t2, true))
+}
+
+func TestDiffInMinutesTimeZone2(t *testing.T) {
+	loc, _ := time.LoadLocation("Europe/Madrid")
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 13, 0, 0, 0, loc))
+
+	assert.Equal(t, int64(60), t1.DiffInMinutes(t2, true))
+}
+
+func TestDiffInMinutesAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddMinute()
+
+	assert.Equal(t, int64(1), t1.DiffInMinutes(t2, true))
+}
+
+func TestDiffInMinutesNoAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddMinute()
+
+	assert.Equal(t, int64(-1), t2.DiffInMinutes(t1, false))
+}
+
+func TestDiffInHoursTimeZone(t *testing.T) {
+	loc, _ := time.LoadLocation("Europe/Madrid")
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 12, 0, 0, 0, loc))
+
+	assert.Equal(t, int64(0), t1.DiffInHours(t2, true))
+}
+
+func TestDiffInHoursTimeZone2(t *testing.T) {
+	loc, _ := time.LoadLocation("Europe/Madrid")
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 13, 0, 0, 0, loc))
+
+	assert.Equal(t, int64(1), t1.DiffInHours(t2, true))
+}
+
+func TestDiffInHoursAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddHour()
+
+	assert.Equal(t, int64(1), t1.DiffInHours(t2, true))
+}
+
+func TestDiffInHoursNoAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddHour()
+
+	assert.Equal(t, int64(-1), t2.DiffInHours(t1, false))
+}
+
+func TestDiffInDaysTimeZone(t *testing.T) {
+	loc, _ := time.LoadLocation("Europe/Madrid")
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 12, 0, 0, 0, loc))
+
+	assert.Equal(t, int64(0), t1.DiffInDays(t2, true))
+}
+
+func TestDiffInDaysTimeZone2(t *testing.T) {
+	loc, _ := time.LoadLocation("Europe/Madrid")
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 13, 12, 0, 0, 0, loc))
+
+	assert.Equal(t, int64(5), t1.DiffInDays(t2, true))
+}
+
+func TestDiffInDaysAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddDay()
+
+	assert.Equal(t, int64(1), t1.DiffInDays(t2, true))
+}
+
+func TestDiffInDaysNoAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddDay()
+
+	assert.Equal(t, int64(-1), t2.DiffInDays(t1, false))
+}
+
+func TestDiffInWeeksTimeZone(t *testing.T) {
+	loc, _ := time.LoadLocation("Europe/Madrid")
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 12, 0, 0, 0, loc))
+
+	assert.Equal(t, int64(0), t1.DiffInWeeks(t2, true))
+}
+
+func TestDiffInWeeksTimeZone2(t *testing.T) {
+	loc, _ := time.LoadLocation("Europe/Madrid")
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.July, 29, 12, 0, 0, 0, loc))
+
+	assert.Equal(t, int64(2), t1.DiffInWeeks(t2, true))
+}
+
+func TestDiffInWeeksAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddWeek()
+
+	assert.Equal(t, int64(1), t1.DiffInWeeks(t2, true))
+}
+
+func TestDiffInWeeksNoAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddWeek()
+
+	assert.Equal(t, int64(-1), t2.DiffInWeeks(t1, false))
+}
+
+func TestDiffInYearsTimeZone(t *testing.T) {
+	loc, _ := time.LoadLocation("Europe/Madrid")
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 12, 0, 0, 0, loc))
+
+	assert.EqualValues(t, 0, t1.DiffInYears(t2, true))
+}
+
+func TestDiffInYears(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(1016, time.July, 29, 12, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 1000, t1.DiffInYears(t2, true))
+}
+
+func TestDiffInYearsAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddYear()
+
+	assert.EqualValues(t, 1, t1.DiffInYears(t2, true))
+}
+
+func TestDiffInYearsNoAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddYear()
+
+	assert.EqualValues(t, -1, t2.DiffInYears(t1, false))
+}
+
+func TestDiffInMonthsTimeZone(t *testing.T) {
+	loc, _ := time.LoadLocation("Europe/Madrid")
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.January, 18, 12, 0, 0, 0, loc))
+
+	assert.EqualValues(t, 7, t1.DiffInMonths(t2, true))
+}
+
+func TestDiffInMonths(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2015, time.July, 29, 12, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 11, t1.DiffInMonths(t2, true))
+}
+
+func TestSecondsSinceMidnight(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	assert.Equal(t, 10*60*60, t1.SecondsSinceMidnight())
+}
+
+func TestSecondsUntildEndOfDay(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, 24*3600-1, t1.SecondsUntilEndOfDay())
+}
+
+func TestDiffInWeekdaysSameDay(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 0, t1.DiffInWeekdays(t2, true))
+}
+
+func TestDiffInWeekdaysOverWeekend(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 19, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 22, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 1, t1.DiffInWeekdays(t2, true))
+}
+
+func TestDiffInWeekdaysWithoutAbs(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, -2, t1.DiffInWeekdays(t2, false))
+}
+
+func TestDiffInWeekdaysWithAbs(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 2, t1.DiffInWeekdays(t2, true))
+}
+
+func TestDiffInWeekdaysOnWeekend(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 20, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 21, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 0, t1.DiffInWeekdays(t2, true))
+}
+
+func TestDiffInWeekendDays(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 20, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 20, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 0, t1.DiffInWeekendDays(t2, true))
+}
+
+func TestDiffInWeekendDaysOnWeekend(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 20, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 21, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 1, t1.DiffInWeekendDays(t2, true))
+}
+
+func TestDiffInWeekendDaysOnWeekendNegative(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 21, 10, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.August, 20, 10, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, -1, t1.DiffInWeekendDays(t2, false))
+}
+
+func TestDiffInDaysFiltered(t *testing.T) {
+	t1 := NewCarbon(time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2000, time.January, 31, 0, 0, 0, 0, time.UTC))
+	f := func(c *Carbon) bool {
+		return c.Weekday() == time.Sunday
+	}
+
+	assert.EqualValues(t, 5, t1.DiffInDaysFiltered(f, t2, true))
+}
+
+func TestDiffInDaysFilteredNegative(t *testing.T) {
+	t1 := NewCarbon(time.Date(2000, time.January, 31, 0, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC))
+	f := func(c *Carbon) bool {
+		return c.Weekday() == time.Sunday
+	}
+
+	assert.EqualValues(t, -5, t1.DiffInDaysFiltered(f, t2, false))
+}
+
+func TestDiffInHoursFiltered(t *testing.T) {
+	t1 := NewCarbon(time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2000, time.January, 31, 23, 59, 59, 0, time.UTC))
+	f := func(c *Carbon) bool {
+		return c.Hour() == 9
+	}
+
+	assert.EqualValues(t, 31, t1.DiffInHoursFiltered(f, t2, true))
+}
+
+func TestDiffInHoursFilteredNegative(t *testing.T) {
+	t1 := NewCarbon(time.Date(2000, time.January, 31, 23, 59, 59, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC))
+	f := func(c *Carbon) bool {
+		return c.Hour() == 9
+	}
+
+	assert.EqualValues(t, -31, t1.DiffInHoursFiltered(f, t2, false))
+}
