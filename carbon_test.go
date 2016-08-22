@@ -1697,7 +1697,7 @@ func TestParseUnknown(t *testing.T) {
 	assert.Equal(t, expected, d)
 }
 
-func TestDiffInSecondsTimeZone(t *testing.T) {
+func TestDiffInSecondsTimeZoneSameTime(t *testing.T) {
 	loc, _ := time.LoadLocation("Europe/Madrid")
 	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
 	t2 := NewCarbon(time.Date(2016, time.August, 18, 12, 0, 0, 0, loc))
@@ -1705,7 +1705,7 @@ func TestDiffInSecondsTimeZone(t *testing.T) {
 	assert.Equal(t, int64(0), t1.DiffInSeconds(t2, true))
 }
 
-func TestDiffInSecondsTimeZone2(t *testing.T) {
+func TestDiffInSecondsTimeZoneDifferentTime(t *testing.T) {
 	loc, _ := time.LoadLocation("Europe/Madrid")
 	t1 := NewCarbon(time.Date(2016, time.August, 18, 10, 0, 0, 0, time.UTC))
 	t2 := NewCarbon(time.Date(2016, time.August, 18, 13, 0, 0, 0, loc))
