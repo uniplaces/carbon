@@ -61,6 +61,51 @@ func NewCarbon(t time.Time) *Carbon {
 	}
 }
 
+// Create returns a new pointer to Carbon instance from a specific date and time.
+func Create(y int, mon time.Month, d, h, m, s, ns int, loc *time.Location) *Carbon {
+	return NewCarbon(time.Date(y, mon, d, h, m, s, ns, loc))
+}
+
+// CreateFromDate returns a new pointer to a Carbon instance from just a date
+// The time portion is set to now
+func CreateFromDate(y int, mon time.Month, d int, loc *time.Location) *Carbon {
+	h, m, s := Now().Clock()
+	ns := Now().Nanosecond()
+
+	return Create(y, mon, d, h, m, s, ns, loc)
+}
+
+// CreateFromTime returns a new pointer to a Carbon instance from just a date
+// The time portion is set to now
+func CreateFromTime(h, m, s, ns int, loc *time.Location) *Carbon {
+	y, mon, d := Now().Date()
+
+	return Create(y, mon, d, h, m, s, ns, loc)
+}
+
+// CreateFromFormat returns a new pointer to a Carbon instance from a specific format.
+func CreateFromFormat(layout, value string, loc *time.Location) (*Carbon, error) {
+	t, err := time.ParseInLocation(layout, value, loc)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewCarbon(t), nil
+}
+
+// CreateFromTimestamp returns a new pointer to a Carbon instance from a timestamp.
+func CreateFromTimestamp(timestamp int64, loc *time.Location) *Carbon {
+	t := NewCarbon(Now().In(loc))
+	t.SetTimestamp(timestamp)
+
+	return t
+}
+
+// CreateFromTimestampUTC returns a new pointer to a Carbon instance from an UTC timestamp.
+func CreateFromTimestampUTC(timestamp int64) *Carbon {
+	return CreateFromTimestamp(timestamp, time.UTC)
+}
+
 // Parse returns a pointer to a new carbon instance from a string
 func Parse(layout, value, location string) (*Carbon, error) {
 	l, err := time.LoadLocation(location)
@@ -127,9 +172,7 @@ func Now() *Carbon {
 
 // Copy returns a new copy of the current Carbon instance
 func (c *Carbon) Copy() *Carbon {
-	t := time.Date(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
-
-	return NewCarbon(t)
+	return Create(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
 }
 
 // WeekStartsAt get the starting day of the week
@@ -711,7 +754,7 @@ func (c *Carbon) IsLeapYear() bool {
 
 // IsLongYear determines if the instance is a long year
 func (c *Carbon) IsLongYear() bool {
-	carb := NewCarbon(time.Date(c.Year(), time.December, 31, 0, 0, 0, 0, time.UTC))
+	carb := Create(c.Year(), time.December, 31, 0, 0, 0, 0, time.UTC)
 	_, w := carb.ISOWeek()
 
 	return w == WeeksPerLongYear
@@ -1083,50 +1126,6 @@ func DiffForHumans() {
 
 //-----------------------------------------------------------
 
-// Create a new Carbon instance from a specific date and time.
-// If any of $year, $month or $day are set to null their now() values will
-// be used.
-// If $hour is null it will be set to its now() value and the default
-// values for $minute and $second will be their now() values.
-// If $hour is not null then the default values for $minute and $second
-// will be 0.
-func Create() {
-}
-
-// Create a new safe Carbon instance from a specific date and time.
-// If any of $year, $month or $day are set to null their now() values will
-// be used.
-// If $hour is null it will be set to its now() value and the default
-// values for $minute and $second will be their now() values.
-// If $hour is not null then the default values for $minute and $second
-// will be 0.
-// If one of the set values is not valid, an \InvalidArgumentException
-// will be thrown.
-// @throws \Carbon\Exceptions\InvalidDateException
-func CreateSafe() {
-}
-
-// Create a Carbon instance from just a date. The time portion is set to now.
-func CreateFromDate() {
-}
-
-// Create a Carbon instance from just a time. The date portion is set to today.
-func CreateFromTime() {
-}
-
-// Create a Carbon instance from a specific format.
-// @throws \InvalidArgumentException
-func CreateFromFormat() {
-}
-
-// Create a Carbon instance from a timestamp.
-func CreateFromTimestamp() {
-}
-
-// Create a Carbon instance from an UTC timestamp.
-func CreateFromTimestampUTC() {
-}
-
 // Determine if there is a relative keyword in the time string, this is to
 // create dates relative to now for test instances. e.g.: next tuesday
 func HasRelativeKeywords() {
@@ -1138,28 +1137,29 @@ func Translator() {
 
 // StartOfDay returns the time at 00:00:00 of the same day
 func (c *Carbon) StartOfDay() *Carbon {
-	return NewCarbon(time.Date(c.Year(), c.Month(), c.Day(), 0, 0, 0, 0, c.Location()))
+	return Create(c.Year(), c.Month(), c.Day(), 0, 0, 0, 0, c.Location())
 }
 
 // EndOfDay returns the time at 23:59:59 of the same day
 func (c *Carbon) EndOfDay() *Carbon {
-	return NewCarbon(time.Date(c.Year(), c.Month(), c.Day(), 23, 59, 59, maxNSecs, c.Location()))
+	return Create(c.Year(), c.Month(), c.Day(), 23, 59, 59, maxNSecs, c.Location())
 }
 
 // StartOfMonth returns the date on the first day of the month and the time to 00:00:00
 func (c *Carbon) StartOfMonth() *Carbon {
-	return NewCarbon(time.Date(c.Year(), c.Month(), 1, 0, 0, 0, 0, c.Location()))
+	return Create(c.Year(), c.Month(), 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfMonth returns the date at the end of the month and time at 23:59:59
 func (c *Carbon) EndOfMonth() *Carbon {
-	return NewCarbon(time.Date(c.Year(), c.Month()+1, 0, 23, 59, 59, maxNSecs, c.Location()))
+	return Create(c.Year(), c.Month()+1, 0, 23, 59, 59, maxNSecs, c.Location())
 }
 
 // StartOfQuarter returns the date at the first day of the quarter and time at 00:00:00
 func (c *Carbon) StartOfQuarter() *Carbon {
 	month := time.Month((c.Quarter()-1)*MonthsPerQuarter + 1)
-	return NewCarbon(time.Date(c.Year(), time.Month(month), 1, 0, 0, 0, 0, c.Location()))
+
+	return Create(c.Year(), time.Month(month), 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfQuarter returns the date at end of the quarter and time at 23:59:59
@@ -1169,36 +1169,40 @@ func (c *Carbon) EndOfQuarter() *Carbon {
 
 // StartOfYear returns the date at the first day of the year and the time at 00:00:00
 func (c *Carbon) StartOfYear() *Carbon {
-	return NewCarbon(time.Date(c.Year(), time.January, 1, 0, 0, 0, 0, c.Location()))
+	return Create(c.Year(), time.January, 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfYear returns the date at end of the year and time to 23:59:59
 func (c *Carbon) EndOfYear() *Carbon {
-	return NewCarbon(time.Date(c.Year(), time.December, 31, 23, 59, 59, maxNSecs, c.Location()))
+	return Create(c.Year(), time.December, 31, 23, 59, 59, maxNSecs, c.Location())
 }
 
 // StartOfDecade returns the date at the first day of the decade and time at 00:00:00
 func (c *Carbon) StartOfDecade() *Carbon {
 	year := c.Year() - c.Year()%YearsPerDecade
-	return NewCarbon(time.Date(year, time.January, 1, 0, 0, 0, 0, c.Location()))
+
+	return Create(year, time.January, 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfDecade returns the date at the end of the decade and time at 23:59:59
 func (c *Carbon) EndOfDecade() *Carbon {
 	year := c.Year() - c.Year()%YearsPerDecade + YearsPerDecade - 1
-	return NewCarbon(time.Date(year, time.December, 31, 23, 59, 59, maxNSecs, c.Location()))
+
+	return Create(year, time.December, 31, 23, 59, 59, maxNSecs, c.Location())
 }
 
 // StartOfCentury returns the date of the first day of the century at 00:00:00
 func (c *Carbon) StartOfCentury() *Carbon {
 	year := c.Year() - c.Year()%YearsPerCenturies
-	return NewCarbon(time.Date(year, time.January, 1, 0, 0, 0, 0, c.Location()))
+
+	return Create(year, time.January, 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfCentury returns the date of the end of the century at 23:59:59
 func (c *Carbon) EndOfCentury() *Carbon {
 	year := c.Year() - 1 - c.Year()%YearsPerCenturies + YearsPerCenturies
-	return NewCarbon(time.Date(year, time.December, 31, 23, 59, 59, maxNSecs, c.Location()))
+
+	return Create(year, time.December, 31, 23, 59, 59, maxNSecs, c.Location())
 }
 
 // StartOfWeek returns the date of the first day of week at 00:00:00
@@ -1381,5 +1385,6 @@ func (c *Carbon) NthOfYear(nth int, wd time.Weekday) *Carbon {
 // Average returns the average bewteen a given carbon date and the current date
 func (c *Carbon) Average(carb *Carbon) *Carbon {
 	average := int(c.DiffInSeconds(carb, false) / 2)
+
 	return c.AddSeconds(average)
 }
