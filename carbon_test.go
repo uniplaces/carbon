@@ -1689,12 +1689,16 @@ func TestParse(t *testing.T) {
 	assert.Equal(t, expected, d)
 }
 
-func TestParseUnknown(t *testing.T) {
-	d, _ := Parse(DefaultFormat, "2015-11-02 16:10:22", "Africa/Cairo")
+func TestParseUnknownLocation(t *testing.T) {
+	_, err := Parse(DefaultFormat, "2015-11-02 16:10:22", "WonderLand")
 
-	loc, _ := time.LoadLocation("Africa/Cairo")
-	expected := NewCarbon(time.Date(2015, time.November, 2, 16, 10, 22, 0, loc))
-	assert.Equal(t, expected, d)
+	assert.NotNil(t, err)
+}
+
+func TestParseInvalidFormat(t *testing.T) {
+	_, err := Parse(DefaultFormat, "Clearly an invalid date format", "Africa/Cairo")
+
+	assert.NotNil(t, err)
 }
 
 func TestDiffInSecondsTimeZoneSameTime(t *testing.T) {
@@ -1995,4 +1999,371 @@ func TestDiffInHoursFilteredNegative(t *testing.T) {
 	}
 
 	assert.EqualValues(t, -31, t1.DiffInHoursFiltered(f, t2, false))
+}
+
+func TestStartOfDay(t *testing.T) {
+	t1 := NewCarbon(time.Date(2009, time.August, 31, 13, 0, 0, 0, time.UTC))
+	t2 := t1.StartOfDay()
+
+	expected := NewCarbon(time.Date(2009, time.August, 31, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestEndOfDay(t *testing.T) {
+	t1 := NewCarbon(time.Date(2009, time.August, 31, 13, 0, 0, 0, time.UTC))
+	t2 := t1.EndOfDay()
+
+	expected := NewCarbon(time.Date(2009, time.August, 31, 23, 59, 59, 999999999, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestStartOfMonth(t *testing.T) {
+	t1 := NewCarbon(time.Date(2009, time.August, 24, 13, 0, 0, 0, time.UTC))
+	t2 := t1.EndOfMonth()
+
+	expected := NewCarbon(time.Date(2009, time.August, 31, 23, 59, 59, 999999999, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestEndOfMonth(t *testing.T) {
+	t1 := NewCarbon(time.Date(2009, time.August, 24, 13, 0, 0, 0, time.UTC))
+	t2 := t1.EndOfMonth()
+
+	expected := NewCarbon(time.Date(2009, time.August, 31, 23, 59, 59, 999999999, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestStartOfQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2009, time.August, 24, 13, 0, 0, 0, time.UTC))
+	t2 := t1.StartOfQuarter()
+
+	expected := NewCarbon(time.Date(2009, time.July, 1, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestEndOfQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2009, time.January, 24, 13, 0, 0, 0, time.UTC))
+	t2 := t1.EndOfQuarter()
+
+	expected := NewCarbon(time.Date(2009, time.March, 31, 23, 59, 59, 999999999, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestStartOfYear(t *testing.T) {
+	t1 := NewCarbon(time.Date(2009, time.August, 24, 13, 0, 0, 0, time.UTC))
+	t2 := t1.StartOfYear()
+
+	expected := NewCarbon(time.Date(2009, time.January, 1, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestEndOfYear(t *testing.T) {
+	t1 := NewCarbon(time.Date(2009, time.August, 24, 13, 0, 0, 0, time.UTC))
+	t2 := t1.EndOfYear()
+
+	expected := NewCarbon(time.Date(2009, time.December, 31, 23, 59, 59, 999999999, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestStartOfDecade(t *testing.T) {
+	t1 := NewCarbon(time.Date(2006, time.August, 24, 13, 0, 0, 0, time.UTC))
+	t2 := t1.StartOfDecade()
+
+	expected := NewCarbon(time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestEndOfDecade(t *testing.T) {
+	t1 := NewCarbon(time.Date(2006, time.August, 24, 13, 0, 0, 0, time.UTC))
+	t2 := t1.EndOfDecade()
+
+	expected := NewCarbon(time.Date(2009, time.December, 31, 23, 59, 59, 999999999, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestStartOfCentury(t *testing.T) {
+	t1 := NewCarbon(time.Date(2006, time.August, 24, 13, 0, 0, 0, time.UTC))
+	t2 := t1.StartOfCentury()
+
+	expected := NewCarbon(time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestEndOfCentury(t *testing.T) {
+	t1 := NewCarbon(time.Date(2006, time.August, 24, 13, 0, 0, 0, time.UTC))
+	t2 := t1.EndOfCentury()
+
+	expected := NewCarbon(time.Date(2099, time.December, 31, 23, 59, 59, 999999999, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestStartOfWeek(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 24, 13, 0, 0, 0, time.UTC))
+	t2 := t1.StartOfWeek()
+
+	expected := NewCarbon(time.Date(2016, time.August, 22, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestEndOfWeek(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 24, 13, 0, 0, 0, time.UTC))
+	t2 := t1.EndOfWeek()
+
+	expected := NewCarbon(time.Date(2016, time.August, 28, 23, 59, 59, 999999999, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestNextWeekday(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 19, 13, 0, 0, 0, time.UTC))
+	t2 := t1.NextWeekday()
+
+	expected := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestPreviousWeekday(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.PreviousWeekday()
+
+	expected := NewCarbon(time.Date(2016, time.August, 19, 13, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestNextWeekendDay(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 18, 13, 0, 0, 0, time.UTC))
+	t2 := t1.NextWeekendDay()
+
+	expected := NewCarbon(time.Date(2016, time.August, 20, 13, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestNextWeekendDayOnWeekend(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 20, 13, 0, 0, 0, time.UTC))
+	t2 := t1.NextWeekendDay()
+
+	expected := NewCarbon(time.Date(2016, time.August, 21, 13, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestPreviousWeekendDay(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 23, 13, 0, 0, 0, time.UTC))
+	t2 := t1.PreviousWeekendDay()
+
+	expected := NewCarbon(time.Date(2016, time.August, 21, 13, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestFirstWednesdayOfMonth(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.FirstOfMonth(time.Wednesday)
+
+	expected := NewCarbon(time.Date(2016, time.August, 3, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestFirstMondayOfMonth(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.FirstOfMonth(time.Monday)
+
+	expected := NewCarbon(time.Date(2016, time.August, 1, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestLastWednesdayOfMonth(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.LastOfMonth(time.Wednesday)
+
+	expected := NewCarbon(time.Date(2016, time.August, 31, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestLastSundayOfMonth(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.LastOfMonth(time.Sunday)
+
+	expected := NewCarbon(time.Date(2016, time.August, 28, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestSecondModayOfMonth(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.NthOfMonth(2, time.Monday)
+
+	expected := NewCarbon(time.Date(2016, time.August, 8, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestSixthModayOfMonth(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.NthOfMonth(6, time.Monday)
+
+	expected := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestFirstModayOfQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.FirstOfQuarter(time.Monday)
+
+	expected := NewCarbon(time.Date(2016, time.July, 4, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestFirstDayOfQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.FirstOfQuarter(time.Friday)
+
+	expected := NewCarbon(time.Date(2016, time.July, 1, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestLastDayOfQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.LastOfQuarter(time.Friday)
+
+	expected := NewCarbon(time.Date(2016, time.September, 30, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestLastMondayOfQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.LastOfQuarter(time.Monday)
+
+	expected := NewCarbon(time.Date(2016, time.September, 26, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestThirdFridayOfQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.NthOfQuarter(3, time.Friday)
+
+	expected := NewCarbon(time.Date(2016, time.July, 15, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestSixthModayOfQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.NthOfQuarter(6, time.Monday)
+
+	expected := NewCarbon(time.Date(2016, time.August, 8, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestDayOutOfQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.NthOfQuarter(20, time.Monday)
+
+	expected := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestFirstDayOfYear(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.FirstOfYear(time.Friday)
+
+	expected := NewCarbon(time.Date(2016, time.January, 1, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestFirstThursdayOfYear(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.FirstOfYear(time.Thursday)
+
+	expected := NewCarbon(time.Date(2016, time.January, 7, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestLastFridayOfYear(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.LastOfYear(time.Friday)
+
+	expected := NewCarbon(time.Date(2016, time.December, 30, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestLastMondayOfYear(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.LastOfYear(time.Monday)
+
+	expected := NewCarbon(time.Date(2016, time.December, 26, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestLastDayOfYear(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.LastOfYear(time.Saturday)
+
+	expected := NewCarbon(time.Date(2016, time.December, 31, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestThirdModayOfYear(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.NthOfYear(3, time.Monday)
+
+	expected := NewCarbon(time.Date(2016, time.January, 18, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestTenthFridayOfYear(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.NthOfYear(10, time.Friday)
+
+	expected := NewCarbon(time.Date(2016, time.March, 4, 0, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestNthOfYearOutOfBounds(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	t2 := t1.NthOfYear(90, time.Monday)
+
+	expected := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestFirstQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.March, 22, 13, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 1, t1.Quarter())
+}
+
+func TestSecondQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.May, 22, 13, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 2, t1.Quarter())
+}
+
+func TestThirdQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.August, 22, 13, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 3, t1.Quarter())
+}
+
+func TestLastQuarter(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.December, 22, 13, 0, 0, 0, time.UTC))
+
+	assert.EqualValues(t, 4, t1.Quarter())
+}
+
+func TestAverageSame(t *testing.T) {
+	t1 := NewCarbon(time.Date(2016, time.December, 22, 13, 0, 0, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2016, time.December, 22, 13, 0, 0, 0, time.UTC)).Average(t1)
+
+	assert.Equal(t, t1, t2)
+}
+
+func TestAverageGreater(t *testing.T) {
+	t1 := NewCarbon(time.Date(2000, time.January, 1, 1, 1, 1, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2009, time.December, 31, 23, 59, 59, 0, time.UTC)).Average(t1)
+
+	expected := NewCarbon(time.Date(2004, time.December, 31, 12, 30, 30, 0, time.UTC))
+	assert.Equal(t, expected, t2)
+}
+
+func TestAverageLower(t *testing.T) {
+	t1 := NewCarbon(time.Date(2009, time.December, 31, 23, 59, 59, 0, time.UTC))
+	t2 := NewCarbon(time.Date(2000, time.January, 1, 1, 1, 1, 0, time.UTC)).Average(t1)
+
+	expected := NewCarbon(time.Date(2004, time.December, 31, 12, 30, 30, 0, time.UTC))
+	assert.Equal(t, expected, t2)
 }

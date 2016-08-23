@@ -15,6 +15,7 @@ const (
 	MonthsPerQuarter  = 3
 	MonthsPerYear     = 12
 	YearsPerCenturies = 100
+	YearsPerDecade    = 10
 	WeeksPerLongYear  = 53
 )
 
@@ -62,11 +63,11 @@ func NewCarbon(t time.Time) *Carbon {
 
 // Parse returns a pointer to a new carbon instance from a string
 func Parse(layout, value, location string) (*Carbon, error) {
-	loc, err := time.LoadLocation(location)
+	l, err := time.LoadLocation(location)
 	if err != nil {
 		return nil, err
 	}
-	t, err := time.ParseInLocation(layout, value, loc)
+	t, err := time.ParseInLocation(layout, value, l)
 	if err != nil {
 		return nil, err
 	}
@@ -75,13 +76,13 @@ func Parse(layout, value, location string) (*Carbon, error) {
 }
 
 // Today returns a pointer to a new carbon instance for today
-func Today(l string) (*Carbon, error) {
-	loc, err := time.LoadLocation(l)
+func Today(location string) (*Carbon, error) {
+	l, err := time.LoadLocation(location)
 	if err != nil {
 		return nil, err
 	}
 
-	return NewCarbon(Now().In(loc)), err
+	return NewCarbon(Now().In(l)), err
 }
 
 // Tomorrow returns a pointer to a new carbon instance for tomorrow
@@ -146,9 +147,28 @@ func (c *Carbon) WeekendDays() []time.Weekday {
 	return c.weekendDays
 }
 
+// Quarter gets the current quarter
+func (c *Carbon) Quarter() int {
+	month := c.Month()
+	switch {
+	case month < 4:
+		return 1
+	case month >= 4 && month < 7:
+		return 2
+	case month >= 7 && month < 10:
+		return 3
+	}
+	return 4
+}
+
 // TimeZone gets the current timezone
 func (c *Carbon) TimeZone() string {
 	return c.Location().String()
+}
+
+// Timestamp gets the current time since January 1, 1970 UTC
+func (c *Carbon) Timestamp() int64 {
+	return c.Unix()
 }
 
 // String gets the current date using the previously set format
@@ -691,20 +711,20 @@ func (c *Carbon) IsLeapYear() bool {
 
 // IsLongYear determines if the instance is a long year
 func (c *Carbon) IsLongYear() bool {
-	d := NewCarbon(time.Date(c.Year(), time.December, 31, 0, 0, 0, 0, time.UTC))
-	_, w := d.ISOWeek()
+	carb := NewCarbon(time.Date(c.Year(), time.December, 31, 0, 0, 0, 0, time.UTC))
+	_, w := carb.ISOWeek()
 
 	return w == WeeksPerLongYear
 }
 
 // IsSameAs compares the formatted values of the two dates.
 // If passed date is nil, compares against today
-func (c *Carbon) IsSameAs(format string, t *Carbon) bool {
-	if t == nil {
+func (c *Carbon) IsSameAs(format string, carb *Carbon) bool {
+	if carb == nil {
 		return c.Format(DefaultFormat) == Now().Format(DefaultFormat)
 	}
 
-	return c.Format(DefaultFormat) == t.Format(DefaultFormat)
+	return c.Format(DefaultFormat) == carb.Format(DefaultFormat)
 }
 
 // IsCurrentYear determines if the current time is in the current year
@@ -714,12 +734,12 @@ func (c *Carbon) IsCurrentYear() bool {
 
 // IsSameYear checks if the passed in date is in the same year as the current time year.
 // If passed date is nil, compares against today
-func (c *Carbon) IsSameYear(d *Carbon) bool {
-	if d == nil {
+func (c *Carbon) IsSameYear(carb *Carbon) bool {
+	if carb == nil {
 		return c.Year() == Now().Year()
 	}
 
-	return c.Year() == d.Year()
+	return c.Year() == carb.Year()
 }
 
 // IsCurrentMonth determines if the current time is in the current month
@@ -729,13 +749,13 @@ func (c *Carbon) IsCurrentMonth() bool {
 
 // IsSameMonth checks if the passed in date is in the same month as the current month
 // If passed date is nil, compares against today
-func (c *Carbon) IsSameMonth(d *Carbon, sameYear bool) bool {
+func (c *Carbon) IsSameMonth(carb *Carbon, sameYear bool) bool {
 	m := Now().Month()
-	if d != nil {
-		m = d.Month()
+	if carb != nil {
+		m = carb.Month()
 	}
 	if sameYear {
-		return c.IsSameYear(d) && c.Month() == m
+		return c.IsSameYear(carb) && c.Month() == m
 	}
 
 	return c.Month() == m
@@ -743,10 +763,10 @@ func (c *Carbon) IsSameMonth(d *Carbon, sameYear bool) bool {
 
 // IsSameDay checks if the passed in date is the same day as the current day.
 // If passed date is nil, compares against today
-func (c *Carbon) IsSameDay(d *Carbon) bool {
+func (c *Carbon) IsSameDay(carb *Carbon) bool {
 	n := Now()
-	if d != nil {
-		n = d
+	if carb != nil {
+		n = carb
 	}
 
 	return c.Year() == n.Year() && c.Month() == n.Month() && c.Day() == n.Day()
@@ -788,63 +808,63 @@ func (c *Carbon) IsSaturday() bool {
 }
 
 // Eq determines if the current carbon is equal to another
-func (c *Carbon) Eq(d *Carbon) bool {
-	return c.Equal(d.Time)
+func (c *Carbon) Eq(carb *Carbon) bool {
+	return c.Equal(carb.Time)
 }
 
 // EqualTo determines if the current carbon is equal to another
-func (c *Carbon) EqualTo(d *Carbon) bool {
-	return c.Eq(d)
+func (c *Carbon) EqualTo(carb *Carbon) bool {
+	return c.Eq(carb)
 }
 
 // Ne determines if the current carbon is not equal to another
-func (c *Carbon) Ne(d *Carbon) bool {
-	return !c.Eq(d)
+func (c *Carbon) Ne(carb *Carbon) bool {
+	return !c.Eq(carb)
 }
 
 // NotEqualTo determines if the current carbon is not equal to another
-func (c *Carbon) NotEqualTo(d *Carbon) bool {
-	return c.Ne(d)
+func (c *Carbon) NotEqualTo(carb *Carbon) bool {
+	return c.Ne(carb)
 }
 
 // Gt determines if the current carbon is greater (after) than another
-func (c *Carbon) Gt(d *Carbon) bool {
-	return c.After(d.Time)
+func (c *Carbon) Gt(carb *Carbon) bool {
+	return c.After(carb.Time)
 }
 
 // GreaterThan determines if the current carbon is greater (after) than another
-func (c *Carbon) GreaterThan(d *Carbon) bool {
-	return c.Gt(d)
+func (c *Carbon) GreaterThan(carb *Carbon) bool {
+	return c.Gt(carb)
 }
 
 // Gte determines if the instance is greater (after) than or equal to another
-func (c *Carbon) Gte(d *Carbon) bool {
-	return c.Gt(d) || c.Eq(d)
+func (c *Carbon) Gte(carb *Carbon) bool {
+	return c.Gt(carb) || c.Eq(carb)
 }
 
 // GreaterThanOrEqualTo determines if the instance is greater (after) than or equal to another
-func (c *Carbon) GreaterThanOrEqualTo(d *Carbon) bool {
-	return c.Gte(d) || c.Eq(d)
+func (c *Carbon) GreaterThanOrEqualTo(carb *Carbon) bool {
+	return c.Gte(carb) || c.Eq(carb)
 }
 
 // Lt determines if the instance is less (before) than another
-func (c *Carbon) Lt(d *Carbon) bool {
-	return c.Before(d.Time)
+func (c *Carbon) Lt(carb *Carbon) bool {
+	return c.Before(carb.Time)
 }
 
 // LessThan determines if the instance is less (before) than another
-func (c *Carbon) LessThan(d *Carbon) bool {
-	return c.Lt(d)
+func (c *Carbon) LessThan(carb *Carbon) bool {
+	return c.Lt(carb)
 }
 
 // Lte determines if the instance is less (before) or equal to another
-func (c *Carbon) Lte(d *Carbon) bool {
-	return c.Lt(d) || c.Eq(d)
+func (c *Carbon) Lte(carb *Carbon) bool {
+	return c.Lt(carb) || c.Eq(carb)
 }
 
 // LessThanOrEqualTo determines if the instance is less (before) or equal to another
-func (c *Carbon) LessThanOrEqualTo(d *Carbon) bool {
-	return c.Lte(d)
+func (c *Carbon) LessThanOrEqualTo(carb *Carbon) bool {
+	return c.Lte(carb)
 }
 
 // Between determines if the current instance is between two others
@@ -879,65 +899,65 @@ func (c *Carbon) Farthest(a, b *Carbon) *Carbon {
 }
 
 // Min returns the minimum instance between a given instance and the current instance
-func (c *Carbon) Min(d *Carbon) *Carbon {
-	if d == nil {
-		d = Now()
+func (c *Carbon) Min(carb *Carbon) *Carbon {
+	if carb == nil {
+		carb = Now()
 	}
 
-	if c.Lt(d) {
+	if c.Lt(carb) {
 		return c
 	}
 
-	return d
+	return carb
 }
 
 // Minimum returns the minimum instance between a given instance and the current instance
-func (c *Carbon) Minimum(d *Carbon) *Carbon {
-	return c.Min(d)
+func (c *Carbon) Minimum(carb *Carbon) *Carbon {
+	return c.Min(carb)
 }
 
 // Max returns the maximum instance between a given instance and the current instance
-func (c *Carbon) Max(d *Carbon) *Carbon {
-	if d == nil {
-		d = Now()
+func (c *Carbon) Max(carb *Carbon) *Carbon {
+	if carb == nil {
+		carb = Now()
 	}
 
-	if c.Gt(d) {
+	if c.Gt(carb) {
 		return c
 	}
 
-	return d
+	return carb
 }
 
 // Maximum returns the maximum instance between a given instance and the current instance
-func (c *Carbon) Maximum(d *Carbon) *Carbon {
-	return c.Max(d)
+func (c *Carbon) Maximum(carb *Carbon) *Carbon {
+	return c.Max(carb)
 }
 
 // DiffInYears returns the difference in years
-func (c *Carbon) DiffInYears(d *Carbon, abs bool) int64 {
-	t1, t2 := d.In(time.UTC), c.In(time.UTC)
+func (c *Carbon) DiffInYears(carb *Carbon, abs bool) int64 {
+	t1, t2 := carb.In(time.UTC), c.In(time.UTC)
 	diff := t1.Year() - t2.Year()
 
 	return absValue(abs, int64(diff))
 }
 
 // DiffInMonths returns the difference in months
-func (c *Carbon) DiffInMonths(d *Carbon, abs bool) int64 {
-	t1, t2 := d.In(time.UTC), c.In(time.UTC)
-	diff := c.DiffInYears(d, abs)*MonthsPerYear + int64(t1.Month()-t2.Month())
+func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
+	t1, t2 := carb.In(time.UTC), c.In(time.UTC)
+	diff := c.DiffInYears(carb, abs)*MonthsPerYear + int64(t1.Month()-t2.Month())
 
 	return absValue(abs, diff)
 }
 
 // DiffInWeeks returns the difference in weeks
-func (c *Carbon) DiffInWeeks(d *Carbon, abs bool) int64 {
-	return c.DiffInDays(d, abs) / DaysPerWeek
+func (c *Carbon) DiffInWeeks(carb *Carbon, abs bool) int64 {
+	return c.DiffInDays(carb, abs) / DaysPerWeek
 }
 
 // DiffInDays returns the difference in days
-func (c *Carbon) DiffInDays(d *Carbon, abs bool) int64 {
-	return c.DiffInHours(d, abs) / HoursPerDay
+func (c *Carbon) DiffInDays(carb *Carbon, abs bool) int64 {
+	return c.DiffInHours(carb, abs) / HoursPerDay
 }
 
 // Filter represents a predicate used for filtering diffs
@@ -947,43 +967,43 @@ type Filter func(*Carbon) bool
 const dayDuration = time.Hour * HoursPerDay
 
 // DiffInDaysFiltered returns the difference in days using a filter
-func (c *Carbon) DiffInDaysFiltered(f Filter, d *Carbon, abs bool) int64 {
-	return c.DiffFiltered(dayDuration, f, d, abs)
+func (c *Carbon) DiffInDaysFiltered(f Filter, carb *Carbon, abs bool) int64 {
+	return c.DiffFiltered(dayDuration, f, carb, abs)
 }
 
 // DiffInHoursFiltered returns the difference in hours using a filter
-func (c *Carbon) DiffInHoursFiltered(f Filter, d *Carbon, abs bool) int64 {
-	return c.DiffFiltered(time.Hour, f, d, abs)
+func (c *Carbon) DiffInHoursFiltered(f Filter, carb *Carbon, abs bool) int64 {
+	return c.DiffFiltered(time.Hour, f, carb, abs)
 }
 
 // DiffInWeekdays returns the difference in weekdays
-func (c *Carbon) DiffInWeekdays(d *Carbon, abs bool) int64 {
-	f := func(d *Carbon) bool {
-		return d.IsWeekday()
+func (c *Carbon) DiffInWeekdays(carb *Carbon, abs bool) int64 {
+	f := func(t *Carbon) bool {
+		return t.IsWeekday()
 	}
 
-	return c.DiffFiltered(dayDuration, f, d, abs)
+	return c.DiffFiltered(dayDuration, f, carb, abs)
 }
 
 // DiffInWeekendDays returns the difference in weekend days using a filter
-func (c *Carbon) DiffInWeekendDays(d *Carbon, abs bool) int64 {
-	f := func(d *Carbon) bool {
-		return d.IsWeekend()
+func (c *Carbon) DiffInWeekendDays(carb *Carbon, abs bool) int64 {
+	f := func(t *Carbon) bool {
+		return t.IsWeekend()
 	}
 
-	return c.DiffFiltered(dayDuration, f, d, abs)
+	return c.DiffFiltered(dayDuration, f, carb, abs)
 }
 
 // DiffFiltered returns the difference by the given duration using a filter
-func (c *Carbon) DiffFiltered(duration time.Duration, f Filter, d *Carbon, abs bool) int64 {
-	if c.IsSameDay(d) {
+func (c *Carbon) DiffFiltered(duration time.Duration, f Filter, carb *Carbon, abs bool) int64 {
+	if c.IsSameDay(carb) {
 		return 0
 	}
 
 	inverse := false
 	var counter int64
 	s := int64(duration.Seconds())
-	start, end := c.Copy(), d.Copy()
+	start, end := c.Copy(), carb.Copy()
 	if start.Gt(end) {
 		start, end = swap(start, end)
 		inverse = true
@@ -1013,20 +1033,22 @@ func (c *Carbon) DiffInMinutes(d *Carbon, abs bool) int64 {
 
 // DiffInSeconds returns the difference in seconds
 func (c *Carbon) DiffInSeconds(d *Carbon, abs bool) int64 {
-	diff := d.Unix() - c.Unix()
+	diff := d.Timestamp() - c.Timestamp()
 
 	return absValue(abs, diff)
 }
 
 // SecondsSinceMidnight the number of seconds since midnight.
 func (c *Carbon) SecondsSinceMidnight() int {
-	midnight := NewCarbon(time.Date(c.Year(), c.Month(), c.Day(), 0, 0, 0, 0, c.Location()))
-	return int(c.DiffInSeconds(midnight, true))
+	startOfDay := c.StartOfDay()
+
+	return int(c.DiffInSeconds(startOfDay, true))
 }
 
 // SecondsUntilEndOfDay The number of seconds until 23:59:59.
 func (c *Carbon) SecondsUntilEndOfDay() int {
-	dayEnd := NewCarbon(time.Date(c.Year(), c.Month(), c.Day(), 23, 59, 59, maxNSecs, c.Location()))
+	dayEnd := c.EndOfDay()
+
 	return int(c.DiffInSeconds(dayEnd, true))
 }
 
@@ -1114,159 +1136,250 @@ func HasRelativeKeywords() {
 func Translator() {
 }
 
-// Resets the time to 00:00:00
-func StartOfDay() {
+// StartOfDay returns the time at 00:00:00 of the same day
+func (c *Carbon) StartOfDay() *Carbon {
+	return NewCarbon(time.Date(c.Year(), c.Month(), c.Day(), 0, 0, 0, 0, c.Location()))
 }
 
-// Resets the time to 23:59:59
-func EndOfDay() {
+// EndOfDay returns the time at 23:59:59 of the same day
+func (c *Carbon) EndOfDay() *Carbon {
+	return NewCarbon(time.Date(c.Year(), c.Month(), c.Day(), 23, 59, 59, maxNSecs, c.Location()))
 }
 
-// Resets the date to the first day of the month and the time to 00:00:00
-func StartOfMonth() {
+// StartOfMonth returns the date on the first day of the month and the time to 00:00:00
+func (c *Carbon) StartOfMonth() *Carbon {
+	return NewCarbon(time.Date(c.Year(), c.Month(), 1, 0, 0, 0, 0, c.Location()))
 }
 
-// Resets the date to end of the month and time to 23:59:59
-func EndOfMonth() {
+// EndOfMonth returns the date at the end of the month and time at 23:59:59
+func (c *Carbon) EndOfMonth() *Carbon {
+	return NewCarbon(time.Date(c.Year(), c.Month()+1, 0, 23, 59, 59, maxNSecs, c.Location()))
 }
 
-// Resets the date to the first day of the quarter and the time to 00:00:00
-func StartOfQuarter() {
+// StartOfQuarter returns the date at the first day of the quarter and time at 00:00:00
+func (c *Carbon) StartOfQuarter() *Carbon {
+	month := time.Month((c.Quarter()-1)*MonthsPerQuarter + 1)
+	return NewCarbon(time.Date(c.Year(), time.Month(month), 1, 0, 0, 0, 0, c.Location()))
 }
 
-// Resets the date to end of the quarter and time to 23:59:59
-func EndOfQuarter() {
+// EndOfQuarter returns the date at end of the quarter and time at 23:59:59
+func (c *Carbon) EndOfQuarter() *Carbon {
+	return c.StartOfQuarter().AddMonths(MonthsPerQuarter - 1).EndOfMonth()
 }
 
-// Resets the date to the first day of the year and the time to 00:00:00
-func StartOfYear() {
+// StartOfYear returns the date at the first day of the year and the time at 00:00:00
+func (c *Carbon) StartOfYear() *Carbon {
+	return NewCarbon(time.Date(c.Year(), time.January, 1, 0, 0, 0, 0, c.Location()))
 }
 
-// Resets the date to end of the year and time to 23:59:59
-func EndOfYear() {
+// EndOfYear returns the date at end of the year and time to 23:59:59
+func (c *Carbon) EndOfYear() *Carbon {
+	return NewCarbon(time.Date(c.Year(), time.December, 31, 23, 59, 59, maxNSecs, c.Location()))
 }
 
-// Resets the date to the first day of the decade and the time to 00:00:00
-func StartOfDecade() {
+// StartOfDecade returns the date at the first day of the decade and time at 00:00:00
+func (c *Carbon) StartOfDecade() *Carbon {
+	year := c.Year() - c.Year()%YearsPerDecade
+	return NewCarbon(time.Date(year, time.January, 1, 0, 0, 0, 0, c.Location()))
 }
 
-// Resets the date to end of the decade and time to 23:59:59
-func EndOfDecade() {
+// EndOfDecade returns the date at the end of the decade and time at 23:59:59
+func (c *Carbon) EndOfDecade() *Carbon {
+	year := c.Year() - c.Year()%YearsPerDecade + YearsPerDecade - 1
+	return NewCarbon(time.Date(year, time.December, 31, 23, 59, 59, maxNSecs, c.Location()))
 }
 
-// Resets the date to the first day of the century and the time to 00:00:00
-func StartOfCentury() {
+// StartOfCentury returns the date of the first day of the century at 00:00:00
+func (c *Carbon) StartOfCentury() *Carbon {
+	year := c.Year() - c.Year()%YearsPerCenturies
+	return NewCarbon(time.Date(year, time.January, 1, 0, 0, 0, 0, c.Location()))
 }
 
-// Resets the date to end of the century and time to 23:59:59
-func EndOfCentury() {
+// EndOfCentury returns the date of the end of the century at 23:59:59
+func (c *Carbon) EndOfCentury() *Carbon {
+	year := c.Year() - 1 - c.Year()%YearsPerCenturies + YearsPerCenturies
+	return NewCarbon(time.Date(year, time.December, 31, 23, 59, 59, maxNSecs, c.Location()))
 }
 
-// Resets the date to the first day of week (defined in $weekStartsAt) and the time to 00:00:00
-func StartOfWeek() {
+// StartOfWeek returns the date of the first day of week at 00:00:00
+func (c *Carbon) StartOfWeek() *Carbon {
+	return c.Previous(c.WeekStartsAt())
 }
 
-// Resets the date to end of week (defined in $weekEndsAt) and time to 23:59:59
-func EndOfWeek() {
+// EndOfWeek returns the date of the last day of the week at 23:59:59
+func (c *Carbon) EndOfWeek() *Carbon {
+	return c.Next(c.WeekEndsAt()).EndOfDay()
 }
 
-// Modify to the next occurrence of a given day of the week.
-// If no dayOfWeek is provided, modify to the next occurrence
-// of the current day of the week.  Use the supplied consts
-// to indicate the desired dayOfWeek, ex. static::MONDAY.
-func Next() {
+// Next changes the time to the next occurrence of a given day of the week
+func (c *Carbon) Next(wd time.Weekday) *Carbon {
+	c = c.AddDay()
+	for c.Weekday() != wd {
+		c = c.AddDay()
+	}
+
+	return c.StartOfDay()
 }
 
-// Go forward to the next weekday.
-func NextWeekday() {
+// NextWeekday goes forward to the next weekday
+func (c *Carbon) NextWeekday() *Carbon {
+	return c.AddWeekday()
 }
 
-// Go backward to the previous weekday.
-func PreviousWeekday() {
+// PreviousWeekday goes back to the previous weekday
+func (c *Carbon) PreviousWeekday() *Carbon {
+	return c.SubWeekday()
 }
 
-// Go forward to the next weekend day.
-func NextWeekendDay() {
+// NextWeekendDay goes forward to the next weekend day
+func (c *Carbon) NextWeekendDay() *Carbon {
+	c = c.AddDay()
+	for !c.IsWeekend() {
+		c = c.AddDay()
+	}
+
+	return c
 }
 
-// Go backward to the previous weekend day.
-func PreviousWeekendDay() {
+// PreviousWeekendDay goes back to the previous weekend day
+func (c *Carbon) PreviousWeekendDay() *Carbon {
+	c = c.SubDay()
+	for !c.IsWeekend() {
+		c = c.SubDay()
+	}
+
+	return c
 }
 
-// Modify to the previous occurrence of a given day of the week.
-// If no dayOfWeek is provided, modify to the previous occurrence
-// of the current day of the week.  Use the supplied consts
-// to indicate the desired dayOfWeek, ex. static::MONDAY.
-func Previous() {
+// Previous changes the time to the previous occurrence of a given day of the week
+func (c *Carbon) Previous(wd time.Weekday) *Carbon {
+	c = c.SubDay()
+	for c.Weekday() != wd {
+		c = c.SubDay()
+	}
+
+	return c.StartOfDay()
 }
 
-// Modify to the first occurrence of a given day of the week
-// in the current month. If no dayOfWeek is provided, modify to the
-// first day of the current month.  Use the supplied consts
-// to indicate the desired dayOfWeek, ex. static::MONDAY.
-func FirstOfMonth() {
+// FirstOfMonth returns the first occurence of a given day of the week in the current month
+func (c *Carbon) FirstOfMonth(wd time.Weekday) *Carbon {
+	d := c.StartOfMonth()
+	if d.Weekday() != wd {
+		return d.Next(wd)
+	}
+
+	return d
 }
 
-// Modify to the last occurrence of a given day of the week
-// in the current month. If no dayOfWeek is provided, modify to the
-// last day of the current month.  Use the supplied consts
-// to indicate the desired dayOfWeek, ex. static::MONDAY.
-func LastOfMonth() {
+// LastOfMonth returns the last occurence of a given day of the week in the current month
+func (c *Carbon) LastOfMonth(wd time.Weekday) *Carbon {
+	d := c.EndOfMonth()
+	if d.Weekday() != wd {
+		return d.Previous(wd)
+	}
+
+	return d.StartOfDay()
 }
 
-// Modify to the given occurrence of a given day of the week
-// in the current month. If the calculated occurrence is outside the scope
-// of the current month, then return false and no modifications are made.
-// Use the supplied consts to indicate the desired dayOfWeek, ex. static::MONDAY.
-func NthOfMonth() {
+// NthOfMonth returns the given occurence of a given day of the week in the current month
+// If the calculated occurrence is outside the scope of current month, no modifications are made
+func (c *Carbon) NthOfMonth(nth int, wd time.Weekday) *Carbon {
+	copy := c.Copy().StartOfMonth()
+	i := 0
+	if copy.Weekday() == wd {
+		i++
+	}
+	for i < nth {
+		copy = copy.Next(wd)
+		i++
+	}
+	if copy.Gt(c.EndOfMonth()) {
+		return c
+	}
+
+	return copy
 }
 
-// Modify to the first occurrence of a given day of the week
-// in the current quarter. If no dayOfWeek is provided, modify to the
-// first day of the current quarter.  Use the supplied consts
-// to indicate the desired dayOfWeek, ex. static::MONDAY.
-func FirstOfQuarter() {
+// FirstOfQuarter returns the first occurence of a given day of the week in the current quarter
+func (c *Carbon) FirstOfQuarter(wd time.Weekday) *Carbon {
+	d := c.StartOfQuarter()
+	if d.Weekday() != wd {
+		return d.Next(wd)
+	}
+
+	return d
 }
 
-// Modify to the last occurrence of a given day of the week
-// in the current quarter. If no dayOfWeek is provided, modify to the
-// last day of the current quarter.  Use the supplied consts
-// to indicate the desired dayOfWeek, ex. static::MONDAY.
-func LastOfQuarter() {
+// LastOfQuarter returns the last occurence of a given day of the week in the current quarter
+func (c *Carbon) LastOfQuarter(wd time.Weekday) *Carbon {
+	d := c.EndOfQuarter()
+	if d.Weekday() != wd {
+		return d.Previous(wd)
+	}
+
+	return d.StartOfDay()
 }
 
-// Modify to the given occurrence of a given day of the week
-// in the current quarter. If the calculated occurrence is outside the scope
-// of the current quarter, then return false and no modifications are made.
-// Use the supplied consts to indicate the desired dayOfWeek, ex. static::MONDAY.
-func NthOfQuarter() {
+// NthOfQuarter returns the given occurence of a given day of the week in the current quarter
+// If the calculated occurrence is outside the scope of current quarter, no modifications are made
+func (c *Carbon) NthOfQuarter(nth int, wd time.Weekday) *Carbon {
+	copy := c.Copy().StartOfQuarter()
+	i := 0
+	if copy.Weekday() == wd {
+		i++
+	}
+	for i < nth {
+		copy = copy.Next(wd)
+		i++
+	}
+	if copy.Gt(c.EndOfQuarter()) {
+		return c
+	}
+
+	return copy
 }
 
-// Modify to the first occurrence of a given day of the week
-// in the current year. If no dayOfWeek is provided, modify to the
-// first day of the current year.  Use the supplied consts
-// to indicate the desired dayOfWeek, ex. static::MONDAY.
-func FirstOfYear() {
+// FirstOfYear returns the first occurence of a given day of the week in the current year
+func (c *Carbon) FirstOfYear(wd time.Weekday) *Carbon {
+	d := c.StartOfYear()
+	if d.Weekday() != wd {
+		return d.Next(wd)
+	}
+
+	return d
 }
 
-// Modify to the last occurrence of a given day of the week
-// in the current year. If no dayOfWeek is provided, modify to the
-// last day of the current year.  Use the supplied consts
-// to indicate the desired dayOfWeek, ex. static::MONDAY.
-func LastOfYear() {
+// LastOfYear returns the last occurence of a given day of the week in the current year
+func (c *Carbon) LastOfYear(wd time.Weekday) *Carbon {
+	d := c.EndOfYear()
+	if d.Weekday() != wd {
+		return d.Previous(wd)
+	}
+
+	return d.StartOfDay()
 }
 
-// Modify to the given occurrence of a given day of the week
-// in the current year. If the calculated occurrence is outside the scope
-// of the current year, then return false and no modifications are made.
-// Use the supplied consts to indicate the desired dayOfWeek, ex. static::MONDAY.
-func NthOfYear() {
+// NthOfYear returns the given occurence of a given day of the week in the current year
+// If the calculated occurrence is outside the scope of current year, no modifications are made
+func (c *Carbon) NthOfYear(nth int, wd time.Weekday) *Carbon {
+	copy := c.Copy().StartOfYear()
+	i := 0
+	if copy.Weekday() == wd {
+		i++
+	}
+	for i < nth {
+		copy = copy.Next(wd)
+		i++
+	}
+	if copy.Gt(c.EndOfYear()) {
+		return c
+	}
+
+	return copy
 }
 
-// Modify the current instance to the average of a given instance (default now) and the current instance.
-func Average() {
-}
-
-// Consider the timezone when modifying the instance.
-func Modify() {
+// Average returns the average bewteen a given carbon date and the current date
+func (c *Carbon) Average(carb *Carbon) *Carbon {
+	average := int(c.DiffInSeconds(carb, false) / 2)
+	return c.AddSeconds(average)
 }
