@@ -936,7 +936,7 @@ func TestSetWeekendDays(t *testing.T) {
 func TestSetTimezone(t *testing.T) {
 	c, _ := Create(2016, time.August, 12, 10, 0, 30, 0, "UTC")
 
-	c.SetTimezone("Europe/Lisbon")
+	c.SetTimeZone("Europe/Lisbon")
 
 	assert.Equal(t, "Europe/Lisbon", c.TimeZone(), "The start of the week should be Sunday")
 }
@@ -944,7 +944,7 @@ func TestSetTimezone(t *testing.T) {
 func TestSetTimezoneError(t *testing.T) {
 	c, _ := Create(2016, time.August, 12, 10, 0, 30, 0, "UTC")
 
-	err := c.SetTimezone("Mars/Wonderland")
+	err := c.SetTimeZone("Mars/Wonderland")
 
 	assert.NotNil(t, err)
 }
