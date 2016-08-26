@@ -40,4 +40,4 @@ go get github.com/uniplaces/carbon
 ```
 
 #Contributing
-Please feel free to add suggestions, create issues, fork the repository and send pull requests!
+Please feel free to make suggestions, create issues, fork the repository and send pull requests!
