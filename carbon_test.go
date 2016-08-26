@@ -2489,3 +2489,15 @@ func TestDaysInMonth(t *testing.T) {
 
 	assert.EqualValues(t, 29, c.DaysInMonth())
 }
+
+func TestNowInLocation(t *testing.T) {
+	today, _ := NowInLocation("America/Vancouver")
+
+	assert.NotNil(t, today)
+}
+
+func TestNowInLocationInvalid(t *testing.T) {
+	_, err := NowInLocation("Wonderland/Vancouver")
+
+	assert.NotNil(t, err)
+}

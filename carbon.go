@@ -173,8 +173,17 @@ func Now() *Carbon {
 	return NewCarbon(time.Now())
 }
 
-// Now returns a new Carbon instance for right now in a given location
-func NowIn(loc *time.Location) *Carbon {
+// NowInLocation returns a new Carbon instance for right now in given location.
+// The location is in IANA Time Zone database, such as "America/New_York".
+func NowInLocation(loc string) (*Carbon, error) {
+	l, err := time.LoadLocation(loc)
+	if err != nil {
+		return nil, err
+	}
+	return nowIn(l), nil
+}
+
+func nowIn(loc *time.Location) *Carbon {
 	return NewCarbon(Now().In(loc))
 }
 
@@ -809,7 +818,7 @@ func (c *Carbon) IsCurrentYear() bool {
 // If passed date is nil, compares against today
 func (c *Carbon) IsSameYear(carb *Carbon) bool {
 	if carb == nil {
-		return c.Year() == NowIn(c.Location()).Year()
+		return c.Year() == nowIn(c.Location()).Year()
 	}
 
 	return c.Year() == carb.Year()
@@ -823,7 +832,7 @@ func (c *Carbon) IsCurrentMonth() bool {
 // IsSameMonth checks if the passed in date is in the same month as the current month
 // If passed date is nil, compares against today
 func (c *Carbon) IsSameMonth(carb *Carbon, sameYear bool) bool {
-	m := NowIn(c.Location()).Month()
+	m := nowIn(c.Location()).Month()
 	if carb != nil {
 		m = carb.Month()
 	}
@@ -837,7 +846,7 @@ func (c *Carbon) IsSameMonth(carb *Carbon, sameYear bool) bool {
 // IsSameDay checks if the passed in date is the same day as the current day.
 // If passed date is nil, compares against today
 func (c *Carbon) IsSameDay(carb *Carbon) bool {
-	n := NowIn(c.Location())
+	n := nowIn(c.Location())
 	if carb != nil {
 		n = carb
 	}
@@ -974,7 +983,7 @@ func (c *Carbon) Farthest(a, b *Carbon) *Carbon {
 // Min returns the minimum instance between a given instance and the current instance
 func (c *Carbon) Min(carb *Carbon) *Carbon {
 	if carb == nil {
-		carb = NowIn(c.Location())
+		carb = nowIn(c.Location())
 	}
 
 	if c.Lt(carb) {
@@ -992,7 +1001,7 @@ func (c *Carbon) Minimum(carb *Carbon) *Carbon {
 // Max returns the maximum instance between a given instance and the current instance
 func (c *Carbon) Max(carb *Carbon) *Carbon {
 	if carb == nil {
-		carb = NowIn(c.Location())
+		carb = nowIn(c.Location())
 	}
 
 	if c.Gt(carb) {
@@ -1010,7 +1019,7 @@ func (c *Carbon) Maximum(carb *Carbon) *Carbon {
 // DiffInYears returns the difference in years
 func (c *Carbon) DiffInYears(carb *Carbon, abs bool) int64 {
 	if carb == nil {
-		carb = NowIn(c.Location())
+		carb = nowIn(c.Location())
 	}
 	t1, t2 := carb.In(time.UTC), c.In(time.UTC)
 	diff := t1.Year() - t2.Year()
@@ -1021,7 +1030,7 @@ func (c *Carbon) DiffInYears(carb *Carbon, abs bool) int64 {
 // DiffInMonths returns the difference in months
 func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 	if carb == nil {
-		carb = NowIn(c.Location())
+		carb = nowIn(c.Location())
 	}
 	t1, t2 := carb.In(time.UTC), c.In(time.UTC)
 	diff := c.DiffInYears(carb, abs)*monthsPerYear + int64(t1.Month()-t2.Month())
@@ -1032,7 +1041,7 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 // DiffInWeeks returns the difference in weeks
 func (c *Carbon) DiffInWeeks(carb *Carbon, abs bool) int64 {
 	if carb == nil {
-		carb = NowIn(c.Location())
+		carb = nowIn(c.Location())
 	}
 	return c.DiffInDays(carb, abs) / daysPerWeek
 }
@@ -1040,7 +1049,7 @@ func (c *Carbon) DiffInWeeks(carb *Carbon, abs bool) int64 {
 // DiffInDays returns the difference in days
 func (c *Carbon) DiffInDays(carb *Carbon, abs bool) int64 {
 	if carb == nil {
-		carb = NowIn(c.Location())
+		carb = nowIn(c.Location())
 	}
 	return c.DiffInHours(carb, abs) / hoursPerDay
 }
@@ -1082,7 +1091,7 @@ func (c *Carbon) DiffInWeekendDays(carb *Carbon, abs bool) int64 {
 // DiffFiltered returns the difference by the given duration using a filter
 func (c *Carbon) DiffFiltered(duration time.Duration, f Filter, carb *Carbon, abs bool) int64 {
 	if carb == nil {
-		carb = NowIn(c.Location())
+		carb = nowIn(c.Location())
 	}
 	if c.IsSameDay(carb) {
 		return 0
@@ -1122,7 +1131,7 @@ func (c *Carbon) DiffInMinutes(d *Carbon, abs bool) int64 {
 // DiffInSeconds returns the difference in seconds
 func (c *Carbon) DiffInSeconds(carb *Carbon, abs bool) int64 {
 	if carb == nil {
-		carb = NowIn(c.Location())
+		carb = nowIn(c.Location())
 	}
 	diff := carb.Timestamp() - c.Timestamp()
 
@@ -1433,7 +1442,7 @@ func (c *Carbon) NthOfYear(nth int, wd time.Weekday) *Carbon {
 // Average returns the average bewteen a given carbon date and the current date
 func (c *Carbon) Average(carb *Carbon) *Carbon {
 	if carb == nil {
-		carb = NowIn(c.Location())
+		carb = nowIn(c.Location())
 	}
 	if c.Eq(carb) {
 		return c.Copy()
