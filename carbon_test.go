@@ -1701,6 +1701,11 @@ func TestParseInvalidFormat(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
+func TestDiffInSecondsNil(t *testing.T) {
+	t1 := Now()
+
+	assert.EqualValues(t, 0, t1.DiffInSeconds(nil, true))
+}
 func TestDiffInSecondsTimeZoneSameTime(t *testing.T) {
 	loc, _ := time.LoadLocation("Europe/Madrid")
 	t1 := Create(2016, time.August, 18, 10, 0, 0, 0, time.UTC)
@@ -1821,6 +1826,18 @@ func TestDiffInDaysNoAbs(t *testing.T) {
 	assert.Equal(t, int64(-1), t2.DiffInDays(t1, false))
 }
 
+func TestDiffInDaysNil(t *testing.T) {
+	t1 := Now()
+
+	assert.EqualValues(t, 0, t1.DiffInDays(nil, true))
+}
+
+func TestDiffInWeeksNil(t *testing.T) {
+	t1 := Now()
+
+	assert.EqualValues(t, 0, t1.DiffInWeeks(nil, true))
+}
+
 func TestDiffInWeeksTimeZone(t *testing.T) {
 	loc, _ := time.LoadLocation("Europe/Madrid")
 	t1 := Create(2016, time.August, 18, 10, 0, 0, 0, time.UTC)
@@ -1851,6 +1868,12 @@ func TestDiffInWeeksNoAbs(t *testing.T) {
 	assert.Equal(t, int64(-1), t2.DiffInWeeks(t1, false))
 }
 
+func TestDiffInYearsNil(t *testing.T) {
+	t1 := Now()
+
+	assert.EqualValues(t, 0, t1.DiffInYears(nil, true))
+}
+
 func TestDiffInYearsTimeZone(t *testing.T) {
 	loc, _ := time.LoadLocation("Europe/Madrid")
 	t1 := Create(2016, time.August, 18, 10, 0, 0, 0, time.UTC)
@@ -1878,6 +1901,12 @@ func TestDiffInYearsNoAbs(t *testing.T) {
 	t2 := t1.AddYear()
 
 	assert.EqualValues(t, -1, t2.DiffInYears(t1, false))
+}
+
+func TestDiffInMonthsNil(t *testing.T) {
+	t1 := Now()
+
+	assert.EqualValues(t, 0, t1.DiffInMonths(nil, true))
 }
 
 func TestDiffInMonthsTimeZone(t *testing.T) {
@@ -1959,6 +1988,15 @@ func TestDiffInWeekendDaysOnWeekendNegative(t *testing.T) {
 	t2 := Create(2016, time.August, 20, 10, 0, 0, 0, time.UTC)
 
 	assert.EqualValues(t, -1, t1.DiffInWeekendDays(t2, false))
+}
+
+func TestDiffInDaysFilteredNil(t *testing.T) {
+	t1 := Now()
+	f := func(c *Carbon) bool {
+		return c.Weekday() == time.Sunday
+	}
+
+	assert.EqualValues(t, 0, t1.DiffInDaysFiltered(f, nil, true))
 }
 
 func TestDiffInDaysFiltered(t *testing.T) {
@@ -2345,6 +2383,12 @@ func TestLastQuarter(t *testing.T) {
 	assert.EqualValues(t, 4, t1.Quarter())
 }
 
+func TestAverageNil(t *testing.T) {
+	t1 := Now()
+
+	assert.Equal(t, t1, t1.Average(nil))
+}
+
 func TestAverageSame(t *testing.T) {
 	t1 := Create(2016, time.December, 22, 13, 0, 0, 0, time.UTC)
 	t2 := Create(2016, time.December, 22, 13, 0, 0, 0, time.UTC).Average(t1)
@@ -2413,4 +2457,35 @@ func TestCreateFromDate(t *testing.T) {
 	assert.EqualValues(t, 2011, c.Year())
 	assert.EqualValues(t, time.August, c.Month())
 	assert.EqualValues(t, 10, c.Day())
+}
+
+func TestAge(t *testing.T) {
+	c := CreateFromDate(2011, time.August, 10, time.UTC)
+	y := Now().Year()
+
+	assert.EqualValues(t, y-2011, c.Age())
+}
+
+func TestWeekOfMonth(t *testing.T) {
+	c := CreateFromDate(2016, time.January, 1, time.UTC)
+
+	assert.EqualValues(t, 1, c.WeekOfMonth())
+}
+
+func TestWeekOfMonthLastWeek(t *testing.T) {
+	c := CreateFromDate(2016, time.January, 31, time.UTC)
+
+	assert.EqualValues(t, 5, c.WeekOfMonth())
+}
+
+func TestWeekOfMonthLastWeekOfYear(t *testing.T) {
+	c := CreateFromDate(2016, time.December, 31, time.UTC)
+
+	assert.EqualValues(t, 5, c.WeekOfMonth())
+}
+
+func TestDaysInMonth(t *testing.T) {
+	c := CreateFromDate(2016, time.February, 1, time.UTC)
+
+	assert.EqualValues(t, 29, c.DaysInMonth())
 }

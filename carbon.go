@@ -1,3 +1,6 @@
+/*
+Package carbon is an extention to library for go's time libray based on php's Carbon library
+*/
 package carbon
 
 import (
@@ -6,20 +9,20 @@ import (
 	"time"
 )
 
-// Represent the number of elements in a given period
+// Represents the number of elements in a given period
 const (
-	SecondsPerMinute  = 60
-	MinutesPerHour    = 60
-	HoursPerDay       = 24
-	DaysPerWeek       = 7
-	MonthsPerQuarter  = 3
-	MonthsPerYear     = 12
-	YearsPerCenturies = 100
-	YearsPerDecade    = 10
-	WeeksPerLongYear  = 53
+	secondsPerMinute  = 60
+	minutesPerHour    = 60
+	hoursPerDay       = 24
+	daysPerWeek       = 7
+	monthsPerQuarter  = 3
+	monthsPerYear     = 12
+	yearsPerCenturies = 100
+	yearsPerDecade    = 10
+	weeksPerLongYear  = 53
 )
 
-// Represent the different string formats for dates
+// Represents the different string formats for dates
 const (
 	DefaultFormat       = "2006-01-02 15:04:05"
 	DateFormat          = "2006-01-02"
@@ -66,8 +69,8 @@ func Create(y int, mon time.Month, d, h, m, s, ns int, loc *time.Location) *Carb
 	return NewCarbon(time.Date(y, mon, d, h, m, s, ns, loc))
 }
 
-// CreateFromDate returns a new pointer to a Carbon instance from just a date
-// The time portion is set to now
+// CreateFromDate returns a new pointer to a Carbon instance from just a date.
+// The time portion is set to now.
 func CreateFromDate(y int, mon time.Month, d int, loc *time.Location) *Carbon {
 	h, m, s := Now().Clock()
 	ns := Now().Nanosecond()
@@ -75,8 +78,8 @@ func CreateFromDate(y int, mon time.Month, d int, loc *time.Location) *Carbon {
 	return Create(y, mon, d, h, m, s, ns, loc)
 }
 
-// CreateFromTime returns a new pointer to a Carbon instance from just a date
-// The time portion is set to now
+// CreateFromTime returns a new pointer to a Carbon instance from just a date.
+// The time portion is set to now.
 func CreateFromTime(h, m, s, ns int, loc *time.Location) *Carbon {
 	y, mon, d := Now().Date()
 
@@ -121,8 +124,8 @@ func Parse(layout, value, location string) (*Carbon, error) {
 }
 
 // Today returns a pointer to a new carbon instance for today
-func Today(location string) (*Carbon, error) {
-	l, err := time.LoadLocation(location)
+func Today(loc string) (*Carbon, error) {
+	l, err := time.LoadLocation(loc)
 	if err != nil {
 		return nil, err
 	}
@@ -150,24 +153,29 @@ func Yesterday(loc string) (*Carbon, error) {
 	return c.SubDay(), nil
 }
 
-// UnixTimeInSeconds represents the number of seconds between Year 1 and 1970
-const UnixTimeInSeconds = 62135596801
+// unixTimeInSeconds represents the number of seconds between Year 1 and 1970
+const unixTimeInSeconds = 62135596801
 
 const maxNSecs = 999999999
 
 // MaxValue returns a pointer to a new carbon instance for greatest supported date
 func MaxValue() *Carbon {
-	return NewCarbon(time.Unix(math.MaxInt64-UnixTimeInSeconds, maxNSecs))
+	return NewCarbon(time.Unix(math.MaxInt64-unixTimeInSeconds, maxNSecs))
 }
 
 // MinValue returns a pointer to a new carbon instance for lowest supported date
 func MinValue() *Carbon {
-	return NewCarbon(time.Unix(math.MinInt64+UnixTimeInSeconds, 0))
+	return NewCarbon(time.Unix(math.MinInt64+unixTimeInSeconds, 0))
 }
 
-// Now returns a new Carbon instance for right now
+// Now returns a new Carbon instance for right now in current localtime
 func Now() *Carbon {
 	return NewCarbon(time.Now())
+}
+
+// Now returns a new Carbon instance for right now in a given location
+func NowIn(loc *time.Location) *Carbon {
+	return NewCarbon(Now().In(loc))
 }
 
 // Copy returns a new copy of the current Carbon instance
@@ -204,6 +212,28 @@ func (c *Carbon) Quarter() int {
 	return 4
 }
 
+// Age gets the age from the current instance time to now
+func (c *Carbon) Age() int {
+	return int(c.DiffInYears(Now(), true))
+}
+
+// DaysInMonth returns the number of days of the current month
+func (c *Carbon) DaysInMonth() int {
+	return c.EndOfMonth().Day()
+}
+
+// WeekOfMonth returns the week of the month
+func (c *Carbon) WeekOfMonth() int {
+	w := math.Ceil(float64(c.Day() / daysPerWeek))
+	return int(w + 1)
+}
+
+// WeekOfYear returns the week of the current year.
+// This is an alias for time.ISOWeek
+func (c *Carbon) WeekOfYear() (int, int) {
+	return c.ISOWeek()
+}
+
 // TimeZone gets the current timezone
 func (c *Carbon) TimeZone() string {
 	return c.Location().String()
@@ -219,8 +249,8 @@ func (c *Carbon) String() string {
 	return c.Format(c.stringFormat)
 }
 
-// AddYears adds a year to the current time
-// Positive value travel forward while negative value travel into the past
+// AddYears adds a year to the current time.
+// Positive values travel forward while negative values travel into the past
 func (c *Carbon) AddYears(y int) *Carbon {
 	return NewCarbon(c.AddDate(y, 0, 0))
 }
@@ -230,10 +260,10 @@ func (c *Carbon) AddYear() *Carbon {
 	return c.AddYears(1)
 }
 
-// AddQuarters adds quarters to the current timePositive $value travels forward while
-// Positive value travel forward while negative value travel into the past
+// AddQuarters adds quarters to the current time.
+// Positive values travel forward while negative values travel into the past
 func (c *Carbon) AddQuarters(q int) *Carbon {
-	return NewCarbon(c.AddDate(0, MonthsPerQuarter*q, 0))
+	return NewCarbon(c.AddDate(0, monthsPerQuarter*q, 0))
 }
 
 // AddQuarter adds a quarter to the current time
@@ -241,10 +271,10 @@ func (c *Carbon) AddQuarter() *Carbon {
 	return c.AddQuarters(1)
 }
 
-// AddCenturies adds centuries to the time
-// Positive value travels forward while negative value travels into the past
+// AddCenturies adds centuries to the time.
+// Positive values travels forward while negative values travels into the past
 func (c *Carbon) AddCenturies(cent int) *Carbon {
-	return NewCarbon(c.AddDate(YearsPerCenturies*cent, 0, 0))
+	return NewCarbon(c.AddDate(yearsPerCenturies*cent, 0, 0))
 }
 
 // AddCentury adds a century to the current time
@@ -252,8 +282,8 @@ func (c *Carbon) AddCentury() *Carbon {
 	return c.AddCenturies(1)
 }
 
-// AddMonths adds months to the current time
-// Positive value travels forward while negative value travels into the past
+// AddMonths adds months to the current time.
+// Positive value travels forward while negative values travels into the past
 func (c *Carbon) AddMonths(m int) *Carbon {
 	return NewCarbon(c.AddDate(0, m, 0))
 }
@@ -264,7 +294,7 @@ func (c *Carbon) AddMonth() *Carbon {
 }
 
 // AddSeconds adds seconds to the current time.
-// Positive value travels forward while negative value travels into the past.
+// Positive values travels forward while negative values travels into the past.
 func (c *Carbon) AddSeconds(s int) *Carbon {
 	d := time.Duration(s) * time.Second
 	return NewCarbon(c.Add(d))
@@ -286,7 +316,7 @@ func (c *Carbon) AddDay() *Carbon {
 	return c.AddDays(1)
 }
 
-// AddWeekdays adds a weekday to the current time
+// AddWeekdays adds a weekday to the current time.
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddWeekdays(wd int) *Carbon {
 	d := 1
@@ -309,10 +339,10 @@ func (c *Carbon) AddWeekday() *Carbon {
 	return c.AddWeekdays(1)
 }
 
-// AddWeeks adds a week to the current time
+// AddWeeks adds a week to the current time.
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddWeeks(w int) *Carbon {
-	return NewCarbon(c.AddDate(0, 0, DaysPerWeek*w))
+	return NewCarbon(c.AddDate(0, 0, daysPerWeek*w))
 }
 
 // AddWeek adds a week to the current time
@@ -320,7 +350,7 @@ func (c *Carbon) AddWeek() *Carbon {
 	return c.AddWeeks(1)
 }
 
-// AddHours adds an hour to the current time
+// AddHours adds an hour to the current time.
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddHours(h int) *Carbon {
 	d := time.Duration(h) * time.Hour
@@ -355,7 +385,7 @@ func (c *Carbon) AddMonthNoOverflow() *Carbon {
 	return c.AddMonthsNoOverflow(1)
 }
 
-// AddMinutes adds minutes to the current time
+// AddMinutes adds minutes to the current time.
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddMinutes(m int) *Carbon {
 	d := time.Duration(m) * time.Minute
@@ -755,9 +785,9 @@ func (c *Carbon) IsLeapYear() bool {
 // IsLongYear determines if the instance is a long year
 func (c *Carbon) IsLongYear() bool {
 	carb := Create(c.Year(), time.December, 31, 0, 0, 0, 0, time.UTC)
-	_, w := carb.ISOWeek()
+	_, w := carb.WeekOfYear()
 
-	return w == WeeksPerLongYear
+	return w == weeksPerLongYear
 }
 
 // IsSameAs compares the formatted values of the two dates.
@@ -779,7 +809,7 @@ func (c *Carbon) IsCurrentYear() bool {
 // If passed date is nil, compares against today
 func (c *Carbon) IsSameYear(carb *Carbon) bool {
 	if carb == nil {
-		return c.Year() == Now().Year()
+		return c.Year() == NowIn(c.Location()).Year()
 	}
 
 	return c.Year() == carb.Year()
@@ -793,7 +823,7 @@ func (c *Carbon) IsCurrentMonth() bool {
 // IsSameMonth checks if the passed in date is in the same month as the current month
 // If passed date is nil, compares against today
 func (c *Carbon) IsSameMonth(carb *Carbon, sameYear bool) bool {
-	m := Now().Month()
+	m := NowIn(c.Location()).Month()
 	if carb != nil {
 		m = carb.Month()
 	}
@@ -807,7 +837,7 @@ func (c *Carbon) IsSameMonth(carb *Carbon, sameYear bool) bool {
 // IsSameDay checks if the passed in date is the same day as the current day.
 // If passed date is nil, compares against today
 func (c *Carbon) IsSameDay(carb *Carbon) bool {
-	n := Now()
+	n := NowIn(c.Location())
 	if carb != nil {
 		n = carb
 	}
@@ -944,7 +974,7 @@ func (c *Carbon) Farthest(a, b *Carbon) *Carbon {
 // Min returns the minimum instance between a given instance and the current instance
 func (c *Carbon) Min(carb *Carbon) *Carbon {
 	if carb == nil {
-		carb = Now()
+		carb = NowIn(c.Location())
 	}
 
 	if c.Lt(carb) {
@@ -962,7 +992,7 @@ func (c *Carbon) Minimum(carb *Carbon) *Carbon {
 // Max returns the maximum instance between a given instance and the current instance
 func (c *Carbon) Max(carb *Carbon) *Carbon {
 	if carb == nil {
-		carb = Now()
+		carb = NowIn(c.Location())
 	}
 
 	if c.Gt(carb) {
@@ -979,6 +1009,9 @@ func (c *Carbon) Maximum(carb *Carbon) *Carbon {
 
 // DiffInYears returns the difference in years
 func (c *Carbon) DiffInYears(carb *Carbon, abs bool) int64 {
+	if carb == nil {
+		carb = NowIn(c.Location())
+	}
 	t1, t2 := carb.In(time.UTC), c.In(time.UTC)
 	diff := t1.Year() - t2.Year()
 
@@ -987,27 +1020,36 @@ func (c *Carbon) DiffInYears(carb *Carbon, abs bool) int64 {
 
 // DiffInMonths returns the difference in months
 func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
+	if carb == nil {
+		carb = NowIn(c.Location())
+	}
 	t1, t2 := carb.In(time.UTC), c.In(time.UTC)
-	diff := c.DiffInYears(carb, abs)*MonthsPerYear + int64(t1.Month()-t2.Month())
+	diff := c.DiffInYears(carb, abs)*monthsPerYear + int64(t1.Month()-t2.Month())
 
 	return absValue(abs, diff)
 }
 
 // DiffInWeeks returns the difference in weeks
 func (c *Carbon) DiffInWeeks(carb *Carbon, abs bool) int64 {
-	return c.DiffInDays(carb, abs) / DaysPerWeek
+	if carb == nil {
+		carb = NowIn(c.Location())
+	}
+	return c.DiffInDays(carb, abs) / daysPerWeek
 }
 
 // DiffInDays returns the difference in days
 func (c *Carbon) DiffInDays(carb *Carbon, abs bool) int64 {
-	return c.DiffInHours(carb, abs) / HoursPerDay
+	if carb == nil {
+		carb = NowIn(c.Location())
+	}
+	return c.DiffInHours(carb, abs) / hoursPerDay
 }
 
 // Filter represents a predicate used for filtering diffs
 type Filter func(*Carbon) bool
 
 // dayDuration reprensets a day in time.Duration format
-const dayDuration = time.Hour * HoursPerDay
+const dayDuration = time.Hour * hoursPerDay
 
 // DiffInDaysFiltered returns the difference in days using a filter
 func (c *Carbon) DiffInDaysFiltered(f Filter, carb *Carbon, abs bool) int64 {
@@ -1039,6 +1081,9 @@ func (c *Carbon) DiffInWeekendDays(carb *Carbon, abs bool) int64 {
 
 // DiffFiltered returns the difference by the given duration using a filter
 func (c *Carbon) DiffFiltered(duration time.Duration, f Filter, carb *Carbon, abs bool) int64 {
+	if carb == nil {
+		carb = NowIn(c.Location())
+	}
 	if c.IsSameDay(carb) {
 		return 0
 	}
@@ -1066,29 +1111,32 @@ func (c *Carbon) DiffFiltered(duration time.Duration, f Filter, carb *Carbon, ab
 
 // DiffInHours returns the difference in hours
 func (c *Carbon) DiffInHours(d *Carbon, abs bool) int64 {
-	return c.DiffInMinutes(d, abs) / MinutesPerHour
+	return c.DiffInMinutes(d, abs) / minutesPerHour
 }
 
 // DiffInMinutes returns the difference in minutes
 func (c *Carbon) DiffInMinutes(d *Carbon, abs bool) int64 {
-	return c.DiffInSeconds(d, abs) / SecondsPerMinute
+	return c.DiffInSeconds(d, abs) / secondsPerMinute
 }
 
 // DiffInSeconds returns the difference in seconds
-func (c *Carbon) DiffInSeconds(d *Carbon, abs bool) int64 {
-	diff := d.Timestamp() - c.Timestamp()
+func (c *Carbon) DiffInSeconds(carb *Carbon, abs bool) int64 {
+	if carb == nil {
+		carb = NowIn(c.Location())
+	}
+	diff := carb.Timestamp() - c.Timestamp()
 
 	return absValue(abs, diff)
 }
 
-// SecondsSinceMidnight the number of seconds since midnight.
+// SecondsSinceMidnight returns the number of seconds since midnight.
 func (c *Carbon) SecondsSinceMidnight() int {
 	startOfDay := c.StartOfDay()
 
 	return int(c.DiffInSeconds(startOfDay, true))
 }
 
-// SecondsUntilEndOfDay The number of seconds until 23:59:59.
+// SecondsUntilEndOfDay returns the number of seconds until 23:59:59.
 func (c *Carbon) SecondsUntilEndOfDay() int {
 	dayEnd := c.EndOfDay()
 
@@ -1157,14 +1205,14 @@ func (c *Carbon) EndOfMonth() *Carbon {
 
 // StartOfQuarter returns the date at the first day of the quarter and time at 00:00:00
 func (c *Carbon) StartOfQuarter() *Carbon {
-	month := time.Month((c.Quarter()-1)*MonthsPerQuarter + 1)
+	month := time.Month((c.Quarter()-1)*monthsPerQuarter + 1)
 
 	return Create(c.Year(), time.Month(month), 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfQuarter returns the date at end of the quarter and time at 23:59:59
 func (c *Carbon) EndOfQuarter() *Carbon {
-	return c.StartOfQuarter().AddMonths(MonthsPerQuarter - 1).EndOfMonth()
+	return c.StartOfQuarter().AddMonths(monthsPerQuarter - 1).EndOfMonth()
 }
 
 // StartOfYear returns the date at the first day of the year and the time at 00:00:00
@@ -1179,28 +1227,28 @@ func (c *Carbon) EndOfYear() *Carbon {
 
 // StartOfDecade returns the date at the first day of the decade and time at 00:00:00
 func (c *Carbon) StartOfDecade() *Carbon {
-	year := c.Year() - c.Year()%YearsPerDecade
+	year := c.Year() - c.Year()%yearsPerDecade
 
 	return Create(year, time.January, 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfDecade returns the date at the end of the decade and time at 23:59:59
 func (c *Carbon) EndOfDecade() *Carbon {
-	year := c.Year() - c.Year()%YearsPerDecade + YearsPerDecade - 1
+	year := c.Year() - c.Year()%yearsPerDecade + yearsPerDecade - 1
 
 	return Create(year, time.December, 31, 23, 59, 59, maxNSecs, c.Location())
 }
 
 // StartOfCentury returns the date of the first day of the century at 00:00:00
 func (c *Carbon) StartOfCentury() *Carbon {
-	year := c.Year() - c.Year()%YearsPerCenturies
+	year := c.Year() - c.Year()%yearsPerCenturies
 
 	return Create(year, time.January, 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfCentury returns the date of the end of the century at 23:59:59
 func (c *Carbon) EndOfCentury() *Carbon {
-	year := c.Year() - 1 - c.Year()%YearsPerCenturies + YearsPerCenturies
+	year := c.Year() - 1 - c.Year()%yearsPerCenturies + yearsPerCenturies
 
 	return Create(year, time.December, 31, 23, 59, 59, maxNSecs, c.Location())
 }
@@ -1384,6 +1432,12 @@ func (c *Carbon) NthOfYear(nth int, wd time.Weekday) *Carbon {
 
 // Average returns the average bewteen a given carbon date and the current date
 func (c *Carbon) Average(carb *Carbon) *Carbon {
+	if carb == nil {
+		carb = NowIn(c.Location())
+	}
+	if c.Eq(carb) {
+		return c.Copy()
+	}
 	average := int(c.DiffInSeconds(carb, false) / 2)
 
 	return c.AddSeconds(average)
