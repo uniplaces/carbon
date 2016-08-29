@@ -14,7 +14,7 @@ __Features:__
 __To do:__
 
 * Implement all localization features as in Carbon
-* As this port is from PHP, there're parts that aren't that idiomatic, and therefore should be improved.
+* Improve the code style to be more idiomatic Go
 
 ## Getting started
 Install Carbon:
