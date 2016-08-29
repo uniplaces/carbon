@@ -632,31 +632,6 @@ func (c *Carbon) SetTimezone(name string) error {
 	return nil
 }
 
-// Get the translator instance in use
-func GetTranslator() {
-	// TODO: Not Implemented
-}
-
-// Set the translator instance to use
-func SetTranslator() {
-	// TODO: Not Implemented
-}
-
-// Get the current translator locale
-func GetLocale() {
-	// TODO: Not Implemented
-}
-
-// Set the current translator locale and indicate if the source locale file exists
-func SetLocale() {
-	// TODO: Not Implemented
-}
-
-// Format the instance with the current locale.
-func FormatLocalized() {
-	// TODO: Not Implemented
-}
-
 // ResetStringFormat changes the format to the DefaultFormat
 func (c *Carbon) ResetStringFormat() {
 	c.stringFormat = DefaultFormat
@@ -997,7 +972,6 @@ func (c *Carbon) Min(carb *Carbon) *Carbon {
 	if carb == nil {
 		carb = nowIn(c.Location())
 	}
-
 	if c.Lt(carb) {
 		return c
 	}
@@ -1175,33 +1149,6 @@ func absValue(needsAbs bool, value int64) int64 {
 
 func swap(a, b *Carbon) (*Carbon, *Carbon) {
 	return b, a
-}
-
-// DiffForHumans returns the difference in a human readable format in the current locale.
-// When comparing a value in the past to default now:
-// 1 hour ago
-// 5 months ago
-// When comparing a value in the future to default now:
-// 1 hour from now
-// 5 months from now
-// When comparing a value in the past to another value:
-// 1 hour before
-// 5 months before
-// When comparing a value in the future to another value:
-// 1 hour after
-// 5 months after
-func DiffForHumans() {
-}
-
-//-----------------------------------------------------------
-
-// Determine if there is a relative keyword in the time string, this is to
-// create dates relative to now for test instances. e.g.: next tuesday
-func HasRelativeKeywords() {
-}
-
-// Intialize the translator instance if necessary.
-func Translator() {
 }
 
 // StartOfDay returns the time at 00:00:00 of the same day
