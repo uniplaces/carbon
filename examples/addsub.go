@@ -6,7 +6,7 @@ import (
 	"github.com/uniplaces/carbon"
 )
 
-func AddSub() {
+func addSub() {
 	t1, _ := carbon.Create(2010, 1, 4, 19, 10, 10, 0, "UTC")
 
 	t1 = t1.AddYear()     // 2011-01-04 19:10:10

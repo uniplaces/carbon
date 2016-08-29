@@ -7,7 +7,7 @@ import (
 	"github.com/uniplaces/carbon"
 )
 
-func Modifiers() {
+func modifiers() {
 	t1, _ := carbon.Create(2012, 1, 31, 12, 0, 0, 0, "Lisbon/Rome")
 	fmt.Printf("Start of day:%s\n", t1.StartOfDay()) // 2012-01-31 00:00:00
 
