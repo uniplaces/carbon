@@ -5,10 +5,10 @@ A simple extension for [Time](https://golang.org/pkg/time/#Time) based on php's 
 
 __Features:__
 
-* [Time](https://golang.org/pkg/time/#Time) is embeded into Carbon (access to all of [Time](https://golang.org/pkg/time/#Time)'s functionality)
+* [Time](https://golang.org/pkg/time/#Time) is embeded into Carbon (provides access to all of [Time](https://golang.org/pkg/time/#Time)'s functionality)
 * Supports addtion and subtraction of dates
 * Provides methods to compare dates
-* Supports date foramting in diffrent common formats
+* Supports date formatting in common formats
 * Easily calculate difference between dates
 
 
@@ -23,7 +23,7 @@ Add to your imports to start using Carbon
 import "github.com/uniplaces/carbon"
 ```
 
-## Example
+## Examples
 A simple example to get you started:
 ```go
 package main
@@ -52,6 +52,8 @@ func main() {
 	}
 }
 ```
+
+You can also check the `examples/` folder for more examples.
 
 ## Contributing
 Please feel free to make suggestions, create issues, fork the repository and send pull requests!
