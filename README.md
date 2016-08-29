@@ -1,16 +1,20 @@
 Carbon
 ======
 
-A simple extension for [Time](https://golang.org/pkg/time/#Time) based on php's [Carbon](http://carbon.nesbot.com) library.
+A simple extension for [Time](https://golang.org/pkg/time/#Time) based on PHP's [Carbon](http://carbon.nesbot.com) library.
 
 __Features:__
 
-* [Time](https://golang.org/pkg/time/#Time) is embeded into Carbon (provides access to all of [Time](https://golang.org/pkg/time/#Time)'s functionality)
-* Supports addtion and subtraction of dates
+* [Time](https://golang.org/pkg/time/#Time) is embedded into Carbon (provides access to all of [Time](https://golang.org/pkg/time/#Time)'s functionality)
+* Supports addition and subtraction of dates
 * Provides methods to compare dates
 * Supports date formatting in common formats
 * Easily calculate difference between dates
 
+__To do:__
+
+* Implement all localization features as in Carbon
+* As this port is from PHP, there're parts that aren't that idiomatic, and therefore should be improved.
 
 ## Getting started
 Install Carbon:
