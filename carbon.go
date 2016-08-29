@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package carbon is an extention to library for go's time libray based on php's Carbon library
+// Package carbon is an extension to library for go's time libray based on php's Carbon library
 package carbon
 
 import (
@@ -52,7 +52,7 @@ const (
 )
 
 // The Carbon type represents a Time instance.
-// Provides a simple API extention for Time.
+// Provides a simple API extension for Time.
 type Carbon struct {
 	time.Time
 	weekStartsAt time.Weekday
@@ -76,7 +76,7 @@ func NewCarbon(t time.Time) *Carbon {
 	}
 }
 
-// create returns a new carbon pointe. It is a helper funtion to create new dates
+// create returns a new carbon pointe. It is a helper function to create new dates
 func create(y int, mon time.Month, d, h, m, s, ns int, l *time.Location) *Carbon {
 	return NewCarbon(time.Date(y, mon, d, h, m, s, ns, l))
 }
@@ -1309,7 +1309,7 @@ func (c *Carbon) Previous(wd time.Weekday) *Carbon {
 	return c.StartOfDay()
 }
 
-// FirstOfMonth returns the first occurence of a given day of the week in the current month
+// FirstOfMonth returns the first occurrence of a given day of the week in the current month
 func (c *Carbon) FirstOfMonth(wd time.Weekday) *Carbon {
 	d := c.StartOfMonth()
 	if d.Weekday() != wd {
@@ -1319,7 +1319,7 @@ func (c *Carbon) FirstOfMonth(wd time.Weekday) *Carbon {
 	return d
 }
 
-// LastOfMonth returns the last occurence of a given day of the week in the current month
+// LastOfMonth returns the last occurrence of a given day of the week in the current month
 func (c *Carbon) LastOfMonth(wd time.Weekday) *Carbon {
 	d := c.EndOfMonth()
 	if d.Weekday() != wd {
@@ -1329,7 +1329,7 @@ func (c *Carbon) LastOfMonth(wd time.Weekday) *Carbon {
 	return d.StartOfDay()
 }
 
-// NthOfMonth returns the given occurence of a given day of the week in the current month
+// NthOfMonth returns the given occurrence of a given day of the week in the current month
 // If the calculated occurrence is outside the scope of current month, no modifications are made
 func (c *Carbon) NthOfMonth(nth int, wd time.Weekday) *Carbon {
 	copy := c.Copy().StartOfMonth()
@@ -1348,7 +1348,7 @@ func (c *Carbon) NthOfMonth(nth int, wd time.Weekday) *Carbon {
 	return copy
 }
 
-// FirstOfQuarter returns the first occurence of a given day of the week in the current quarter
+// FirstOfQuarter returns the first occurrence of a given day of the week in the current quarter
 func (c *Carbon) FirstOfQuarter(wd time.Weekday) *Carbon {
 	d := c.StartOfQuarter()
 	if d.Weekday() != wd {
@@ -1358,7 +1358,7 @@ func (c *Carbon) FirstOfQuarter(wd time.Weekday) *Carbon {
 	return d
 }
 
-// LastOfQuarter returns the last occurence of a given day of the week in the current quarter
+// LastOfQuarter returns the last occurrence of a given day of the week in the current quarter
 func (c *Carbon) LastOfQuarter(wd time.Weekday) *Carbon {
 	d := c.EndOfQuarter()
 	if d.Weekday() != wd {
@@ -1368,7 +1368,7 @@ func (c *Carbon) LastOfQuarter(wd time.Weekday) *Carbon {
 	return d.StartOfDay()
 }
 
-// NthOfQuarter returns the given occurence of a given day of the week in the current quarter
+// NthOfQuarter returns the given occurrence of a given day of the week in the current quarter
 // If the calculated occurrence is outside the scope of current quarter, no modifications are made
 func (c *Carbon) NthOfQuarter(nth int, wd time.Weekday) *Carbon {
 	copy := c.Copy().StartOfQuarter()
@@ -1387,7 +1387,7 @@ func (c *Carbon) NthOfQuarter(nth int, wd time.Weekday) *Carbon {
 	return copy
 }
 
-// FirstOfYear returns the first occurence of a given day of the week in the current year
+// FirstOfYear returns the first occurrence of a given day of the week in the current year
 func (c *Carbon) FirstOfYear(wd time.Weekday) *Carbon {
 	d := c.StartOfYear()
 	if d.Weekday() != wd {
@@ -1397,7 +1397,7 @@ func (c *Carbon) FirstOfYear(wd time.Weekday) *Carbon {
 	return d
 }
 
-// LastOfYear returns the last occurence of a given day of the week in the current year
+// LastOfYear returns the last occurrence of a given day of the week in the current year
 func (c *Carbon) LastOfYear(wd time.Weekday) *Carbon {
 	d := c.EndOfYear()
 	if d.Weekday() != wd {
@@ -1407,7 +1407,7 @@ func (c *Carbon) LastOfYear(wd time.Weekday) *Carbon {
 	return d.StartOfDay()
 }
 
-// NthOfYear returns the given occurence of a given day of the week in the current year
+// NthOfYear returns the given occurrence of a given day of the week in the current year
 // If the calculated occurrence is outside the scope of current year, no modifications are made
 func (c *Carbon) NthOfYear(nth int, wd time.Weekday) *Carbon {
 	copy := c.Copy().StartOfYear()
@@ -1426,7 +1426,7 @@ func (c *Carbon) NthOfYear(nth int, wd time.Weekday) *Carbon {
 	return copy
 }
 
-// Average returns the average bewteen a given carbon date and the current date
+// Average returns the average between a given carbon date and the current date
 func (c *Carbon) Average(carb *Carbon) *Carbon {
 	if carb == nil {
 		carb = nowIn(c.Location())
