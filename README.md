@@ -32,7 +32,7 @@ import (
 	"fmt"
 	"time"
 
-	carbon "github.com/uniplaces/carbon"
+	"github.com/uniplaces/carbon"
 )
 
 func main() {
@@ -44,7 +44,8 @@ func main() {
 	fmt.Printf("Tomorrow is %s\n", carbon.Now().AddDay())
 	fmt.Printf("Last week is %s\n", carbon.Now().SubWeek())
 
-	nextOlmypics := carbon.CreateFromDate(2016, time.August, 5, time.UTC).AddYears(4)
+	nextOlmypics, _ := carbon.CreateFromDate(2016, time.August, 5, "Europe/London")
+	nextOlmypics = nextOlmypics.AddYears(4)
 	fmt.Printf("Next olympics are in %d\n", nextOlmypics.Year())
 
 	if carbon.Now().IsWeekend() {

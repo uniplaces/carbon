@@ -76,31 +76,48 @@ func NewCarbon(t time.Time) *Carbon {
 	}
 }
 
+// create returns a new carbon pointe. It is a helper funtion to create new dates
+func create(y int, mon time.Month, d, h, m, s, ns int, l *time.Location) *Carbon {
+	return NewCarbon(time.Date(y, mon, d, h, m, s, ns, l))
+}
+
 // Create returns a new pointer to Carbon instance from a specific date and time.
-func Create(y int, mon time.Month, d, h, m, s, ns int, loc *time.Location) *Carbon {
-	return NewCarbon(time.Date(y, mon, d, h, m, s, ns, loc))
+// If the location is invalid, it returns an error instead.
+func Create(y int, mon time.Month, d, h, m, s, ns int, location string) (*Carbon, error) {
+	l, err := time.LoadLocation(location)
+	if err != nil {
+		return nil, err
+	}
+	return create(y, mon, d, h, m, s, ns, l), nil
 }
 
 // CreateFromDate returns a new pointer to a Carbon instance from just a date.
 // The time portion is set to now.
-func CreateFromDate(y int, mon time.Month, d int, loc *time.Location) *Carbon {
+// If the location is invalid, it returns an error instead.
+func CreateFromDate(y int, mon time.Month, d int, location string) (*Carbon, error) {
 	h, m, s := Now().Clock()
 	ns := Now().Nanosecond()
 
-	return Create(y, mon, d, h, m, s, ns, loc)
+	return Create(y, mon, d, h, m, s, ns, location)
 }
 
 // CreateFromTime returns a new pointer to a Carbon instance from just a date.
 // The time portion is set to now.
-func CreateFromTime(h, m, s, ns int, loc *time.Location) *Carbon {
+// If the locations is invalid, it returns an error instead.
+func CreateFromTime(h, m, s, ns int, location string) (*Carbon, error) {
 	y, mon, d := Now().Date()
 
-	return Create(y, mon, d, h, m, s, ns, loc)
+	return Create(y, mon, d, h, m, s, ns, location)
 }
 
 // CreateFromFormat returns a new pointer to a Carbon instance from a specific format.
-func CreateFromFormat(layout, value string, loc *time.Location) (*Carbon, error) {
-	t, err := time.ParseInLocation(layout, value, loc)
+// If the location is invalid, it returns an error instead.
+func CreateFromFormat(layout, value string, location string) (*Carbon, error) {
+	l, err := time.LoadLocation(location)
+	if err != nil {
+		return nil, err
+	}
+	t, err := time.ParseInLocation(layout, value, l)
 	if err != nil {
 		return nil, err
 	}
@@ -109,19 +126,26 @@ func CreateFromFormat(layout, value string, loc *time.Location) (*Carbon, error)
 }
 
 // CreateFromTimestamp returns a new pointer to a Carbon instance from a timestamp.
-func CreateFromTimestamp(timestamp int64, loc *time.Location) *Carbon {
-	t := NewCarbon(Now().In(loc))
+// If the location is invalid, it returns an error instead.
+func CreateFromTimestamp(timestamp int64, location string) (*Carbon, error) {
+	l, err := time.LoadLocation(location)
+	if err != nil {
+		return nil, err
+	}
+	t := NewCarbon(Now().In(l))
 	t.SetTimestamp(timestamp)
 
-	return t
+	return t, nil
 }
 
 // CreateFromTimestampUTC returns a new pointer to a Carbon instance from an UTC timestamp.
-func CreateFromTimestampUTC(timestamp int64) *Carbon {
-	return CreateFromTimestamp(timestamp, time.UTC)
+// If the location is invalid, it returns an error instead.
+func CreateFromTimestampUTC(timestamp int64) (*Carbon, error) {
+	return CreateFromTimestamp(timestamp, "UTC")
 }
 
 // Parse returns a pointer to a new carbon instance from a string
+// If the location is invalid, it returns an error instead.
 func Parse(layout, value, location string) (*Carbon, error) {
 	l, err := time.LoadLocation(location)
 	if err != nil {
@@ -136,8 +160,9 @@ func Parse(layout, value, location string) (*Carbon, error) {
 }
 
 // Today returns a pointer to a new carbon instance for today
-func Today(loc string) (*Carbon, error) {
-	l, err := time.LoadLocation(loc)
+// If the location is invalid, it returns an error instead.
+func Today(location string) (*Carbon, error) {
+	l, err := time.LoadLocation(location)
 	if err != nil {
 		return nil, err
 	}
@@ -146,8 +171,9 @@ func Today(loc string) (*Carbon, error) {
 }
 
 // Tomorrow returns a pointer to a new carbon instance for tomorrow
-func Tomorrow(loc string) (*Carbon, error) {
-	c, err := Today(loc)
+// If the location is invalid, it returns an error instead.
+func Tomorrow(location string) (*Carbon, error) {
+	c, err := Today(location)
 	if err != nil {
 		return nil, err
 	}
@@ -156,8 +182,9 @@ func Tomorrow(loc string) (*Carbon, error) {
 }
 
 // Yesterday returns a pointer to a new carbon instance for yesterday
-func Yesterday(loc string) (*Carbon, error) {
-	c, err := Today(loc)
+// If the location is invalid, it returns an error instead.
+func Yesterday(location string) (*Carbon, error) {
+	c, err := Today(location)
 	if err != nil {
 		return nil, err
 	}
@@ -201,7 +228,7 @@ func nowIn(loc *time.Location) *Carbon {
 
 // Copy returns a new copy of the current Carbon instance
 func (c *Carbon) Copy() *Carbon {
-	return Create(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
+	return create(c.Year(), c.Month(), c.Day(), c.Hour(), c.Minute(), c.Second(), c.Nanosecond(), c.Location())
 }
 
 // WeekStartsAt get the starting day of the week
@@ -621,7 +648,8 @@ func (c *Carbon) SetTimestamp(sec int64) {
 	c.Time = time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), c.Location())
 }
 
-// SetTimezone the location from a string
+// SetTimezone sets the location from a string
+// If the location is invalid, it returns an error instead.
 func (c *Carbon) SetTimezone(name string) error {
 	loc, err := time.LoadLocation(name)
 	if err != nil {
@@ -780,7 +808,7 @@ func (c *Carbon) IsLeapYear() bool {
 
 // IsLongYear determines if the instance is a long year
 func (c *Carbon) IsLongYear() bool {
-	carb := Create(c.Year(), time.December, 31, 0, 0, 0, 0, time.UTC)
+	carb := create(c.Year(), time.December, 31, 0, 0, 0, 0, c.Location())
 	_, w := carb.WeekOfYear()
 
 	return w == weeksPerLongYear
@@ -1153,29 +1181,29 @@ func swap(a, b *Carbon) (*Carbon, *Carbon) {
 
 // StartOfDay returns the time at 00:00:00 of the same day
 func (c *Carbon) StartOfDay() *Carbon {
-	return Create(c.Year(), c.Month(), c.Day(), 0, 0, 0, 0, c.Location())
+	return create(c.Year(), c.Month(), c.Day(), 0, 0, 0, 0, c.Location())
 }
 
 // EndOfDay returns the time at 23:59:59 of the same day
 func (c *Carbon) EndOfDay() *Carbon {
-	return Create(c.Year(), c.Month(), c.Day(), 23, 59, 59, maxNSecs, c.Location())
+	return create(c.Year(), c.Month(), c.Day(), 23, 59, 59, maxNSecs, c.Location())
 }
 
 // StartOfMonth returns the date on the first day of the month and the time to 00:00:00
 func (c *Carbon) StartOfMonth() *Carbon {
-	return Create(c.Year(), c.Month(), 1, 0, 0, 0, 0, c.Location())
+	return create(c.Year(), c.Month(), 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfMonth returns the date at the end of the month and time at 23:59:59
 func (c *Carbon) EndOfMonth() *Carbon {
-	return Create(c.Year(), c.Month()+1, 0, 23, 59, 59, maxNSecs, c.Location())
+	return create(c.Year(), c.Month()+1, 0, 23, 59, 59, maxNSecs, c.Location())
 }
 
 // StartOfQuarter returns the date at the first day of the quarter and time at 00:00:00
 func (c *Carbon) StartOfQuarter() *Carbon {
 	month := time.Month((c.Quarter()-1)*monthsPerQuarter + 1)
 
-	return Create(c.Year(), time.Month(month), 1, 0, 0, 0, 0, c.Location())
+	return create(c.Year(), time.Month(month), 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfQuarter returns the date at end of the quarter and time at 23:59:59
@@ -1185,40 +1213,40 @@ func (c *Carbon) EndOfQuarter() *Carbon {
 
 // StartOfYear returns the date at the first day of the year and the time at 00:00:00
 func (c *Carbon) StartOfYear() *Carbon {
-	return Create(c.Year(), time.January, 1, 0, 0, 0, 0, c.Location())
+	return create(c.Year(), time.January, 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfYear returns the date at end of the year and time to 23:59:59
 func (c *Carbon) EndOfYear() *Carbon {
-	return Create(c.Year(), time.December, 31, 23, 59, 59, maxNSecs, c.Location())
+	return create(c.Year(), time.December, 31, 23, 59, 59, maxNSecs, c.Location())
 }
 
 // StartOfDecade returns the date at the first day of the decade and time at 00:00:00
 func (c *Carbon) StartOfDecade() *Carbon {
 	year := c.Year() - c.Year()%yearsPerDecade
 
-	return Create(year, time.January, 1, 0, 0, 0, 0, c.Location())
+	return create(year, time.January, 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfDecade returns the date at the end of the decade and time at 23:59:59
 func (c *Carbon) EndOfDecade() *Carbon {
 	year := c.Year() - c.Year()%yearsPerDecade + yearsPerDecade - 1
 
-	return Create(year, time.December, 31, 23, 59, 59, maxNSecs, c.Location())
+	return create(year, time.December, 31, 23, 59, 59, maxNSecs, c.Location())
 }
 
 // StartOfCentury returns the date of the first day of the century at 00:00:00
 func (c *Carbon) StartOfCentury() *Carbon {
 	year := c.Year() - c.Year()%yearsPerCenturies
 
-	return Create(year, time.January, 1, 0, 0, 0, 0, c.Location())
+	return create(year, time.January, 1, 0, 0, 0, 0, c.Location())
 }
 
 // EndOfCentury returns the date of the end of the century at 23:59:59
 func (c *Carbon) EndOfCentury() *Carbon {
 	year := c.Year() - 1 - c.Year()%yearsPerCenturies + yearsPerCenturies
 
-	return Create(year, time.December, 31, 23, 59, 59, maxNSecs, c.Location())
+	return create(year, time.December, 31, 23, 59, 59, maxNSecs, c.Location())
 }
 
 // StartOfWeek returns the date of the first day of week at 00:00:00
