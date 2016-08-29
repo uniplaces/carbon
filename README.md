@@ -1,8 +1,9 @@
-[![Build Status](https://travis-ci.org/uniplaces/carbon.svg?branch=master)](https://travis-ci.org/uniplaces/carbon)
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-
 Carbon
 ======
+[![Build Status](https://travis-ci.org/uniplaces/carbon.svg?branch=master)](https://travis-ci.org/uniplaces/carbon)
+[![Go Report Card](https://goreportcard.com/badge/github.com/uniplaces/carbon)](https://goreportcard.com/report/github.com/uniplaces/carbon)
+[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
 
 A simple extension for [Time](https://golang.org/pkg/time/#Time) based on PHP's [Carbon](http://carbon.nesbot.com) library.
 
