@@ -53,9 +53,9 @@ func main() {
 	fmt.Printf("Tomorrow is %s\n", carbon.Now().AddDay())
 	fmt.Printf("Last week is %s\n", carbon.Now().SubWeek())
 
-	nextOlmypics, _ := carbon.CreateFromDate(2016, time.August, 5, "Europe/London")
-	nextOlmypics = nextOlmypics.AddYears(4)
-	fmt.Printf("Next olympics are in %d\n", nextOlmypics.Year())
+	nextOlympics, _ := carbon.CreateFromDate(2016, time.August, 5, "Europe/London")
+	nextOlympics = nextOlympics.AddYears(4)
+	fmt.Printf("Next olympics are in %d\n", nextOlympics.Year())
 
 	if carbon.Now().IsWeekend() {
 		fmt.Printf("Party time!")
