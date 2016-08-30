@@ -1,11 +1,10 @@
-package carbon_test
+package carbon
 
 import (
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	. "github.com/uniplaces/carbon"
 )
 
 func TestAddYearsPositive(t *testing.T) {
