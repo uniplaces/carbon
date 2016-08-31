@@ -1657,7 +1657,7 @@ func TestTomorrowEET(t *testing.T) {
 	tomorrow, _ := Tomorrow("Africa/Cairo")
 
 	assert.Equal(t, "Africa/Cairo", tomorrow.TimeZone())
-	assert.Equal(t, today.Day()+1, tomorrow.Day())
+	assert.Equal(t, today.AddDay().Day(), tomorrow.Day())
 }
 
 func TestTomorrowUnknown(t *testing.T) {
