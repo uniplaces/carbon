@@ -1671,7 +1671,7 @@ func TestYesterdayEET(t *testing.T) {
 	yesterday, _ := Yesterday("Africa/Cairo")
 
 	assert.Equal(t, "Africa/Cairo", yesterday.TimeZone())
-	assert.Equal(t, today.Day()-1, yesterday.Day())
+	assert.Equal(t, today.SubDay().Day(), yesterday.Day())
 }
 
 func TestYesterdayUnknown(t *testing.T) {
@@ -1869,25 +1869,25 @@ func TestDiffInYearsTimeZone(t *testing.T) {
 	assert.EqualValues(t, 0, t1.DiffInYears(t2, true))
 }
 
-func TestDiffInYears(t *testing.T) {
-	t1, _ := Create(2016, time.August, 18, 10, 0, 0, 0, "UTC")
-	t2, _ := Create(1016, time.July, 29, 12, 0, 0, 0, "UTC")
-
-	assert.EqualValues(t, 1000, t1.DiffInYears(t2, true))
-}
-
-func TestDiffInYearsAbs(t *testing.T) {
-	t1 := Now()
-	t2 := t1.AddYear()
+func TestDiffInYearsOneYearDifferenceNoLeapYear(t *testing.T) {
+	t1, _ := Create(2014, time.August, 10, 14, 0, 0, 0, "UTC")
+	t2, _ := Create(2015, time.August, 10, 14, 0, 0, 0, "UTC")
 
 	assert.EqualValues(t, 1, t1.DiffInYears(t2, true))
 }
 
-func TestDiffInYearsNoAbs(t *testing.T) {
-	t1 := Now()
-	t2 := t1.AddYear()
+func TestDiffInYearsOneHourLessInYear(t *testing.T) {
+	t1, _ := Create(2014, time.August, 10, 15, 0, 0, 0, "UTC")
+	t2, _ := Create(2015, time.August, 10, 14, 0, 0, 0, "UTC")
 
-	assert.EqualValues(t, -1, t2.DiffInYears(t1, false))
+	assert.EqualValues(t, 0, t1.DiffInYears(t2, true))
+}
+
+func TestDiffInYearsOneYearDifferenceForLeapYear(t *testing.T) {
+	t1, _ := Create(2015, time.August, 10, 15, 0, 0, 0, "UTC")
+	t2, _ := Create(2016, time.August, 10, 14, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, 1, t1.DiffInYears(t2, true))
 }
 
 func TestDiffInMonthsNil(t *testing.T) {
@@ -1908,6 +1908,34 @@ func TestDiffInMonths(t *testing.T) {
 	t2, _ := Create(2015, time.July, 29, 12, 0, 0, 0, "UTC")
 
 	assert.EqualValues(t, 11, t1.DiffInMonths(t2, true))
+}
+
+func TestDiffInMonthsOneDayDifference(t *testing.T) {
+	t1, _ := Create(2016, time.September, 1, 10, 0, 0, 0, "UTC")
+	t2, _ := Create(2016, time.August, 31, 10, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, 0, t1.DiffInMonths(t2, true))
+}
+
+func TestDiffInMonthsOneMonthDifference(t *testing.T) {
+	t1, _ := Create(2016, time.September, 1, 10, 0, 0, 0, "UTC")
+	t2, _ := Create(2016, time.August, 1, 10, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, 1, t1.DiffInMonths(t2, true))
+}
+
+func TestDiffInMonthsOneHourLessInMonthDifference(t *testing.T) {
+	t1, _ := Create(2016, time.August, 1, 10, 0, 0, 0, "UTC")
+	t2, _ := Create(2016, time.September, 1, 9, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, 0, t1.DiffInMonths(t2, true))
+}
+
+func TestDiffInString(t *testing.T) {
+	t1, _ := Create(2016, time.August, 10, 10, 0, 0, 0, "UTC")
+	t2, _ := Create(2016, time.August, 1, 23, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, "203h0m0s", t1.DiffDurationInString(t2))
 }
 
 func TestSecondsSinceMidnight(t *testing.T) {
@@ -2475,6 +2503,18 @@ func TestDaysInMonth(t *testing.T) {
 	c, _ := CreateFromDate(2016, time.February, 1, "UTC")
 
 	assert.EqualValues(t, 29, c.DaysInMonth())
+}
+
+func TestDaysInYearNormal(t *testing.T) {
+	c, _ := CreateFromDate(2015, time.February, 1, "UTC")
+
+	assert.EqualValues(t, 365, c.DaysInYear())
+}
+
+func TestDaysInYearLeap(t *testing.T) {
+	c, _ := CreateFromDate(2016, time.February, 1, "UTC")
+
+	assert.EqualValues(t, 366, c.DaysInYear())
 }
 
 func TestNowInLocation(t *testing.T) {

@@ -18,6 +18,7 @@ package carbon
 import (
 	"errors"
 	"math"
+	"strings"
 	"time"
 )
 
@@ -32,6 +33,8 @@ const (
 	yearsPerCenturies = 100
 	yearsPerDecade    = 10
 	weeksPerLongYear  = 53
+	daysInLeapYear    = 366
+	daysInNormalYear  = 365
 )
 
 // Represents the different string formats for dates
@@ -265,9 +268,18 @@ func (c *Carbon) Age() int {
 	return int(c.DiffInYears(Now(), true))
 }
 
-// DaysInMonth returns the number of days of the current month
+// DaysInMonth returns the number of days in the month
 func (c *Carbon) DaysInMonth() int {
 	return c.EndOfMonth().Day()
+}
+
+// DaysInYear returns the number of days in the year
+func (c *Carbon) DaysInYear() int {
+	if c.IsLeapYear() {
+		return daysInLeapYear
+	}
+
+	return daysInNormalYear
 }
 
 // WeekOfMonth returns the week of the month
@@ -1035,10 +1047,17 @@ func (c *Carbon) DiffInYears(carb *Carbon, abs bool) int64 {
 	if carb == nil {
 		carb = nowIn(c.Location())
 	}
-	t1, t2 := carb.In(time.UTC), c.In(time.UTC)
-	diff := t1.Year() - t2.Year()
 
-	return absValue(abs, int64(diff))
+	diffHr := c.DiffInHours(carb, abs)
+	hrLastYear := int64(c.DaysInYear() * hoursPerDay)
+
+	if (diffHr - hrLastYear) >= 0 {
+		diff := int64(carb.In(time.UTC).Year() - c.In(time.UTC).Year())
+
+		return absValue(abs, diff)
+	}
+
+	return 0
 }
 
 // DiffInMonths returns the difference in months
@@ -1046,10 +1065,26 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 	if carb == nil {
 		carb = nowIn(c.Location())
 	}
-	t1, t2 := carb.In(time.UTC), c.In(time.UTC)
-	diff := c.DiffInYears(carb, abs)*monthsPerYear + int64(t1.Month()-t2.Month())
 
-	return absValue(abs, diff)
+	diffHr := c.DiffInHours(carb, abs)
+	hrLastMonth := int64(c.DaysInMonth() * hoursPerDay)
+
+	if (diffHr - hrLastMonth) >= 0 {
+		diff := c.DiffInYears(carb, abs)*monthsPerYear + int64(carb.In(time.UTC).Month()-c.In(time.UTC).Month())
+
+		return absValue(abs, diff)
+	}
+
+	return 0
+}
+
+// DiffDurationInString returns the duration difference in string format
+func (c *Carbon) DiffDurationInString(carb *Carbon) string {
+	if carb == nil {
+		carb = nowIn(c.Location())
+	}
+
+	return strings.Replace(carb.Sub(c.Time).String(), "-", "", 1)
 }
 
 // DiffInWeeks returns the difference in weeks
