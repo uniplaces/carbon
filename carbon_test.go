@@ -1935,7 +1935,7 @@ func TestDiffInString(t *testing.T) {
 	t1, _ := Create(2016, time.August, 10, 10, 0, 0, 0, "UTC")
 	t2, _ := Create(2016, time.August, 1, 23, 0, 0, 0, "UTC")
 
-	assert.EqualValues(t, "203h0m0s", t1.DiffInString(t2))
+	assert.EqualValues(t, "203h0m0s", t1.DiffDurationInString(t2))
 }
 
 func TestSecondsSinceMidnight(t *testing.T) {

@@ -1057,7 +1057,7 @@ func (c *Carbon) DiffInYears(carb *Carbon, abs bool) int64 {
 		return absValue(abs, diff)
 	}
 
-	return absValue(abs, 0)
+	return 0
 }
 
 // DiffInMonths returns the difference in months
@@ -1075,11 +1075,11 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 		return absValue(abs, diff)
 	}
 
-	return absValue(abs, 0)
+	return 0
 }
 
-// DiffInString return the difference between duration in string format
-func (c *Carbon) DiffInString(carb *Carbon) string {
+// DiffDurationInString returns the duration difference in string format
+func (c *Carbon) DiffDurationInString(carb *Carbon) string {
 	if carb == nil {
 		carb = nowIn(c.Location())
 	}
