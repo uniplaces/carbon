@@ -1,7 +1,6 @@
 package carbon
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -17,8 +16,7 @@ func TestLoadResource(t *testing.T) {
 func TestTrans(t *testing.T) {
 	c, _ := Create(2009, time.November, 10, 23, 0, 0, 0, "UTC")
 	c.SetLocale("pt")
-
-	fmt.Println(c.GetLocale())
+	assert.Equal(t, "pt", c.GetLocale())
 }
 
 // TODO: These are DiffForHumans Test 496-1214, these needs to be moved to diff_test
@@ -102,111 +100,93 @@ func TestDiffForHumansNowAndNearlyDayThree(t *testing.T) {
 	assert.Equal(t, "1 month ago", gotTime)
 }
 
-/*
-   public function testDiffForHumansNowAndNearlyDay()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('23 hours ago', Carbon::now()->subHours(23)->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndLessThanDay(t *testing.T) {
+	gotTime, err := Now().SubHours(23).DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "23 hours ago", gotTime)
+}
 
-   public function testDiffForHumansNowAndDay()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('1 day ago', Carbon::now()->subDay()->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndDay(t *testing.T) {
+	gotTime, err := Now().SubDay().DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "1 day ago", gotTime)
+}
 
-   public function testDiffForHumansNowAndDays()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('2 days ago', Carbon::now()->subDays(2)->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndDays(t *testing.T) {
+	gotTime, err := Now().SubDays(2).DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "2 days ago", gotTime)
+}
 
-   public function testDiffForHumansNowAndNearlyWeek()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('6 days ago', Carbon::now()->subDays(6)->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndNearlyWeek(t *testing.T) {
+	gotTime, err := Now().SubDays(6).DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "6 days ago", gotTime)
+}
 
-   public function testDiffForHumansNowAndWeek()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('1 week ago', Carbon::now()->subWeek()->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndWeek(t *testing.T) {
+	gotTime, err := Now().SubWeek().DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "1 week ago", gotTime)
+}
 
-   public function testDiffForHumansNowAndWeeks()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('2 weeks ago', Carbon::now()->subWeeks(2)->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndWeeks(t *testing.T) {
+	gotTime, err := Now().SubWeeks(2).DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "2 weeks ago", gotTime)
+}
 
-   public function testDiffForHumansNowAndNearlyMonth()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('3 weeks ago', Carbon::now()->subWeeks(3)->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndNearlyMonth(t *testing.T) {
+	gotTime, err := Now().SubWeeks(3).DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "3 weeks ago", gotTime)
+}
 
-   public function testDiffForHumansNowAndMonth()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('4 weeks ago', Carbon::now()->subWeeks(4)->diffForHumans());
-           $scope->assertSame('1 month ago', Carbon::now()->subMonth()->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndMonth(t *testing.T) {
+	gotTime, err := Now().SubWeeks(4).DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "4 weeks ago", gotTime)
+	gotTime, err = Now().SubMonth().DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "1 month ago", gotTime)
+}
 
-   public function testDiffForHumansNowAndMonths()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('2 months ago', Carbon::now()->subMonths(2)->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndMonths(t *testing.T) {
+	gotTime, err := Now().SubMonths(2).DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "2 months ago", gotTime)
+}
 
-   public function testDiffForHumansNowAndNearlyYear()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('11 months ago', Carbon::now()->subMonths(11)->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndNearlyYear(t *testing.T) {
+	gotTime, err := Now().SubMonths(11).DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "11 months ago", gotTime)
+}
 
-   public function testDiffForHumansNowAndYear()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('1 year ago', Carbon::now()->subYear()->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndYear(t *testing.T) {
+	gotTime, err := Now().SubYear().DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "1 year ago", gotTime)
+}
 
-   public function testDiffForHumansNowAndYears()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('2 years ago', Carbon::now()->subYears(2)->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndYears(t *testing.T) {
+	gotTime, err := Now().SubYears(2).DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "2 years ago", gotTime)
+}
 
-   public function testDiffForHumansNowAndFutureSecond()
-   {
-       $scope = $this;
-       $this->wrapWithTestNow(function () use ($scope) {
-           $scope->assertSame('1 second from now', Carbon::now()->addSecond()->diffForHumans());
-       });
-   }
+func TestDiffForHumansNowAndFutureSecond(t *testing.T) {
+	gotTime, err := Now().AddSecond().DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "1 second from now", gotTime)
+}
+
+/* TODO Start fixing from here, as this test case is failing
+func TestDiffForHumansNowAndFutureSeconds(t *testing.T) {
+	gotTime, err := Now().AddSeconds(2).DiffForHumans(nil, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "2 seconds from now", gotTime)
+}
 
    public function testDiffForHumansNowAndFutureSeconds()
    {

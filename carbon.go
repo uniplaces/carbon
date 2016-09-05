@@ -1050,6 +1050,10 @@ func (c *Carbon) DiffInYears(carb *Carbon, abs bool) int64 {
 		carb = nowIn(c.Location())
 	}
 
+	if c.Year() == carb.Year() {
+		return 0
+	}
+
 	diffHr := c.DiffInHours(carb, abs)
 	hrLastYear := int64(c.DaysInYear() * hoursPerDay)
 
@@ -1068,11 +1072,45 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 		carb = nowIn(c.Location())
 	}
 
+	if c.Month() == carb.Month() && c.Year() == carb.Year() {
+		return 0
+	}
+
 	diffHr := c.DiffInHours(carb, abs)
 	hrLastMonth := int64(c.DaysInMonth() * hoursPerDay)
 
 	if (diffHr - hrLastMonth) >= 0 {
-		diff := c.DiffInYears(carb, abs)*monthsPerYear + int64(carb.In(time.UTC).Month()-c.In(time.UTC).Month())
+		var m int64
+		if c.Year() < carb.Year() {
+			m = (int64(monthsPerYear) - int64(c.In(time.UTC).Month())) + (int64(carb.In(time.UTC).Month()) - 1)
+			totalHr := int64(c.DaysInMonth() * hoursPerDay)
+			cHr := c.StartOfMonth().DiffInHours(c, abs)
+			remainHr := totalHr - cHr
+			spentInHr := carb.StartOfMonth().DiffInHours(carb, abs)
+			if (remainHr + spentInHr) >= totalHr {
+				m = m + 1
+			}
+		} else if c.Year() > carb.Year() {
+			m = (int64(monthsPerYear) - int64(carb.In(time.UTC).Month())) + (int64(c.In(time.UTC).Month()) - 1)
+			totalHr := int64(carb.DaysInMonth() * hoursPerDay)
+			carbHr := carb.StartOfMonth().DiffInHours(carb, abs)
+			remainHr := totalHr - carbHr
+			spentInHr := c.StartOfMonth().DiffInHours(c, abs)
+			if (remainHr + spentInHr) >= totalHr {
+				m = m + 1
+			}
+		} else {
+			m = int64(carb.In(time.UTC).Month() - c.In(time.UTC).Month())
+		}
+
+		diffYr := c.Year() - carb.Year()
+		if diffYr > 1 {
+			diff := c.DiffInYears(carb, abs)*monthsPerYear + m
+
+			return absValue(abs, diff)
+		}
+
+		diff := m
 
 		return absValue(abs, diff)
 	}

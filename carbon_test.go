@@ -1903,11 +1903,25 @@ func TestDiffInMonthsTimeZone(t *testing.T) {
 	assert.EqualValues(t, 7, t1.DiffInMonths(t2, true))
 }
 
-func TestDiffInMonths(t *testing.T) {
-	t1, _ := Create(2016, time.August, 18, 10, 0, 0, 0, "UTC")
-	t2, _ := Create(2015, time.July, 29, 12, 0, 0, 0, "UTC")
+func TestDiffInMonthsLessThanOneYear(t *testing.T) {
+	t1, _ := Create(2016, time.July, 3, 1, 0, 0, 0, "UTC")
+	t2, _ := Create(2015, time.August, 1, 1, 0, 0, 0, "UTC")
 
 	assert.EqualValues(t, 11, t1.DiffInMonths(t2, true))
+}
+
+func TestDiffInMonthsAroundOneYear(t *testing.T) {
+	t1, _ := Create(2016, time.July, 4, 1, 0, 0, 0, "UTC")
+	t2, _ := Create(2015, time.July, 3, 1, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, 12, t1.DiffInMonths(t2, true))
+}
+
+func TestDiffInMonthsMoreThanOneYear(t *testing.T) {
+	t1, _ := Create(2016, time.August, 4, 1, 0, 0, 0, "UTC")
+	t2, _ := Create(2015, time.July, 3, 1, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, 13, t1.DiffInMonths(t2, true))
 }
 
 func TestDiffInMonthsOneDayDifference(t *testing.T) {
@@ -1927,6 +1941,13 @@ func TestDiffInMonthsOneMonthDifference(t *testing.T) {
 func TestDiffInMonthsOneHourLessInMonthDifference(t *testing.T) {
 	t1, _ := Create(2016, time.August, 1, 10, 0, 0, 0, "UTC")
 	t2, _ := Create(2016, time.September, 1, 9, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, 0, t1.DiffInMonths(t2, true))
+}
+
+func TestDiffInMonthsSameMonth(t *testing.T) {
+	t1, _ := Create(2016, time.August, 1, 12, 0, 0, 0, "UTC")
+	t2, _ := Create(2016, time.August, 10, 6, 0, 0, 0, "UTC")
 
 	assert.EqualValues(t, 0, t1.DiffInMonths(t2, true))
 }
