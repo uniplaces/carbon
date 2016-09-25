@@ -1267,7 +1267,7 @@ func swap(a, b *Carbon) (*Carbon, *Carbon) {
 // When comparing a value in the future to another value:
 // 1 hour after
 // 5 months after
-func (c *Carbon) DiffForHumans(d *Carbon, absolute, short bool) (string, error) {
+func (c *Carbon) DiffForHumans(d *Carbon, abs, absolute, short bool) (string, error) {
 	isNow := (d == nil)
 	if isNow {
 		d = Now()
@@ -1277,31 +1277,31 @@ func (c *Carbon) DiffForHumans(d *Carbon, absolute, short bool) (string, error) 
 	var count int64
 
 	switch true {
-	case c.DiffInYears(d, absolute) > 0:
+	case c.DiffInYears(d, abs) > 0:
 		if short {
 			unit = "y"
 		} else {
 			unit = "year"
 		}
-		count = c.DiffInYears(d, absolute)
+		count = c.DiffInYears(d, abs)
 		break
 
-	case c.DiffInMonths(d, absolute) > 0:
+	case c.DiffInMonths(d, abs) > 0:
 		if short {
 			unit = "m"
 		} else {
 			unit = "month"
 		}
-		count = c.DiffInMonths(d, absolute)
+		count = c.DiffInMonths(d, abs)
 		break
 
-	case c.DiffInDays(d, absolute) > 0:
+	case c.DiffInDays(d, abs) > 0:
 		if short {
 			unit = "d"
 		} else {
 			unit = "day"
 		}
-		count = c.DiffInDays(d, absolute)
+		count = c.DiffInDays(d, abs)
 		if count >= daysPerWeek {
 			if short {
 				unit = "w"
@@ -1312,22 +1312,22 @@ func (c *Carbon) DiffForHumans(d *Carbon, absolute, short bool) (string, error) 
 		}
 		break
 
-	case c.DiffInHours(d, absolute) > 0:
+	case c.DiffInHours(d, abs) > 0:
 		if short {
 			unit = "h"
 		} else {
 			unit = "hour"
 		}
-		count = c.DiffInHours(d, absolute)
+		count = c.DiffInHours(d, abs)
 		break
 
-	case c.DiffInMinutes(d, absolute) > 0:
+	case c.DiffInMinutes(d, abs) > 0:
 		if short {
 			unit = "min"
 		} else {
 			unit = "minute"
 		}
-		count = c.DiffInMinutes(d, absolute)
+		count = c.DiffInMinutes(d, abs)
 		break
 
 	default:
@@ -1336,7 +1336,7 @@ func (c *Carbon) DiffForHumans(d *Carbon, absolute, short bool) (string, error) 
 		} else {
 			unit = "second"
 		}
-		count = c.DiffInSeconds(d, absolute)
+		count = c.DiffInSeconds(d, abs)
 		break
 	}
 
@@ -1344,13 +1344,13 @@ func (c *Carbon) DiffForHumans(d *Carbon, absolute, short bool) (string, error) 
 		count = 1
 	}
 
-	time, err := c.Translator.ChooseUnit(unit, count)
+	t, err := c.Translator.ChooseUnit(unit, count)
 	if err != nil {
 		return "", err
 	}
 
 	if absolute {
-		return time, nil
+		return t, nil
 	}
 
 	isFuture := c.GreaterThan(d)
@@ -1370,16 +1370,15 @@ func (c *Carbon) DiffForHumans(d *Carbon, absolute, short bool) (string, error) 
 		}
 	}
 
+	/* TODO
 	// Some langs have special pluralization for past and future tense.
 	// tryKeyExists := unit + "_" + transID
-
-	/* TODO
 	if tryKeyExists != c.Translator.Choose(tryKeyExists, count) {
 		time, _ = c.Translator.Choose(tryKeyExists, count)
 	}
 	*/
 
-	return c.Translator.ChooseTrans(transID, time), nil
+	return c.Translator.ChooseTrans(transID, t), nil
 }
 
 // StartOfDay returns the time at 00:00:00 of the same day
