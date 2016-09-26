@@ -1680,7 +1680,7 @@ func (c *Carbon) SetLocale(l string) error {
 	return nil
 }
 
-/*
+/* TODO
 // String Formatting
 
 // FormatLocalized will format the carbon instance with the current locale
