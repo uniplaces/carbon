@@ -1143,6 +1143,14 @@ func (c *Carbon) DiffInDays(carb *Carbon, abs bool) int64 {
 	return c.DiffInHours(carb, abs) / hoursPerDay
 }
 
+// DiffInNights returns the difference in nights
+func (c *Carbon) DiffInNights(carb *Carbon, abs bool) int64 {
+	if carb == nil {
+		carb = nowIn(c.Location())
+	}
+	return c.DiffInDays(carb, abs)
+}
+
 // Filter represents a predicate used for filtering diffs
 type Filter func(*Carbon) bool
 
