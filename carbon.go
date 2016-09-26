@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package carbon is an extension to library for go's time libray based on php's Carbon library
+// Package `carbon` is an extension to Go's time library based on PHP's Carbon library
 package carbon
 
 import (
@@ -62,6 +62,7 @@ type Carbon struct {
 	weekEndsAt   time.Weekday
 	weekendDays  []time.Weekday
 	stringFormat string
+	Translator   *Translator
 }
 
 // NewCarbon returns a pointer to a new Carbon instance
@@ -76,6 +77,7 @@ func NewCarbon(t time.Time) *Carbon {
 		weekEndsAt:   time.Sunday,
 		weekendDays:  wds,
 		stringFormat: DefaultFormat,
+		Translator:   translator(),
 	}
 }
 
@@ -660,9 +662,9 @@ func (c *Carbon) SetTimestamp(sec int64) {
 	c.Time = time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), c.Location())
 }
 
-// SetTimezone sets the location from a string
+// SetTimeZone sets the location from a string
 // If the location is invalid, it returns an error instead.
-func (c *Carbon) SetTimezone(name string) error {
+func (c *Carbon) SetTimeZone(name string) error {
 	loc, err := time.LoadLocation(name)
 	if err != nil {
 		return err
@@ -1048,6 +1050,10 @@ func (c *Carbon) DiffInYears(carb *Carbon, abs bool) int64 {
 		carb = nowIn(c.Location())
 	}
 
+	if c.Year() == carb.Year() {
+		return 0
+	}
+
 	diffHr := c.DiffInHours(carb, abs)
 	hrLastYear := int64(c.DaysInYear() * hoursPerDay)
 
@@ -1066,11 +1072,45 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 		carb = nowIn(c.Location())
 	}
 
+	if c.Month() == carb.Month() && c.Year() == carb.Year() {
+		return 0
+	}
+
 	diffHr := c.DiffInHours(carb, abs)
 	hrLastMonth := int64(c.DaysInMonth() * hoursPerDay)
 
 	if (diffHr - hrLastMonth) >= 0 {
-		diff := c.DiffInYears(carb, abs)*monthsPerYear + int64(carb.In(time.UTC).Month()-c.In(time.UTC).Month())
+		var m int64
+		if c.Year() < carb.Year() {
+			m = (int64(monthsPerYear) - int64(c.In(time.UTC).Month())) + (int64(carb.In(time.UTC).Month()) - 1)
+			totalHr := int64(c.DaysInMonth() * hoursPerDay)
+			cHr := c.StartOfMonth().DiffInHours(c, abs)
+			remainHr := totalHr - cHr
+			spentInHr := carb.StartOfMonth().DiffInHours(carb, abs)
+			if (remainHr + spentInHr) >= totalHr {
+				m = m + 1
+			}
+		} else if c.Year() > carb.Year() {
+			m = (int64(monthsPerYear) - int64(carb.In(time.UTC).Month())) + (int64(c.In(time.UTC).Month()) - 1)
+			totalHr := int64(carb.DaysInMonth() * hoursPerDay)
+			carbHr := carb.StartOfMonth().DiffInHours(carb, abs)
+			remainHr := totalHr - carbHr
+			spentInHr := c.StartOfMonth().DiffInHours(c, abs)
+			if (remainHr + spentInHr) >= totalHr {
+				m = m + 1
+			}
+		} else {
+			m = int64(carb.In(time.UTC).Month() - c.In(time.UTC).Month())
+		}
+
+		diffYr := c.Year() - carb.Year()
+		if diffYr > 1 {
+			diff := c.DiffInYears(carb, abs)*monthsPerYear + m
+
+			return absValue(abs, diff)
+		}
+
+		diff := m
 
 		return absValue(abs, diff)
 	}
@@ -1212,6 +1252,133 @@ func absValue(needsAbs bool, value int64) int64 {
 
 func swap(a, b *Carbon) (*Carbon, *Carbon) {
 	return b, a
+}
+
+// DiffForHumans returns the difference in a human readable format in the current locale.
+// When comparing a value in the past to default now:
+// 1 hour ago
+// 5 months ago
+// When comparing a value in the future to default now:
+// 1 hour from now
+// 5 months from now
+// When comparing a value in the past to another value:
+// 1 hour before
+// 5 months before
+// When comparing a value in the future to another value:
+// 1 hour after
+// 5 months after
+func (c *Carbon) DiffForHumans(d *Carbon, abs, absolute, short bool) (string, error) {
+	isNow := (d == nil)
+	if isNow {
+		d = Now()
+	}
+
+	var unit string
+	var count int64
+
+	switch true {
+	case c.DiffInYears(d, abs) > 0:
+		if short {
+			unit = "y"
+		} else {
+			unit = "year"
+		}
+		count = c.DiffInYears(d, abs)
+		break
+
+	case c.DiffInMonths(d, abs) > 0:
+		if short {
+			unit = "m"
+		} else {
+			unit = "month"
+		}
+		count = c.DiffInMonths(d, abs)
+		break
+
+	case c.DiffInDays(d, abs) > 0:
+		if short {
+			unit = "d"
+		} else {
+			unit = "day"
+		}
+		count = c.DiffInDays(d, abs)
+		if count >= daysPerWeek {
+			if short {
+				unit = "w"
+			} else {
+				unit = "week"
+			}
+			count = int64(count / daysPerWeek)
+		}
+		break
+
+	case c.DiffInHours(d, abs) > 0:
+		if short {
+			unit = "h"
+		} else {
+			unit = "hour"
+		}
+		count = c.DiffInHours(d, abs)
+		break
+
+	case c.DiffInMinutes(d, abs) > 0:
+		if short {
+			unit = "min"
+		} else {
+			unit = "minute"
+		}
+		count = c.DiffInMinutes(d, abs)
+		break
+
+	default:
+		if short {
+			unit = "s"
+		} else {
+			unit = "second"
+		}
+		count = c.DiffInSeconds(d, abs)
+		break
+	}
+
+	if count == 0 {
+		count = 1
+	}
+
+	t, err := c.Translator.chooseUnit(unit, count)
+	if err != nil {
+		return "", err
+	}
+
+	if absolute {
+		return t, nil
+	}
+
+	isFuture := c.GreaterThan(d)
+
+	var transID string
+	if isNow {
+		if isFuture {
+			transID = "from_now"
+		} else {
+			transID = "ago"
+		}
+	} else {
+		if isFuture {
+			transID = "after"
+		} else {
+			transID = "before"
+		}
+	}
+
+	/* TODO
+	// Some langs have special pluralization for past and future tense.
+	// tryKeyExists := unit + "_" + transID
+	if tryKeyExists != c.Translator.Choose(tryKeyExists, count) {
+		time, _ = c.Translator.Choose(tryKeyExists, count)
+	}
+	*/
+
+	return c.Translator.chooseTrans(transID, t), nil
 }
 
 // StartOfDay returns the time at 00:00:00 of the same day
@@ -1367,20 +1534,20 @@ func (c *Carbon) LastOfMonth(wd time.Weekday) *Carbon {
 // NthOfMonth returns the given occurrence of a given day of the week in the current month
 // If the calculated occurrence is outside the scope of current month, no modifications are made
 func (c *Carbon) NthOfMonth(nth int, wd time.Weekday) *Carbon {
-	copy := c.Copy().StartOfMonth()
+	cp := c.Copy().StartOfMonth()
 	i := 0
-	if copy.Weekday() == wd {
+	if cp.Weekday() == wd {
 		i++
 	}
 	for i < nth {
-		copy = copy.Next(wd)
+		cp = cp.Next(wd)
 		i++
 	}
-	if copy.Gt(c.EndOfMonth()) {
+	if cp.Gt(c.EndOfMonth()) {
 		return c
 	}
 
-	return copy
+	return cp
 }
 
 // FirstOfQuarter returns the first occurrence of a given day of the week in the current quarter
@@ -1406,20 +1573,20 @@ func (c *Carbon) LastOfQuarter(wd time.Weekday) *Carbon {
 // NthOfQuarter returns the given occurrence of a given day of the week in the current quarter
 // If the calculated occurrence is outside the scope of current quarter, no modifications are made
 func (c *Carbon) NthOfQuarter(nth int, wd time.Weekday) *Carbon {
-	copy := c.Copy().StartOfQuarter()
+	cp := c.Copy().StartOfQuarter()
 	i := 0
-	if copy.Weekday() == wd {
+	if cp.Weekday() == wd {
 		i++
 	}
 	for i < nth {
-		copy = copy.Next(wd)
+		cp = cp.Next(wd)
 		i++
 	}
-	if copy.Gt(c.EndOfQuarter()) {
+	if cp.Gt(c.EndOfQuarter()) {
 		return c
 	}
 
-	return copy
+	return cp
 }
 
 // FirstOfYear returns the first occurrence of a given day of the week in the current year
@@ -1445,20 +1612,20 @@ func (c *Carbon) LastOfYear(wd time.Weekday) *Carbon {
 // NthOfYear returns the given occurrence of a given day of the week in the current year
 // If the calculated occurrence is outside the scope of current year, no modifications are made
 func (c *Carbon) NthOfYear(nth int, wd time.Weekday) *Carbon {
-	copy := c.Copy().StartOfYear()
+	cp := c.Copy().StartOfYear()
 	i := 0
-	if copy.Weekday() == wd {
+	if cp.Weekday() == wd {
 		i++
 	}
 	for i < nth {
-		copy = copy.Next(wd)
+		cp = cp.Next(wd)
 		i++
 	}
-	if copy.Gt(c.EndOfYear()) {
+	if cp.Gt(c.EndOfYear()) {
 		return c
 	}
 
-	return copy
+	return cp
 }
 
 // Average returns the average between a given carbon date and the current date
@@ -1473,3 +1640,77 @@ func (c *Carbon) Average(carb *Carbon) *Carbon {
 
 	return c.AddSeconds(average)
 }
+
+// Localization
+
+// GetTranslator returns Translator inside a Carbon instance if exist,
+// otherwise it creates a new Translator with "en" as default locale
+func (c *Carbon) GetTranslator() (*Translator, error) {
+	if c.Translator == nil {
+		c.Translator = translator()
+	}
+
+	return c.Translator, nil
+}
+
+func translator() *Translator {
+	t := NewTranslator()
+	t.SetLocale("en")
+
+	return t
+}
+
+// SetTranslator sets the Translator inside a Carbon instance
+func (c *Carbon) SetTranslator(t *Translator) {
+	c.Translator = t
+}
+
+// GetLocale returns locale of the Translator of Carbon
+func (c *Carbon) GetLocale() string {
+	return c.Translator.GetLocale()
+}
+
+// SetLocale sets locale for the Translator of Carbon
+func (c *Carbon) SetLocale(l string) error {
+	err := c.Translator.SetLocale(l)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+/* TODO
+// String Formatting
+
+// FormatLocalized will format the carbon instance with the current locale
+func (c *Carbon) FormatLocalized(format string) (string, error) {
+	if runtime.GOOS == "windows" {
+		regExpObj, err := regexp.Compile("#(?<!%)((?:%%)*)%e#")
+		if err != nil {
+			return "", err
+		}
+
+		format = regExpObj.ReplaceAllString(format, "\1%#d")
+	}
+
+	return c.Format(format), nil
+}
+
+// Testing AIDS
+
+// Determine if there is a relative keyword in the time string, this is to
+// create dates relative to now for test instances. e.g.: next tuesday
+func HasRelativeKeywords() {
+	// skip common format with a '-' in it
+        if (preg_match('/\d{4}-\d{1,2}-\d{1,2}/', $time) !== 1) {
+            foreach (static::$relativeKeywords as $keyword) {
+                if (stripos($time, $keyword) !== false) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+}
+*/
