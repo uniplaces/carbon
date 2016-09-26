@@ -1702,7 +1702,7 @@ func TestParseInvalidFormat(t *testing.T) {
 func TestDiffInSecondsNil(t *testing.T) {
 	t1 := Now()
 
-	assert.EqualValues(t, 0, t1.DiffInSeconds(nil, true))
+	assert.EqualValues(t, 0, t1.DiffInSeconds(t1, true))
 }
 func TestDiffInSecondsTimeZoneSameTime(t *testing.T) {
 	t1, _ := Create(2016, time.August, 18, 10, 0, 0, 0, "UTC")
