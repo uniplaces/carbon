@@ -9,7 +9,7 @@ import (
 
 func TestLoadResource(t *testing.T) {
 	tr := NewTranslator()
-	err := tr.LoadResource("pt_BR")
+	err := tr.loadResource("pt_BR")
 	assert.Nil(t, err)
 }
 

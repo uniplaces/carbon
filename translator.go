@@ -10,6 +10,7 @@ import (
 	"github.com/uniplaces/carbon/lang"
 )
 
+// Translator helps to translate time based on locale
 type Translator struct {
 	locale    string
 	cacheDir  string
@@ -23,17 +24,19 @@ func NewTranslator() *Translator {
 	}
 }
 
+// GetLocale will return locale of a Translator
 func (t *Translator) GetLocale() string {
 	return t.locale
 }
 
+// SetLocale will set locale on a Translator
 func (t *Translator) SetLocale(l string) error {
 	err := t.AssertValidLocale(l)
 	if err != nil {
 		return err
 	}
 
-	err = t.LoadResource(l)
+	err = t.loadResource(l)
 	if err != nil {
 		return err
 	}
@@ -43,6 +46,7 @@ func (t *Translator) SetLocale(l string) error {
 	return nil
 }
 
+// AssertValidLocale checks if the locale is valid or not
 func (t *Translator) AssertValidLocale(l string) error {
 	matched, err := regexp.MatchString("^(?:[a-z]{2}|[a-z]{2}(([_-]{1})([a-zA-Z]{2}){1,2}))$", l)
 	if err != nil {
@@ -55,7 +59,8 @@ func (t *Translator) AssertValidLocale(l string) error {
 	return nil
 }
 
-func (t *Translator) LoadResource(l string) error {
+// loadResource loads the translations according to the locale
+func (t *Translator) loadResource(l string) error {
 	ltext, err := lang.LoadLocaleText(l)
 	if err != nil {
 		return err
@@ -69,7 +74,8 @@ func (t *Translator) LoadResource(l string) error {
 	return nil
 }
 
-func (t *Translator) ChooseUnit(unit string, count int64) (string, error) {
+// chooseUnit will choose unit of translations according to the count
+func (t *Translator) chooseUnit(unit string, count int64) (string, error) {
 	s := strings.Split(t.resources[unit], "|")
 	if count > 1 {
 		return strings.Replace(s[1], ":count", strconv.FormatInt(int64(count), 10), 1), nil
@@ -78,7 +84,8 @@ func (t *Translator) ChooseUnit(unit string, count int64) (string, error) {
 	return s[0], nil
 }
 
-func (t *Translator) ChooseTrans(transID, time string) string {
+// chooseTrans will choose the word to make a diffForHumans statement
+func (t *Translator) chooseTrans(transID, time string) string {
 	return strings.Replace(t.resources[transID], ":time", time, 1)
 }
 

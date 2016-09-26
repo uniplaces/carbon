@@ -1344,7 +1344,7 @@ func (c *Carbon) DiffForHumans(d *Carbon, abs, absolute, short bool) (string, er
 		count = 1
 	}
 
-	t, err := c.Translator.ChooseUnit(unit, count)
+	t, err := c.Translator.chooseUnit(unit, count)
 	if err != nil {
 		return "", err
 	}
@@ -1378,7 +1378,7 @@ func (c *Carbon) DiffForHumans(d *Carbon, abs, absolute, short bool) (string, er
 	}
 	*/
 
-	return c.Translator.ChooseTrans(transID, t), nil
+	return c.Translator.chooseTrans(transID, t), nil
 }
 
 // StartOfDay returns the time at 00:00:00 of the same day
@@ -1683,13 +1683,14 @@ func (c *Carbon) SetLocale(l string) error {
 /*
 // String Formatting
 
-// FormatLocalized
+// FormatLocalized will format the carbon instance with the current locale
 func (c *Carbon) FormatLocalized(format string) (string, error) {
 	if runtime.GOOS == "windows" {
 		regExpObj, err := regexp.Compile("#(?<!%)((?:%%)*)%e#")
 		if err != nil {
 			return "", err
 		}
+
 		format = regExpObj.ReplaceAllString(format, "\1%#d")
 	}
 
@@ -1701,5 +1702,15 @@ func (c *Carbon) FormatLocalized(format string) (string, error) {
 // Determine if there is a relative keyword in the time string, this is to
 // create dates relative to now for test instances. e.g.: next tuesday
 func HasRelativeKeywords() {
+	// skip common format with a '-' in it
+        if (preg_match('/\d{4}-\d{1,2}-\d{1,2}/', $time) !== 1) {
+            foreach (static::$relativeKeywords as $keyword) {
+                if (stripos($time, $keyword) !== false) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
 }
 */
