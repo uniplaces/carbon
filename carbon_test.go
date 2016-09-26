@@ -1822,6 +1822,40 @@ func TestDiffInDaysNil(t *testing.T) {
 	assert.EqualValues(t, 0, t1.DiffInDays(nil, true))
 }
 
+func TestDiffInNightsTimeZone(t *testing.T) {
+	t1, _ := Create(2016, time.August, 18, 10, 0, 0, 0, "UTC")
+	t2, _ := Create(2016, time.August, 18, 12, 0, 0, 0, "Europe/Madrid")
+
+	assert.Equal(t, int64(0), t1.DiffInNights(t2, true))
+}
+
+func TestDiffInNightsTimeZone2(t *testing.T) {
+	t1, _ := Create(2016, time.August, 18, 10, 0, 0, 0, "UTC")
+	t2, _ := Create(2016, time.August, 13, 12, 0, 0, 0, "Europe/Madrid")
+
+	assert.Equal(t, int64(5), t1.DiffInNights(t2, true))
+}
+
+func TestDiffInNightsAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddDay()
+
+	assert.Equal(t, int64(1), t1.DiffInNights(t2, true))
+}
+
+func TestDiffInNightsNoAbs(t *testing.T) {
+	t1 := Now()
+	t2 := t1.AddDay()
+
+	assert.Equal(t, int64(-1), t2.DiffInNights(t1, false))
+}
+
+func TestDiffInNightsNil(t *testing.T) {
+	t1 := Now()
+
+	assert.EqualValues(t, 0, t1.DiffInNights(nil, true))
+}
+
 func TestDiffInWeeksNil(t *testing.T) {
 	t1 := Now()
 
