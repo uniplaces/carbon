@@ -2601,3 +2601,25 @@ func TestCreateFromTimestampInvalidLocation(t *testing.T) {
 
 	assert.NotNil(t, err)
 }
+
+func TestLastDayOfMonth(t *testing.T) {
+	c, err := Create(2016, time.August, 20, 10, 0, 0, 0, "UTC")
+	assert.Nil(t, err)
+	d := c.LastDayOfMonth()
+	assert.Equal(t, 31, d.Day())
+
+	c = c.AddMonth()
+	d = c.LastDayOfMonth()
+	assert.Equal(t, 30, d.Day())
+}
+
+func TestFirstDayOfMonth(t *testing.T) {
+	c, err := Create(2016, time.May, 20, 10, 0, 0, 0, "UTC")
+	assert.Nil(t, err)
+	d := c.FirstDayOfMonth()
+	assert.Equal(t, 1, d.Day())
+
+	c = c.AddMonth()
+	d = c.FirstDayOfMonth()
+	assert.Equal(t, 1, d.Day())
+}

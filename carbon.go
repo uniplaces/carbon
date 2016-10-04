@@ -1539,6 +1539,16 @@ func (c *Carbon) LastOfMonth(wd time.Weekday) *Carbon {
 	return d.StartOfDay()
 }
 
+// LastDayOfMonth returns a new carbon instance with the last day of current month
+func (c *Carbon) LastDayOfMonth() *Carbon {
+	return NewCarbon(time.Date(c.Year(), c.Month(), c.DaysInMonth(), 0, 0, 0, 0, time.UTC))
+}
+
+// FirstDayOfMonth returns a new carbon instance with the first day of current month
+func (c *Carbon) FirstDayOfMonth() *Carbon {
+	return NewCarbon(time.Date(c.Year(), c.Month(), 1, 0, 0, 0, 0, time.UTC))
+}
+
 // NthOfMonth returns the given occurrence of a given day of the week in the current month
 // If the calculated occurrence is outside the scope of current month, no modifications are made
 func (c *Carbon) NthOfMonth(nth int, wd time.Weekday) *Carbon {
