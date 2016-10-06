@@ -35,6 +35,8 @@ const (
 	weeksPerLongYear  = 53
 	daysInLeapYear    = 366
 	daysInNormalYear  = 365
+	secondsInWeek     = 691200
+	secondsInMonth    = 2678400
 )
 
 // Represents the different string formats for dates
@@ -916,6 +918,28 @@ func (c *Carbon) IsFriday() bool {
 // IsSaturday checks if this day is a Saturday.
 func (c *Carbon) IsSaturday() bool {
 	return c.Weekday() == time.Saturday
+}
+
+// IsLastWeek returns true is the date is within last week
+func (c *Carbon) IsLastWeek() bool {
+	secondsInWeek := float64(secondsInWeek)
+	difference := time.Now().Sub(c.Time)
+	if difference.Seconds() > 0 && difference.Seconds() < secondsInWeek {
+		return true
+	}
+
+	return false
+}
+
+// IsLastMonth returns true is the date is within last month
+func (c *Carbon) IsLastMonth() bool {
+	secondsInMonth := float64(secondsInMonth)
+	difference := time.Now().Sub(c.Time)
+	if difference.Seconds() > 0 && difference.Seconds() < secondsInMonth {
+		return true
+	}
+
+	return false
 }
 
 // Eq determines if the current carbon is equal to another

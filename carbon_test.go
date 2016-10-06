@@ -2623,3 +2623,25 @@ func TestFirstDayOfMonth(t *testing.T) {
 	d = c.FirstDayOfMonth()
 	assert.Equal(t, 1, d.Day())
 }
+
+func TestIsLastWeekTrue(t *testing.T) {
+	c := Now().SubDays(3)
+	assert.True(t, c.IsLastWeek())
+}
+
+func TestIsLastWeekFalse(t *testing.T) {
+	c, err := Create(2016, time.May, 20, 10, 0, 0, 0, "UTC")
+	assert.Nil(t, err)
+	assert.False(t, c.IsLastWeek())
+}
+
+func TestIsLastMonthTrue(t *testing.T) {
+	c := Now().SubWeeks(2)
+	assert.True(t, c.IsLastMonth())
+}
+
+func TestIsLastMonthFalse(t *testing.T) {
+	c, err := Create(2016, time.May, 20, 10, 0, 0, 0, "UTC")
+	assert.Nil(t, err)
+	assert.False(t, c.IsLastMonth())
+}
