@@ -1,25 +1,28 @@
 package carbon
 
-// Create a new CarbonInterval instance from specific values.
-//func Create() {
-//}
+import (
+	"github.com/vektra/errors"
+)
 
-//Create a CarbonInterval instance from a DateInterval one.
-//func Instance() {
-//}
-
-// Allow setting of weeks and days to be cumulative.
-func WeeksAndDays() {
+// CarbonInterval represents an interval between two carbons.
+type CarbonInterval struct {
+	Start *Carbon
+	End *Carbon
 }
 
-// Get the current interval in a human readable format in the current locale.
-func ForHumans() {
+// NewCarbonInterval returns a pointer to a new CarbonInterval instance
+func NewCarbonInterval(start, end *Carbon) (*CarbonInterval, error) {
+	if start.Gte(end) {
+		return nil, errors.New("The end date must be greater than the start date.")
+	}
+
+	return &CarbonInterval{
+		Start: start,
+		End: end,
+	}, nil
 }
 
-// Add the passed interval to the current instance
-func Add() {
-}
-
-// Get the interval_spec string
-func Spec() {
+// DiffInHours return the difference in hours between start and end date
+func (ci *CarbonInterval) DiffInHours() int64 {
+	return ci.End.DiffInHours(ci.Start, true)
 }
