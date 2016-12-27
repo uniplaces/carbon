@@ -1,7 +1,7 @@
 package carbon
 
 import (
-	"github.com/vektra/errors"
+	"errors"
 )
 
 // CarbonInterval represents an interval between two carbons.
