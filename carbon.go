@@ -1152,16 +1152,23 @@ func (c *Carbon) DiffInYears(carb *Carbon, abs bool) int64 {
 		return 0
 	}
 
-	diffHr := c.DiffInHours(carb, abs)
-	hrLastYear := int64(c.DaysInYear() * hoursPerDay)
-
-	if (diffHr - hrLastYear) >= 0 {
-		diff := int64(carb.In(time.UTC).Year() - c.In(time.UTC).Year())
-
-		return absValue(abs, diff)
+	start := NewCarbon(c.Time)
+	end := NewCarbon(carb.Time)
+	if end.UnixNano() < start.UnixNano() {
+		aux := start
+		start = end
+		end = aux
 	}
 
-	return 0
+	yearsAmmount := int64(end.Year()-start.Year()) - 1
+
+	start.SetYear(end.Year())
+
+	if start.UnixNano() <= end.UnixNano() {
+		yearsAmmount++
+	}
+
+	return absValue(abs, yearsAmmount)
 }
 
 // DiffInMonths returns the difference in months
