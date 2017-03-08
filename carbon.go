@@ -1001,9 +1001,15 @@ func (c *Carbon) IsLastWeek() bool {
 
 // IsLastMonth returns true is the date is within last month
 func (c *Carbon) IsLastMonth() bool {
-	secondsInMonth := float64(secondsInMonth)
-	difference := Now().Sub(c.Time)
-	if difference.Seconds() > 0 && difference.Seconds() < secondsInMonth {
+	now := Now()
+
+	monthDifference := now.Month() - c.Month()
+
+	if absValue(true, int64(monthDifference)) != 1 {
+		return false
+	}
+
+	if now.UnixNano() > c.UnixNano() && monthDifference == 1 {
 		return true
 	}
 
