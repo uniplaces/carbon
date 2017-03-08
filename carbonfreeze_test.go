@@ -4,9 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/mumia/carbon"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFreeze(t *testing.T) {
@@ -54,6 +53,7 @@ func TestUnFreeze(t *testing.T) {
 	assert.Nil(t, err)
 
 	carbon.Freeze(timeToFreeze.Time)
+	defer carbon.UnFreeze()
 
 	frozenNow := carbon.Now()
 
