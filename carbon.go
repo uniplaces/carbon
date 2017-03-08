@@ -113,9 +113,9 @@ func After(d time.Duration) <-chan time.Time {
 		c := make(chan time.Time, 1)
 		c <- currentFrozenTime
 		return c
-	} else {
-		return time.After(d)
 	}
+
+	return time.After(d)
 }
 
 // Tick will be behave like time.Tick unless time has been frozen
@@ -130,9 +130,9 @@ func Tick(d time.Duration) <-chan time.Time {
 			}
 		}()
 		return c
-	} else {
-		return time.Tick(d)
 	}
+
+	return time.Tick(d)
 }
 
 // Sleep will be behave like time.Sleep unless time has been frozen
@@ -140,9 +140,11 @@ func Tick(d time.Duration) <-chan time.Time {
 func Sleep(d time.Duration) {
 	if isTimeFrozen && d > 0 {
 		currentFrozenTime = currentFrozenTime.Add(d)
-	} else {
-		time.Sleep(d)
+
+		return
 	}
+
+	time.Sleep(d)
 }
 
 // create returns a new carbon pointe. It is a helper function to create new dates
