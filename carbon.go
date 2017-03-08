@@ -67,6 +67,12 @@ type Carbon struct {
 	Translator   *Translator
 }
 
+// Used for testing purposes
+var (
+	isTimeFrozen      bool
+	currentFrozenTime time.Time
+)
+
 // NewCarbon returns a pointer to a new Carbon instance
 func NewCarbon(t time.Time) *Carbon {
 	wds := []time.Weekday{
@@ -80,6 +86,62 @@ func NewCarbon(t time.Time) *Carbon {
 		weekendDays:  wds,
 		stringFormat: DefaultFormat,
 		Translator:   translator(),
+	}
+}
+
+// Freeze allows time to be frozen to facilitate testing
+func Freeze(time time.Time) {
+	currentFrozenTime = time
+	isTimeFrozen = true
+}
+
+// UnFreeze returns time to normal operation
+func UnFreeze() {
+	isTimeFrozen = false
+}
+
+// IsTimeFrozen allows checking if time has been frozen
+func IsTimeFrozen() bool {
+	return isTimeFrozen
+}
+
+// After will be behave like time.After unless time has been frozen
+// If time is frozen it will add the expected delay and immediately send the frozen time on the returned channel
+func After(d time.Duration) <-chan time.Time {
+	if isTimeFrozen {
+		currentFrozenTime = currentFrozenTime.Add(d)
+		c := make(chan time.Time, 1)
+		c <- currentFrozenTime
+		return c
+	} else {
+		return time.After(d)
+	}
+}
+
+// Tick will be behave like time.Tick unless time has been frozen
+// If time is frozen it will tick normally but the date will be based on the frozen date
+func Tick(d time.Duration) <-chan time.Time {
+	if isTimeFrozen {
+		c := make(chan time.Time, 1)
+		go func() {
+			for {
+				currentFrozenTime = currentFrozenTime.Add(d)
+				c <- currentFrozenTime
+			}
+		}()
+		return c
+	} else {
+		return time.Tick(d)
+	}
+}
+
+// Sleep will be behave like time.Sleep unless time has been frozen
+// If time is frozen it will add the expected sleep delay and return immediately
+func Sleep(d time.Duration) {
+	if isTimeFrozen && d > 0 {
+		currentFrozenTime = currentFrozenTime.Add(d)
+	} else {
+		time.Sleep(d)
 	}
 }
 
@@ -216,6 +278,10 @@ func MinValue() *Carbon {
 
 // Now returns a new Carbon instance for right now in current localtime
 func Now() *Carbon {
+	if isTimeFrozen {
+		return NewCarbon(currentFrozenTime)
+	}
+
 	return NewCarbon(time.Now())
 }
 
