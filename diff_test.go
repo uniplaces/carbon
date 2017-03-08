@@ -2,9 +2,26 @@ package carbon
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
+
+// Check https://github.com/uniplaces/carbon/issues/30
+func TestCarbonDiffInYears(t *testing.T) {
+	dob, _ := CreateFromDate(2000, time.June, 27, time.UTC.String())
+
+	yesterday, _ := CreateFromDate(2016, time.June, 26, time.UTC.String())
+	today, _ := CreateFromDate(2016, time.June, 27, time.UTC.String())
+	tomorrow, _ := CreateFromDate(2016, time.June, 28, time.UTC.String())
+
+	// Day before 16th birthday... Should be 15
+	assert.Equal(t, int64(15), dob.DiffInYears(yesterday, true))
+	// Day of 16th birthday
+	assert.Equal(t, int64(16), dob.DiffInYears(today, true))
+	// Day after 16th birthday
+	assert.Equal(t, int64(16), dob.DiffInYears(tomorrow, true))
+}
 
 func TestDiffForHumansNowAndSecond(t *testing.T) {
 	gotTime, err := Now().DiffForHumans(nil, false, false, false)
