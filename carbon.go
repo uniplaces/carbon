@@ -872,12 +872,12 @@ func (c *Carbon) IsTomorrow() bool {
 
 // IsFuture determines if the current time is in the future, ie. greater (after) than now
 func (c *Carbon) IsFuture() bool {
-	return c.After(time.Now())
+	return c.After(Now().Time)
 }
 
 // IsPast determines if the current time is in the past, ie. less (before) than now
 func (c *Carbon) IsPast() bool {
-	return c.Before(time.Now())
+	return c.Before(Now().Time)
 }
 
 // IsLeapYear determines if current current time is a leap year
@@ -991,7 +991,7 @@ func (c *Carbon) IsSaturday() bool {
 // IsLastWeek returns true is the date is within last week
 func (c *Carbon) IsLastWeek() bool {
 	secondsInWeek := float64(secondsInWeek)
-	difference := time.Now().Sub(c.Time)
+	difference := Now().Sub(c.Time)
 	if difference.Seconds() > 0 && difference.Seconds() < secondsInWeek {
 		return true
 	}
@@ -1002,7 +1002,7 @@ func (c *Carbon) IsLastWeek() bool {
 // IsLastMonth returns true is the date is within last month
 func (c *Carbon) IsLastMonth() bool {
 	secondsInMonth := float64(secondsInMonth)
-	difference := time.Now().Sub(c.Time)
+	difference := Now().Sub(c.Time)
 	if difference.Seconds() > 0 && difference.Seconds() < secondsInMonth {
 		return true
 	}
