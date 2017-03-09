@@ -67,6 +67,12 @@ type Carbon struct {
 	Translator   *Translator
 }
 
+// Used for testing purposes
+var (
+	isTimeFrozen      bool
+	currentFrozenTime time.Time
+)
+
 // NewCarbon returns a pointer to a new Carbon instance
 func NewCarbon(t time.Time) *Carbon {
 	wds := []time.Weekday{
@@ -81,6 +87,64 @@ func NewCarbon(t time.Time) *Carbon {
 		stringFormat: DefaultFormat,
 		Translator:   translator(),
 	}
+}
+
+// Freeze allows time to be frozen to facilitate testing
+func Freeze(time time.Time) {
+	currentFrozenTime = time
+	isTimeFrozen = true
+}
+
+// UnFreeze returns time to normal operation
+func UnFreeze() {
+	isTimeFrozen = false
+}
+
+// IsTimeFrozen allows checking if time has been frozen
+func IsTimeFrozen() bool {
+	return isTimeFrozen
+}
+
+// After will be behave like time.After unless time has been frozen
+// If time is frozen it will add the expected delay and immediately send the frozen time on the returned channel
+func After(d time.Duration) <-chan time.Time {
+	if isTimeFrozen {
+		currentFrozenTime = currentFrozenTime.Add(d)
+		c := make(chan time.Time, 1)
+		c <- currentFrozenTime
+		return c
+	}
+
+	return time.After(d)
+}
+
+// Tick will be behave like time.Tick unless time has been frozen
+// If time is frozen it will tick normally but the date will be based on the frozen date
+func Tick(d time.Duration) <-chan time.Time {
+	if isTimeFrozen {
+		c := make(chan time.Time, 1)
+		go func() {
+			for {
+				currentFrozenTime = currentFrozenTime.Add(d)
+				c <- currentFrozenTime
+			}
+		}()
+		return c
+	}
+
+	return time.Tick(d)
+}
+
+// Sleep will be behave like time.Sleep unless time has been frozen
+// If time is frozen it will add the expected sleep delay and return immediately
+func Sleep(d time.Duration) {
+	if isTimeFrozen && d > 0 {
+		currentFrozenTime = currentFrozenTime.Add(d)
+
+		return
+	}
+
+	time.Sleep(d)
 }
 
 // create returns a new carbon pointe. It is a helper function to create new dates
@@ -216,6 +280,10 @@ func MinValue() *Carbon {
 
 // Now returns a new Carbon instance for right now in current localtime
 func Now() *Carbon {
+	if isTimeFrozen {
+		return NewCarbon(currentFrozenTime)
+	}
+
 	return NewCarbon(time.Now())
 }
 
@@ -804,12 +872,12 @@ func (c *Carbon) IsTomorrow() bool {
 
 // IsFuture determines if the current time is in the future, ie. greater (after) than now
 func (c *Carbon) IsFuture() bool {
-	return c.After(time.Now())
+	return c.After(Now().Time)
 }
 
 // IsPast determines if the current time is in the past, ie. less (before) than now
 func (c *Carbon) IsPast() bool {
-	return c.Before(time.Now())
+	return c.Before(Now().Time)
 }
 
 // IsLeapYear determines if current current time is a leap year
@@ -923,7 +991,7 @@ func (c *Carbon) IsSaturday() bool {
 // IsLastWeek returns true is the date is within last week
 func (c *Carbon) IsLastWeek() bool {
 	secondsInWeek := float64(secondsInWeek)
-	difference := time.Now().Sub(c.Time)
+	difference := Now().Sub(c.Time)
 	if difference.Seconds() > 0 && difference.Seconds() < secondsInWeek {
 		return true
 	}
@@ -933,9 +1001,15 @@ func (c *Carbon) IsLastWeek() bool {
 
 // IsLastMonth returns true is the date is within last month
 func (c *Carbon) IsLastMonth() bool {
-	secondsInMonth := float64(secondsInMonth)
-	difference := time.Now().Sub(c.Time)
-	if difference.Seconds() > 0 && difference.Seconds() < secondsInMonth {
+	now := Now()
+
+	monthDifference := now.Month() - c.Month()
+
+	if absValue(true, int64(monthDifference)) != 1 {
+		return false
+	}
+
+	if now.UnixNano() > c.UnixNano() && monthDifference == 1 {
 		return true
 	}
 
@@ -1078,16 +1152,23 @@ func (c *Carbon) DiffInYears(carb *Carbon, abs bool) int64 {
 		return 0
 	}
 
-	diffHr := c.DiffInHours(carb, abs)
-	hrLastYear := int64(c.DaysInYear() * hoursPerDay)
-
-	if (diffHr - hrLastYear) >= 0 {
-		diff := int64(carb.In(time.UTC).Year() - c.In(time.UTC).Year())
-
-		return absValue(abs, diff)
+	start := NewCarbon(c.Time)
+	end := NewCarbon(carb.Time)
+	if end.UnixNano() < start.UnixNano() {
+		aux := start
+		start = end
+		end = aux
 	}
 
-	return 0
+	yearsAmmount := int64(end.Year()-start.Year()) - 1
+
+	start.SetYear(end.Year())
+
+	if start.UnixNano() <= end.UnixNano() {
+		yearsAmmount++
+	}
+
+	return absValue(abs, yearsAmmount)
 }
 
 // DiffInMonths returns the difference in months
