@@ -16,6 +16,7 @@ __Features:__
 * Provides methods to compare dates
 * Supports date formatting in common formats
 * Easily calculate difference between dates
+* Ease testing with dates by using `carbon.Freeze()` and `carbon.Now()`
 
 __To do:__
 
