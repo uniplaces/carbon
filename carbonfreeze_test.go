@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/uniplaces/carbon"
 	"github.com/stretchr/testify/assert"
+	"github.com/uniplaces/carbon"
 )
 
 func TestFreeze(t *testing.T) {
@@ -68,4 +68,30 @@ func TestUnFreeze(t *testing.T) {
 	assert.NotEqual(t, frozenNow, unfrozenNow)
 	assert.Equal(t, expectedTimeStamp, frozenNow.Unix())
 	assert.Equal(t, realNow.Unix(), unfrozenNow.Time.Unix())
+}
+
+func TestNotSharing(t *testing.T) {
+	// 2017-03-08T01:24:34+00:00
+	expectedTimeStamp1 := int64(1488936274)
+	timeToFreeze1, _ := carbon.CreateFromTimestampUTC(expectedTimeStamp1)
+	carbon.Freeze(timeToFreeze1.Time)
+
+	carbon1 := carbon.Now()
+
+	time.Sleep(2 * time.Second)
+
+	carbon11 := carbon.Now()
+
+	// 2017-03-09T10:12:01+00:00
+	expectedTimeStamp2 := int64(1489054321)
+	timeToFreeze2, _ := carbon.CreateFromTimestampUTC(expectedTimeStamp2)
+	carbon.Freeze(timeToFreeze2.Time)
+
+	carbon2 := carbon.Now()
+
+	assert.NotEqual(t, carbon1.UnixNano(), carbon2.UnixNano())
+	assert.Equal(t, carbon1.UnixNano(), carbon11.UnixNano())
+	assert.Equal(t, expectedTimeStamp1, carbon1.Unix())
+	assert.Equal(t, expectedTimeStamp1, carbon11.Unix())
+	assert.Equal(t, expectedTimeStamp2, carbon2.Unix())
 }
