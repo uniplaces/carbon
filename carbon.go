@@ -90,8 +90,8 @@ func NewCarbon(t time.Time) *Carbon {
 }
 
 // Freeze allows time to be frozen to facilitate testing
-func Freeze(time time.Time) {
-	currentFrozenTime = time
+func Freeze(value time.Time) {
+	currentFrozenTime = value
 	isTimeFrozen = true
 }
 
@@ -384,7 +384,9 @@ func (c *Carbon) String() string {
 // AddYears adds a year to the current time.
 // Positive values travel forward while negative values travel into the past
 func (c *Carbon) AddYears(y int) *Carbon {
-	return NewCarbon(c.AddDate(y, 0, 0))
+	c.Time = c.AddDate(y, 0, 0)
+
+	return c
 }
 
 // AddYear adds a year to the current time
@@ -395,7 +397,9 @@ func (c *Carbon) AddYear() *Carbon {
 // AddQuarters adds quarters to the current time.
 // Positive values travel forward while negative values travel into the past
 func (c *Carbon) AddQuarters(q int) *Carbon {
-	return NewCarbon(c.AddDate(0, monthsPerQuarter*q, 0))
+	c.Time = c.AddDate(0, monthsPerQuarter*q, 0)
+
+	return c
 }
 
 // AddQuarter adds a quarter to the current time
@@ -406,7 +410,9 @@ func (c *Carbon) AddQuarter() *Carbon {
 // AddCenturies adds centuries to the time.
 // Positive values travels forward while negative values travels into the past
 func (c *Carbon) AddCenturies(cent int) *Carbon {
-	return NewCarbon(c.AddDate(yearsPerCenturies*cent, 0, 0))
+	c.Time = c.AddDate(yearsPerCenturies*cent, 0, 0)
+
+	return c
 }
 
 // AddCentury adds a century to the current time
@@ -417,7 +423,9 @@ func (c *Carbon) AddCentury() *Carbon {
 // AddMonths adds months to the current time.
 // Positive value travels forward while negative values travels into the past
 func (c *Carbon) AddMonths(m int) *Carbon {
-	return NewCarbon(c.AddDate(0, m, 0))
+	c.Time = c.AddDate(0, m, 0)
+
+	return c
 }
 
 // AddMonth adds a month to the current time
@@ -429,7 +437,9 @@ func (c *Carbon) AddMonth() *Carbon {
 // Positive values travels forward while negative values travels into the past.
 func (c *Carbon) AddSeconds(s int) *Carbon {
 	d := time.Duration(s) * time.Second
-	return NewCarbon(c.Add(d))
+	c.Time = c.Add(d)
+
+	return c
 }
 
 // AddSecond adds a second to the time
@@ -440,7 +450,9 @@ func (c *Carbon) AddSecond() *Carbon {
 // AddDays adds a day to the current time.
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddDays(d int) *Carbon {
-	return NewCarbon(c.AddDate(0, 0, d))
+	c.Time = c.AddDate(0, 0, d)
+
+	return c
 }
 
 // AddDay adds a day to the current time
@@ -474,7 +486,9 @@ func (c *Carbon) AddWeekday() *Carbon {
 // AddWeeks adds a week to the current time.
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddWeeks(w int) *Carbon {
-	return NewCarbon(c.AddDate(0, 0, daysPerWeek*w))
+	c.Time = c.AddDate(0, 0, daysPerWeek*w)
+
+	return c
 }
 
 // AddWeek adds a week to the current time
@@ -486,8 +500,9 @@ func (c *Carbon) AddWeek() *Carbon {
 // Positive value travels forward while negative value travels into the past
 func (c *Carbon) AddHours(h int) *Carbon {
 	d := time.Duration(h) * time.Hour
+	c.Time = c.Add(d)
 
-	return NewCarbon(c.Add(d))
+	return c
 }
 
 // AddHour adds an hour to the current time
@@ -504,12 +519,16 @@ func (c *Carbon) AddMonthsNoOverflow(m int) *Carbon {
 		return addedDate.PreviousMonthLastDay()
 	}
 
-	return addedDate
+	c.Time = addedDate.Time
+
+	return c
 }
 
 // PreviousMonthLastDay returns the last day of the previous month
 func (c *Carbon) PreviousMonthLastDay() *Carbon {
-	return NewCarbon(c.AddDate(0, 0, -c.Day()))
+	c.Time = c.AddDate(0, 0, -c.Day())
+
+	return c
 }
 
 // AddMonthNoOverflow adds a month with no overflow to the current time
@@ -521,8 +540,9 @@ func (c *Carbon) AddMonthNoOverflow() *Carbon {
 // Positive value travels forward while negative value travels into the past.
 func (c *Carbon) AddMinutes(m int) *Carbon {
 	d := time.Duration(m) * time.Minute
+	c.Time = c.Add(d)
 
-	return NewCarbon(c.Add(d))
+	return c
 }
 
 // AddMinute adds a minute to the current time
@@ -1160,15 +1180,15 @@ func (c *Carbon) DiffInYears(carb *Carbon, abs bool) int64 {
 		end = aux
 	}
 
-	yearsAmmount := int64(end.Year()-start.Year()) - 1
+	yearsAmount := int64(end.Year()-start.Year()) - 1
 
 	start.SetYear(end.Year())
 
 	if start.UnixNano() <= end.UnixNano() {
-		yearsAmmount++
+		yearsAmount++
 	}
 
-	return absValue(abs, yearsAmmount)
+	return absValue(abs, yearsAmount)
 }
 
 // DiffInMonths returns the difference in months
@@ -1311,7 +1331,7 @@ func (c *Carbon) DiffFiltered(duration time.Duration, f Filter, carb *Carbon, ab
 		if f(end) {
 			counter++
 		}
-		end = NewCarbon(end.Add(-duration))
+		end.Time = end.Add(-duration)
 	}
 	if inverse {
 		counter = -counter
@@ -1644,14 +1664,18 @@ func (c *Carbon) LastOfMonth(wd time.Weekday) *Carbon {
 	return d.StartOfDay()
 }
 
-// LastDayOfMonth returns a new carbon instance with the last day of current month
+// LastDayOfMonth resets date to the last day of current month
 func (c *Carbon) LastDayOfMonth() *Carbon {
-	return NewCarbon(time.Date(c.Year(), c.Month(), c.DaysInMonth(), 0, 0, 0, 0, time.UTC))
+	c.Time = time.Date(c.Year(), c.Month(), c.DaysInMonth(), 0, 0, 0, 0, time.UTC)
+
+	return c
 }
 
-// FirstDayOfMonth returns a new carbon instance with the first day of current month
+// FirstDayOfMonth resets date to the first day of current month
 func (c *Carbon) FirstDayOfMonth() *Carbon {
-	return NewCarbon(time.Date(c.Year(), c.Month(), 1, 0, 0, 0, 0, time.UTC))
+	c.Time = time.Date(c.Year(), c.Month(), 1, 0, 0, 0, 0, time.UTC)
+
+	return c
 }
 
 // NthOfMonth returns the given occurrence of a given day of the week in the current month
