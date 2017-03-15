@@ -1,9 +1,9 @@
 package carbon
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestErrorOnConstruction(t *testing.T) {

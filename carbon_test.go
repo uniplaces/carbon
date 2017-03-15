@@ -1514,8 +1514,9 @@ func TestLteFalseLesser(t *testing.T) {
 
 func TestBetweenTrue(t *testing.T) {
 	c := Now()
-	d := c.SubMonth()
-	b := c.AddMonth()
+
+	d := Now().SubMonth()
+	b := Now().AddMonth()
 
 	assert.True(t, c.Between(d, b, false))
 }
@@ -1531,16 +1532,16 @@ func TestBetweenEqualTrue(t *testing.T) {
 
 func TestBetweenSwapedTrue(t *testing.T) {
 	c := Now()
-	a := c.SubMonth()
-	b := c.AddMonth()
+	a := Now().SubMonth()
+	b := Now().AddMonth()
 
 	assert.True(t, c.Between(b, a, false))
 }
 
 func TestBetweenFalse(t *testing.T) {
 	c := Now()
-	d := c.SubMonth()
-	b := c.AddMonth()
+	d := Now().SubMonth()
+	b := Now().AddMonth()
 	c = c.SubMonth()
 
 	assert.False(t, c.Between(d, b, false))
@@ -1548,48 +1549,48 @@ func TestBetweenFalse(t *testing.T) {
 
 func TestClosestFirstArgument(t *testing.T) {
 	c := Now()
-	a := c.AddHour()
-	b := c.AddMonth()
+	a := Now().AddHour()
+	b := Now().AddMonth()
 
 	assert.Equal(t, a, c.Closest(a, b))
 }
 
 func TestClosestLastArgument(t *testing.T) {
 	c := Now()
-	a := c.AddHour()
-	b := c.AddSecond()
+	a := Now().AddHour()
+	b := Now().AddSecond()
 
 	assert.Equal(t, b, c.Closest(a, b))
 }
 
 func TestClosestBeforeAndAfterDates(t *testing.T) {
 	c := Now()
-	a := c.SubHour()
-	b := c.AddMinute()
+	a := Now().SubHour()
+	b := Now().AddMinute()
 
 	assert.Equal(t, b, c.Closest(a, b))
 }
 
 func TestFarthestFirstArgument(t *testing.T) {
 	c := Now()
-	a := c.AddYear()
-	b := c.AddMonth()
+	a := Now().AddYear()
+	b := Now().AddMonth()
 
 	assert.Equal(t, a, c.Farthest(a, b))
 }
 
 func TestFarthestLastArgument(t *testing.T) {
 	c := Now()
-	a := c.AddSecond()
-	b := c.AddMinute()
+	a := Now().AddSecond()
+	b := Now().AddMinute()
 
 	assert.Equal(t, b, c.Farthest(a, b))
 }
 
 func TestFarthestBeforeAndAfterDates(t *testing.T) {
 	c := Now()
-	a := c.SubHour()
-	b := c.AddMinute()
+	a := Now().SubHour()
+	b := Now().AddMinute()
 
 	assert.Equal(t, a, c.Farthest(a, b))
 }
@@ -1720,14 +1721,14 @@ func TestDiffInSecondsTimeZoneDifferentTime(t *testing.T) {
 
 func TestDiffInSecondsAbs(t *testing.T) {
 	t1 := Now()
-	t2 := t1.AddSecond()
+	t2 := Now().AddSecond()
 
 	assert.Equal(t, int64(1), t1.DiffInSeconds(t2, true))
 }
 
 func TestDiffInSecondsNoAbs(t *testing.T) {
 	t1 := Now()
-	t2 := t1.AddSecond()
+	t2 := Now().AddSecond()
 
 	assert.Equal(t, int64(-1), t2.DiffInSeconds(t1, false))
 }
@@ -1748,14 +1749,14 @@ func TestDiffInMinutesTimeZone2(t *testing.T) {
 
 func TestDiffInMinutesAbs(t *testing.T) {
 	t1 := Now()
-	t2 := t1.AddMinute()
+	t2 := Now().AddMinute()
 
 	assert.Equal(t, int64(1), t1.DiffInMinutes(t2, true))
 }
 
 func TestDiffInMinutesNoAbs(t *testing.T) {
 	t1 := Now()
-	t2 := t1.AddMinute()
+	t2 := Now().AddMinute()
 
 	assert.Equal(t, int64(-1), t2.DiffInMinutes(t1, false))
 }
@@ -1776,14 +1777,14 @@ func TestDiffInHoursTimeZone2(t *testing.T) {
 
 func TestDiffInHoursAbs(t *testing.T) {
 	t1 := Now()
-	t2 := t1.AddHour()
+	t2 := Now().AddHour()
 
 	assert.Equal(t, int64(1), t1.DiffInHours(t2, true))
 }
 
 func TestDiffInHoursNoAbs(t *testing.T) {
 	t1 := Now()
-	t2 := t1.AddHour()
+	t2 := Now().AddHour()
 
 	assert.Equal(t, int64(-1), t2.DiffInHours(t1, false))
 }
@@ -1804,14 +1805,14 @@ func TestDiffInDaysTimeZone2(t *testing.T) {
 
 func TestDiffInDaysAbs(t *testing.T) {
 	t1 := Now()
-	t2 := t1.AddDay()
+	t2 := Now().AddDay()
 
 	assert.Equal(t, int64(1), t1.DiffInDays(t2, true))
 }
 
 func TestDiffInDaysNoAbs(t *testing.T) {
 	t1 := Now()
-	t2 := t1.AddDay()
+	t2 := Now().AddDay()
 
 	assert.Equal(t, int64(-1), t2.DiffInDays(t1, false))
 }
@@ -1838,14 +1839,14 @@ func TestDiffInNightsTimeZone2(t *testing.T) {
 
 func TestDiffInNightsAbs(t *testing.T) {
 	t1 := Now()
-	t2 := t1.AddDay()
+	t2 := Now().AddDay()
 
 	assert.Equal(t, int64(1), t1.DiffInNights(t2, true))
 }
 
 func TestDiffInNightsNoAbs(t *testing.T) {
 	t1 := Now()
-	t2 := t1.AddDay()
+	t2 := Now().AddDay()
 
 	assert.Equal(t, int64(-1), t2.DiffInNights(t1, false))
 }
@@ -1878,14 +1879,14 @@ func TestDiffInWeeksTimeZone2(t *testing.T) {
 
 func TestDiffInWeeksAbs(t *testing.T) {
 	t1 := Now()
-	t2 := t1.AddWeek()
+	t2 := Now().AddWeek()
 
 	assert.Equal(t, int64(1), t1.DiffInWeeks(t2, true))
 }
 
 func TestDiffInWeeksNoAbs(t *testing.T) {
 	t1 := Now()
-	t2 := t1.AddWeek()
+	t2 := Now().AddWeek()
 
 	assert.Equal(t, int64(-1), t2.DiffInWeeks(t1, false))
 }
@@ -2606,12 +2607,11 @@ func TestCreateFromTimestampInvalidLocation(t *testing.T) {
 func TestLastDayOfMonth(t *testing.T) {
 	c, err := Create(2016, time.August, 20, 10, 0, 0, 0, "UTC")
 	assert.Nil(t, err)
-	d := c.LastDayOfMonth()
-	assert.Equal(t, 31, d.Day())
+	c.LastDayOfMonth()
+	assert.Equal(t, 31, c.Day())
 
-	c = c.AddMonth()
-	d = c.LastDayOfMonth()
-	assert.Equal(t, 30, d.Day())
+	c = c.AddDay().LastDayOfMonth()
+	assert.Equal(t, 30, c.Day())
 }
 
 func TestFirstDayOfMonth(t *testing.T) {

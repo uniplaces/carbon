@@ -7,7 +7,7 @@ import (
 // CarbonInterval represents an interval between two carbons.
 type CarbonInterval struct {
 	Start *Carbon
-	End *Carbon
+	End   *Carbon
 }
 
 // NewCarbonInterval returns a pointer to a new CarbonInterval instance
@@ -18,7 +18,7 @@ func NewCarbonInterval(start, end *Carbon) (*CarbonInterval, error) {
 
 	return &CarbonInterval{
 		Start: start,
-		End: end,
+		End:   end,
 	}, nil
 }
 
