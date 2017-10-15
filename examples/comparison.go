@@ -14,9 +14,10 @@ func comparison() {
 	fmt.Printf("t1 not equal to t2: %t", t1.Ne(t2))
 
 	fmt.Printf("t1 greater than t2: %t", t1.Gt(t2))
-	fmt.Printf("t1 lesser than t2: %t", t1.Lt(t2))
+	fmt.Printf("t1 less than t2: %t", t1.Lt(t2))
 
 	t3, _ := carbon.CreateFromDate(2011, 1, 20, "Europe/Paris")
+	// The third parameter states that t3 could be equal to either t1 or t2
 	fmt.Printf("t3 between t1 and t2: %t", t3.Between(t1, t2, true))
 
 	now := carbon.Now()
