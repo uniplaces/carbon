@@ -1209,7 +1209,7 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 		}
 
 		diffYr := c.Year() - carb.Year()
-		if diffYr > 1 {
+		if math.Abs(float64(diffYr)) > 1 {
 			diff := c.DiffInYears(carb, abs)*monthsPerYear + m
 
 			return absValue(abs, diff)
