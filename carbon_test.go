@@ -1993,6 +1993,13 @@ func TestDiffInMonthsSameMonth(t *testing.T) {
 	assert.EqualValues(t, 0, t1.DiffInMonths(t2, true))
 }
 
+func TestDiffInMonthsDifferentYears(t *testing.T) {
+	t1, _ := Create(2018, time.May, 1, 0, 0, 0, 0, "UTC")
+	t2, _ := Create(2020, time.June, 1, 0, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, 25, t1.DiffInMonths(t2, true))
+}
+
 func TestDiffInString(t *testing.T) {
 	t1, _ := Create(2016, time.August, 10, 10, 0, 0, 0, "UTC")
 	t2, _ := Create(2016, time.August, 1, 23, 0, 0, 0, "UTC")

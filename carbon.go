@@ -1187,7 +1187,7 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 	if (diffHr - hrLastMonth) >= 0 {
 		var m int64
 		if c.Year() < carb.Year() {
-			m = (int64(monthsPerYear) - int64(c.In(time.UTC).Month())) + (int64(carb.In(time.UTC).Month()) - 1)
+			m = int64(monthsPerYear) - int64(c.In(time.UTC).Month()) + int64(carb.In(time.UTC).Month()) - 1
 			totalHr := int64(c.DaysInMonth() * hoursPerDay)
 			cHr := c.StartOfMonth().DiffInHours(c, abs)
 			remainHr := totalHr - cHr
@@ -1210,7 +1210,8 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 
 		diffYr := c.Year() - carb.Year()
 		if math.Abs(float64(diffYr)) > 1 {
-			diff := c.DiffInYears(carb, abs)*monthsPerYear + m
+			dateWithoutMonths := c.AddMonths(int(m))
+			diff := dateWithoutMonths.DiffInYears(carb, abs)*monthsPerYear + m
 
 			return absValue(abs, diff)
 		}
