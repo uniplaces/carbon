@@ -12,7 +12,7 @@ func instantiation() {
 	fmt.Printf("New carbon from time instance: %s\n", now)
 
 	now = carbon.Now()
-	fmt.Printf("New carbon now: %s\n", now)
+	fmt.Printf("New carbon from Now function: %s\n", now)
 
 	fromDate, _ := carbon.CreateFromDate(2000, 1, 1, "Europe/London")
 	fmt.Printf("Created from date: %s\n", fromDate)
