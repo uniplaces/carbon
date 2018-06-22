@@ -2018,7 +2018,7 @@ func TestDiffInMonthsNegativeNoSign(t *testing.T) {
 	t1, _ := Create(2018, time.January, 1, 0, 0, 0, 0, "UTC")
 	t2, _ := Create(2017, time.February, 1, 0, 0, 0, 0, "UTC")
 
-	assert.EqualValues(t, 11, t1.DiffInMonths(t2, false))
+	assert.EqualValues(t, 11, t1.DiffInMonths(t2, true))
 }
 
 func TestDiffInMonthsEnsureIsTruncated(t *testing.T) {

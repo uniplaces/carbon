@@ -1204,8 +1204,7 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 		m = int64(carb.In(time.UTC).Month()) - int64(c.In(time.UTC).Month())
 		remainingTime := int(carb.DiffInHours(c, true))
 
-		//fmt.Println(remainingTime, carb.DaysInMonth()*hoursPerDay)
-		if remainingTime < carb.DaysInMonth()*hoursPerDay {
+		if remainingTime < c.DaysInMonth()*hoursPerDay {
 			m = 0
 		}
 	}
@@ -1219,6 +1218,10 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 	}
 
 	diff := m
+
+	if c.GreaterThan(carb) {
+		diff = -diff
+	}
 
 	return absValue(abs, diff)
 }
