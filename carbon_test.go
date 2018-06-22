@@ -2014,6 +2014,41 @@ func TestDiffInMonthsNegativeWithSign(t *testing.T) {
 	assert.EqualValues(t, -11, t1.DiffInMonths(t2, false))
 }
 
+func TestDiffInMonthsNegativeWithSignOneHourLess(t *testing.T) {
+	t1, _ := Create(2018, time.January, 1, 0, 0, 0, 0, "UTC")
+	t2, _ := Create(2017, time.January, 1, 1, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, -11, t1.DiffInMonths(t2, false))
+}
+
+func TestDiffInMonthsNegativeWithSignWithMonthsLess(t *testing.T) {
+	t1, _ := Create(2018, time.January, 1, 0, 0, 0, 0, "UTC")
+	t2, _ := Create(2017, time.July, 1, 0, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, -6, t1.DiffInMonths(t2, false))
+}
+
+func TestDiffInMonthsNegativeWithSignWithOneMonthLess(t *testing.T) {
+	t1, _ := Create(2018, time.January, 1, 0, 0, 0, 0, "UTC")
+	t2, _ := Create(2017, time.December, 1, 0, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, -1, t1.DiffInMonths(t2, false))
+}
+
+func TestDiffInMonthsNegativeWithSignWithOneMonthAndOneHourLess(t *testing.T) {
+	t1, _ := Create(2018, time.January, 1, 0, 0, 0, 0, "UTC")
+	t2, _ := Create(2017, time.December, 1, 1, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, 0, t1.DiffInMonths(t2, false))
+}
+
+func TestDiffInMonthsNegativeWithFewDaysLeft(t *testing.T) {
+	t1, _ := Create(2018, time.January, 1, 0, 0, 0, 0, "UTC")
+	t2, _ := Create(2017, time.December, 20, 0, 0, 0, 0, "UTC")
+
+	assert.EqualValues(t, 0, t1.DiffInMonths(t2, false))
+}
+
 func TestDiffInMonthsNegativeNoSign(t *testing.T) {
 	t1, _ := Create(2018, time.January, 1, 0, 0, 0, 0, "UTC")
 	t2, _ := Create(2017, time.February, 1, 0, 0, 0, 0, "UTC")
