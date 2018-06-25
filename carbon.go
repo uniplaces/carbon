@@ -1181,46 +1181,54 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 		return 0
 	}
 
-	diffHr := c.DiffInHours(carb, abs)
-	hrLastMonth := int64(c.DaysInMonth() * hoursPerDay)
+	if c.Month() != carb.Month() && c.Year() == carb.Year() {
+		diffInMonths := int64(carb.In(time.UTC).Month() - c.In(time.UTC).Month())
+		remainingTime := int(carb.DiffInHours(c, true))
 
-	if (diffHr - hrLastMonth) >= 0 {
-		var m int64
-		if c.Year() < carb.Year() {
-			m = (int64(monthsPerYear) - int64(c.In(time.UTC).Month())) + (int64(carb.In(time.UTC).Month()) - 1)
-			totalHr := int64(c.DaysInMonth() * hoursPerDay)
-			cHr := c.StartOfMonth().DiffInHours(c, abs)
-			remainHr := totalHr - cHr
-			spentInHr := carb.StartOfMonth().DiffInHours(carb, abs)
-			if (remainHr + spentInHr) >= totalHr {
-				m = m + 1
-			}
-		} else if c.Year() > carb.Year() {
-			m = (int64(monthsPerYear) - int64(carb.In(time.UTC).Month())) + (int64(c.In(time.UTC).Month()) - 1)
-			totalHr := int64(carb.DaysInMonth() * hoursPerDay)
-			carbHr := carb.StartOfMonth().DiffInHours(carb, abs)
-			remainHr := totalHr - carbHr
-			spentInHr := c.StartOfMonth().DiffInHours(c, abs)
-			if (remainHr + spentInHr) >= totalHr {
-				m = m + 1
-			}
-		} else {
-			m = int64(carb.In(time.UTC).Month() - c.In(time.UTC).Month())
+		if remainingTime < c.DaysInMonth()*hoursPerDay {
+			return 0
 		}
 
-		diffYr := c.Year() - carb.Year()
-		if math.Abs(float64(diffYr)) > 1 {
-			diff := c.DiffInYears(carb, abs)*monthsPerYear + m
+		return absValue(abs, diffInMonths)
+	}
 
-			return absValue(abs, diff)
+	m := monthsPerYear - c.In(time.UTC).Month() + carb.In(time.UTC).Month() - 1
+	if c.Year() < carb.Year() && c.hasRemainingHours(carb) {
+		m = m + 1
+	}
+
+	if c.Year() > carb.Year() {
+		m = monthsPerYear - carb.In(time.UTC).Month() + c.In(time.UTC).Month() - 1
+
+		if carb.hasRemainingHours(c) {
+			m = m + 1
 		}
+	}
 
-		diff := m
+	diffYr := c.Year() - carb.Year()
+	if math.Abs(float64(diffYr)) > 1 {
+		dateWithoutMonths := c.AddMonths(int(m))
+		diff := dateWithoutMonths.DiffInYears(carb, abs)*monthsPerYear + int64(m)
 
 		return absValue(abs, diff)
 	}
 
-	return 0
+	diff := int64(m)
+
+	if c.GreaterThan(carb) {
+		diff = -diff
+	}
+
+	return absValue(abs, diff)
+}
+
+func (c *Carbon) hasRemainingHours(carb *Carbon) bool {
+	totalHr := int64(c.DaysInMonth() * hoursPerDay)
+	cHr := c.StartOfMonth().DiffInHours(c, false)
+	remainHr := totalHr - cHr
+	spentInHr := carb.StartOfMonth().DiffInHours(carb, false)
+
+	return remainHr+spentInHr >= totalHr
 }
 
 // DiffDurationInString returns the duration difference in string format
