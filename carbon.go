@@ -20,6 +20,8 @@ import (
 	"math"
 	"strings"
 	"time"
+
+	"gopkg.in/mgo.v2/bson"
 )
 
 // Represents the number of elements in a given period
@@ -1809,6 +1811,27 @@ func (c *Carbon) SetLocale(l string) error {
 	}
 
 	return nil
+}
+
+func (c Carbon) GetBSON() (interface{}, error) {
+	return c.Time, nil
+}
+
+func (c *Carbon) SetBSON(raw bson.Raw) error {
+	decoded := &time.Time{}
+	err := raw.Unmarshal(decoded)
+
+	if err == nil {
+		c.SetYear(decoded.Year())
+		c.SetMonth(decoded.Month())
+		c.SetDay(decoded.Day())
+		c.SetHour(decoded.Hour())
+		c.SetMinute(decoded.Minute())
+		c.SetSecond(decoded.Second())
+		return nil
+	} else {
+		return err
+	}
 }
 
 /* TODO
