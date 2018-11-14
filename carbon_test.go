@@ -2606,6 +2606,13 @@ func TestCreateFromDate(t *testing.T) {
 	assert.EqualValues(t, 10, c.Day())
 }
 
+func TestCreateFromMonthAndYear(t *testing.T) {
+	c, _ := CreateFromMonthAndYear(2011, time.August, "UTC")
+
+	assert.EqualValues(t, 2011, c.Year())
+	assert.EqualValues(t, time.August, c.Month())
+}
+
 func TestAge(t *testing.T) {
 	c, _ := CreateFromDate(2011, time.August, 10, "UTC")
 	y, _ := CreateFromDate(2017, time.August, 10, "UTC")

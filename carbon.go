@@ -217,6 +217,16 @@ func CreateFromTimestampUTC(timestamp int64) (*Carbon, error) {
 	return CreateFromTimestamp(timestamp, "UTC")
 }
 
+// CreateFromMonthAndYear returns a new pointer to a Carbon instance from a specific month and year.
+// If the location is invalid, it returns an error instead.
+func CreateFromMonthAndYear(y int, mon time.Month, location string) (*Carbon, error) {
+	_, _, d := Now().Date()
+	h, m, s := Now().Clock()
+	ns := Now().Nanosecond()
+
+	return Create(y, mon, d, h, m, s, ns, location)
+}
+
 // Parse returns a pointer to a new carbon instance from a string
 // If the location is invalid, it returns an error instead.
 func Parse(layout, value, location string) (*Carbon, error) {
