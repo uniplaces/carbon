@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAddYearsPositive(t *testing.T) {
@@ -2744,4 +2745,12 @@ func TestIsLastMonthFalse(t *testing.T) {
 	c = Now().SubWeek()
 	assert.Nil(t, err)
 	assert.False(t, c.IsLastMonth())
+}
+
+func TestSetUnix(t *testing.T) {
+	unix := time.Now().UTC().Unix()
+	utcTime, err := CreateFromTimestampUTC(unix)
+
+	require.Nil(t, err)
+	assert.Equal(t, unix, utcTime.Unix())
 }
