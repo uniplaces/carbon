@@ -1187,11 +1187,17 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 		carb = nowIn(c.Location())
 	}
 
-	if c.Location() != carb.Location() {
-		c = NewCarbon(c.In(time.UTC))
-		carb = NewCarbon(carb.In(time.UTC))
+	cAux := c.Copy()
+	carbAux := carb.Copy()
+	if cAux.Location() != carbAux.Location() {
+		cAux = NewCarbon(cAux.In(time.UTC))
+		carbAux = NewCarbon(carbAux.In(time.UTC))
 	}
 
+	return calculateDiffInMonths(cAux, carbAux, abs)
+}
+
+func calculateDiffInMonths(c, carb *Carbon, abs bool) int64 {
 	if c.Month() == carb.Month() && c.Year() == carb.Year() {
 		return 0
 	}
