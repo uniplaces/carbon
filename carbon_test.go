@@ -2056,6 +2056,13 @@ func TestDiffInMonthsNegativeNoSign(t *testing.T) {
 	assert.EqualValues(t, 11, t1.DiffInMonths(t2, true))
 }
 
+func TestDiffInMonthsOverYearNonUTC(t *testing.T) {
+	t1, _ := Create(2018, time.December, 2, 0, 0, 0, 0, "EET")
+	t2, _ := Create(2019, time.February, 1, 0, 0, 0, 0, "EET")
+
+	assert.EqualValues(t, 1, t1.DiffInMonths(t2, true))
+}
+
 func TestDiffInMonthsEnsureIsTruncated(t *testing.T) {
 	t1, _ := Create(2018, time.January, 1, 0, 0, 0, 0, "UTC")
 	t2, _ := Create(2018, time.February, 17, 0, 0, 0, 0, "UTC")
