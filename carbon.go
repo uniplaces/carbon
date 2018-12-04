@@ -1187,12 +1187,23 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 		carb = nowIn(c.Location())
 	}
 
+	cAux := c.Copy()
+	carbAux := carb.Copy()
+	if cAux.Location() != carbAux.Location() {
+		cAux = NewCarbon(cAux.In(time.UTC))
+		carbAux = NewCarbon(carbAux.In(time.UTC))
+	}
+
+	return calculateDiffInMonths(cAux, carbAux, abs)
+}
+
+func calculateDiffInMonths(c, carb *Carbon, abs bool) int64 {
 	if c.Month() == carb.Month() && c.Year() == carb.Year() {
 		return 0
 	}
 
 	if c.Month() != carb.Month() && c.Year() == carb.Year() {
-		diffInMonths := int64(carb.In(time.UTC).Month() - c.In(time.UTC).Month())
+		diffInMonths := int64(carb.Month() - c.Month())
 		remainingTime := int(carb.DiffInHours(c, true))
 
 		if remainingTime < c.DaysInMonth()*hoursPerDay {
@@ -1202,13 +1213,13 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 		return absValue(abs, diffInMonths)
 	}
 
-	m := monthsPerYear - c.In(time.UTC).Month() + carb.In(time.UTC).Month() - 1
+	m := monthsPerYear - c.Month() + carb.Month() - 1
 	if c.Year() < carb.Year() && c.hasRemainingHours(carb) {
 		m = m + 1
 	}
 
 	if c.Year() > carb.Year() {
-		m = monthsPerYear - carb.In(time.UTC).Month() + c.In(time.UTC).Month() - 1
+		m = monthsPerYear - carb.Month() + c.Month() - 1
 
 		if carb.hasRemainingHours(c) {
 			m = m + 1
