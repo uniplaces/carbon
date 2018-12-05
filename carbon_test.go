@@ -2593,8 +2593,8 @@ func TestCreateFromTimestampUTC(t *testing.T) {
 func TestCreateFromTimestamp(t *testing.T) {
 	c, _ := CreateFromTimestamp(1171502725, "Africa/Cairo")
 
-	expected, _ := Create(2007, time.February, 15, 1, 25, 25, 0, "Africa/Cairo")
-	assert.Equal(t, expected, c, "The date should be 07-02-15 01:25:25")
+	expected, _ := Create(2007, time.February, 15, 3, 25, 25, 0, "Africa/Cairo")
+	assert.Equal(t, expected, c, "The date should be 07-02-15 03:25:25")
 }
 
 func TestCreateFromTime(t *testing.T) {

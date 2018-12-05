@@ -738,8 +738,7 @@ func (c *Carbon) SetWeekendDays(wds []time.Weekday) {
 
 // SetTimestamp sets the current time given a timestamp
 func (c *Carbon) SetTimestamp(sec int64) {
-	t := time.Unix(sec, 0)
-	c.Time = time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), c.Location())
+	c.Time = time.Unix(sec, 0).In(c.Location())
 }
 
 // SetTimeZone sets the location from a string
