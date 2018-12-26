@@ -2295,6 +2295,12 @@ func TestStartOfWeek(t *testing.T) {
 
 	expected, _ := Create(2016, time.August, 22, 0, 0, 0, 0, "UTC")
 	assert.Equal(t, expected, t2)
+
+	t3, _ := Create(2018, time.December, 3, 13, 0, 0, 0, "UTC")
+	t4 := t3.StartOfWeek()
+
+	expected2, _ := Create(2018, time.December, 3, 0, 0, 0, 0, "UTC")
+	assert.Equal(t, expected2, t4)
 }
 
 func TestEndOfWeek(t *testing.T) {
