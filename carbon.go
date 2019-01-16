@@ -1594,6 +1594,10 @@ func (c *Carbon) EndOfCentury() *Carbon {
 
 // StartOfWeek returns the date of the first day of week at 00:00:00
 func (c *Carbon) StartOfWeek() *Carbon {
+	if c.Weekday() == c.WeekStartsAt() {
+		return c.StartOfDay()
+	}
+
 	return c.Previous(c.WeekStartsAt())
 }
 
