@@ -36,7 +36,6 @@ const (
 	daysInLeapYear    = 366
 	daysInNormalYear  = 365
 	secondsInWeek     = 691200
-	secondsInMonth    = 2678400
 )
 
 // Represents the different string formats for dates
