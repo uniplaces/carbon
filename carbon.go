@@ -1204,7 +1204,7 @@ func calculateDiffInMonths(c, carb *Carbon, abs bool) int64 {
 		diffInMonths := int64(carb.Month() - c.Month())
 		remainingTime := int(carb.DiffInHours(c, true))
 
-		if remainingTime < c.DaysInMonth()*hoursPerDay {
+		if remainingTime < c.DaysInMonth()*hoursPerDay && diffInMonths > 0 {
 			return 0
 		}
 
