@@ -16,7 +16,8 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
 
-      - run: go get -t ./...
+      - name: Install dependencies
+        run: go get -t ./...
 
       - name: Test
         run: go test -coverprofile=coverage.txt -covermode=atomic
