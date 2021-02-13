@@ -1602,6 +1602,10 @@ func (c *Carbon) StartOfWeek() *Carbon {
 
 // EndOfWeek returns the date of the last day of the week at 23:59:59
 func (c *Carbon) EndOfWeek() *Carbon {
+	if c.Weekday() == c.WeekEndsAt() {
+		return c.EndOfDay();
+	}
+
 	return c.Next(c.WeekEndsAt()).EndOfDay()
 }
 
