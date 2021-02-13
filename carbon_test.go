@@ -2309,6 +2309,13 @@ func TestEndOfWeek(t *testing.T) {
 
 	expected, _ := Create(2016, time.August, 28, 23, 59, 59, 999999999, "UTC")
 	assert.Equal(t, expected, t2)
+
+	// test end of week when date is last day of weekend
+	t3, _ := Create(2021, time.January, 17, 13, 0, 0, 0, "UTC")
+	t4 := t3.EndOfWeek()
+
+	expected2, _ := Create(2021, time.January, 17, 23, 59, 59, 999999999, "UTC")
+	assert.Equal(t, expected2, t4)
 }
 
 func TestNextWeekday(t *testing.T) {
