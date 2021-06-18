@@ -1202,9 +1202,17 @@ func calculateDiffInMonths(c, carb *Carbon, abs bool) int64 {
 
 	if c.Month() != carb.Month() && c.Year() == carb.Year() {
 		diffInMonths := int64(carb.Month() - c.Month())
-		remainingTime := int(carb.DiffInHours(c, true))
+		remainingTime := 0
+		totalHours := 0
+		if carb.Timestamp() < c.Timestamp() {
+			remainingTime = int(c.DiffInHours(carb, true))
+			totalHours = carb.DaysInMonth() * hoursPerDay
+		} else {
+			remainingTime = int(carb.DiffInHours(c, true))
+			totalHours = c.DaysInMonth() * hoursPerDay
+		}
 
-		if remainingTime < c.DaysInMonth()*hoursPerDay && diffInMonths > 0 {
+		if remainingTime < totalHours {
 			return 0
 		}
 
@@ -1603,7 +1611,7 @@ func (c *Carbon) StartOfWeek() *Carbon {
 // EndOfWeek returns the date of the last day of the week at 23:59:59
 func (c *Carbon) EndOfWeek() *Carbon {
 	if c.Weekday() == c.WeekEndsAt() {
-		return c.EndOfDay();
+		return c.EndOfDay()
 	}
 
 	return c.Next(c.WeekEndsAt()).EndOfDay()
