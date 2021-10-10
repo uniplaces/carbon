@@ -47,17 +47,17 @@ import (
 )
 
 func main() {
-	fmt.Printf("Right now, time is %s\n", carbon.Now().DateTimeString())
+	fmt.Printf("Right now is %s\n", carbon.Now().DateTimeString())
 
 	today, _ := carbon.NowInLocation("America/Vancouver")
-	fmt.Printf("Current time in Vancouver is %s\n", today)
+	fmt.Printf("Right now in Vancouver is %s\n", today)
 
 	fmt.Printf("Tomorrow is %s\n", carbon.Now().AddDay())
-	fmt.Printf("Last week was %s\n", carbon.Now().SubWeek())
+	fmt.Printf("Last week is %s\n", carbon.Now().SubWeek())
 
-	nextOlympics, _ := carbon.CreateFromDate(2020, time.August, 5, "Europe/London")
+	nextOlympics, _ := carbon.CreateFromDate(2016, time.August, 5, "Europe/London")
 	nextOlympics = nextOlympics.AddYears(4)
-	fmt.Printf("Next Olympics to be held in %d\n", nextOlympics.Year())
+	fmt.Printf("Next olympics are in %d\n", nextOlympics.Year())
 
 	if carbon.Now().IsWeekend() {
 		fmt.Printf("Party time!")
