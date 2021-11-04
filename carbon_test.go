@@ -2596,11 +2596,17 @@ func TestCreateFromFormatInvalidFormat(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
-func TestCreateFromTimestampUTC(t *testing.T) {
+func TestCreateFromTimestampUTCDefault(t *testing.T) {
 	c, _ := CreateFromTimestampUTC(1171502725)
 
 	expected, _ := Create(2007, time.February, 15, 1, 25, 25, 0, "UTC")
 	assert.Equal(t, expected, c, "The date should be 07-02-15 01:25:25")
+}
+
+func TestCreateFromTimestampUTCByLocationParam(t *testing.T) {
+	c, err := CreateFromTimestamp(1624647416, "UTC")
+	assert.Nil(t, err)
+	assert.Equal(t, "Fri, Jun 25, 2021 6:56 PM", c.DayDateTimeString())
 }
 
 func TestCreateFromTimestamp(t *testing.T) {

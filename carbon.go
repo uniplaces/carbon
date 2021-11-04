@@ -46,7 +46,7 @@ const (
 	TimeFormat          = "15:04:05"
 	HourMinuteFormat    = "15:04"
 	HourFormat          = "15"
-	DayDateTimeFormat   = "Mon, Aug 2, 2006 3:04 PM"
+	DayDateTimeFormat   = "Mon, Jan 2, 2006 3:04 PM"
 	CookieFormat        = "Monday, 02-Jan-2006 15:04:05 MST"
 	RFC822Format        = "Mon, 02 Jan 06 15:04:05 -0700"
 	RFC1036Format       = "Mon, 02 Jan 06 15:04:05 -0700"
