@@ -1202,9 +1202,9 @@ func calculateDiffInMonths(c, carb *Carbon, abs bool) int64 {
 
 	if c.Month() != carb.Month() && c.Year() == carb.Year() {
 		diffInMonths := int64(carb.Month() - c.Month())
-		remainingTime := int(carb.DiffInHours(c, true))
+		remainingTime, totalHours := calculateDiffInTimeAndHours(c, carb)
 
-		if remainingTime < c.DaysInMonth()*hoursPerDay {
+		if remainingTime < totalHours {
 			return 0
 		}
 
@@ -1836,6 +1836,14 @@ func (c *Carbon) SetLocale(l string) error {
 	}
 
 	return nil
+}
+
+func calculateDiffInTimeAndHours(c, carb *Carbon) (int, int) {
+	if carb.Timestamp() < c.Timestamp() {
+		return int(c.DiffInHours(carb, true)), carb.DaysInMonth() * hoursPerDay
+	}
+
+	return int(carb.DiffInHours(c, true)), c.DaysInMonth() * hoursPerDay
 }
 
 /* TODO

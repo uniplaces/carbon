@@ -2773,3 +2773,12 @@ func TestSetUnix(t *testing.T) {
 	require.Nil(t, err)
 	assert.Equal(t, unix, utcTime.Unix())
 }
+
+func TestIncorrectDiffInMonthsCalculationIssue59(t *testing.T) {
+	d1, _ := Create(2020, time.November, 1, 0, 0, 0, 0, time.UTC.String())
+	d2, _ := Create(2020, time.December, 1, 0, 0, 0, 0, time.UTC.String())
+	months := d1.DiffInMonths(d2, true)
+	assert.EqualValues(t, 1, months)
+	monthsReverse := d2.DiffInMonths(d1, true)
+	assert.EqualValues(t, 1, monthsReverse)
+}
