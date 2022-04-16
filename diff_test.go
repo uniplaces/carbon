@@ -85,7 +85,7 @@ func TestDiffForHumansNowAndHours(t *testing.T) {
 }
 
 func TestDiffForHumansNowAndNearlyDayOne(t *testing.T) {
-	gotTime, err := Now().SubHours(743).DiffForHumans(nil, false, false, false)
+	gotTime, err := Now().SubWeeks(4).DiffForHumans(nil, false, false, false)
 	assert.Nil(t, err)
 	assert.Equal(t, "4 weeks ago", gotTime)
 }
@@ -145,10 +145,7 @@ func TestDiffForHumansNowAndNearlyMonth(t *testing.T) {
 }
 
 func TestDiffForHumansNowAndMonth(t *testing.T) {
-	gotTime, err := Now().SubWeeks(4).DiffForHumans(nil, false, false, false)
-	assert.Nil(t, err)
-	assert.Equal(t, "4 weeks ago", gotTime)
-	gotTime, err = Now().SubMonth().DiffForHumans(nil, false, false, false)
+	gotTime, err := Now().SubMonth().DiffForHumans(nil, false, false, false)
 	assert.Nil(t, err)
 	assert.Equal(t, "1 month ago", gotTime)
 }
@@ -526,7 +523,7 @@ func TestDiffForHumansOtherAndLessThanFutureMonth(t *testing.T) {
 }
 
 func TestDiffForHumansOtherAndFutureMonth(t *testing.T) {
-	gotTime, err := Now().DiffForHumans(Now().SubMonth(), true, false, false)
+	gotTime, err := Now().AddMonth().DiffForHumans(Now(), true, false, false)
 	assert.Nil(t, err)
 	assert.Equal(t, "1 month after", gotTime)
 }
