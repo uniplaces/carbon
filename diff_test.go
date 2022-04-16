@@ -562,6 +562,12 @@ func TestDiffForHumansAbsoluteSeconds(t *testing.T) {
 	assert.Equal(t, "59 seconds", gotTime2)
 }
 
+func TestDiffForOneMinute(t *testing.T) {
+	gotTime, err := Now().SubMinute().DiffForHumans(nil, false, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "1 minute ago", gotTime)
+}
+
 func TestDiffForHumansAbsoluteMinutes(t *testing.T) {
 	gotTime, err := Now().DiffForHumans(Now().SubMinutes(30), true, true, false)
 	assert.Nil(t, err)
@@ -580,6 +586,16 @@ func TestDiffForHumansAbsoluteHours(t *testing.T) {
 	gotTime2, err := Now().DiffForHumans(Now().AddHours(3), true, true, false)
 	assert.Nil(t, err)
 	assert.Equal(t, "3 hours", gotTime2)
+}
+
+func TestForDiffInHours(t *testing.T) {
+	a := NewCarbon(time.Now())
+	b := NewCarbon(time.Now().Add(time.Hour * 10))
+
+	gotTime, err := a.DiffForHumans(b, false, false, false)
+
+	assert.Nil(t, err)
+	assert.Equal(t, "10 hours before", gotTime)
 }
 
 func TestDiffForHumansAbsoluteDays(t *testing.T) {
