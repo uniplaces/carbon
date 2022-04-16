@@ -61,12 +61,12 @@ func (t *Translator) AssertValidLocale(l string) error {
 
 // loadResource loads the translations according to the locale
 func (t *Translator) loadResource(l string) error {
-	ltext, err := lang.LoadLocaleText(l)
+	lText, err := lang.LoadLocaleText(l)
 	if err != nil {
 		return err
 	}
 
-	err = json.Unmarshal(ltext, &t.resources)
+	err = json.Unmarshal(lText, &t.resources)
 	if err != nil {
 		return errors.New("unable to unmarshall locale data : " + err.Error())
 	}
