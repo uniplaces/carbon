@@ -1828,14 +1828,6 @@ func (c *Carbon) SetLocale(l string) error {
 	return nil
 }
 
-func calculateDiffInTimeAndHours(c, carb *Carbon) (int, int) {
-	if carb.Timestamp() < c.Timestamp() {
-		return int(c.DiffInHours(carb, true)), carb.DaysInMonth() * hoursPerDay
-	}
-
-	return int(carb.DiffInHours(c, true)), c.DaysInMonth() * hoursPerDay
-}
-
 /* TODO
 // String Formatting
 
