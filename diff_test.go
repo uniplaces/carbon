@@ -84,8 +84,8 @@ func TestDiffForHumansNowAndHours(t *testing.T) {
 	assert.Equal(t, "2 hours ago", gotTime)
 }
 
-func _TestDiffForHumansNowAndNearlyDayOne(t *testing.T) {
-	gotTime, err := Now().SubHours(743).DiffForHumans(nil, false, false, false)
+func TestDiffForHumansNowAndNearlyDayOne(t *testing.T) {
+	gotTime, err := Now().SubWeeks(4).DiffForHumans(nil, false, false, false)
 	assert.Nil(t, err)
 	assert.Equal(t, "4 weeks ago", gotTime)
 }
@@ -145,10 +145,7 @@ func TestDiffForHumansNowAndNearlyMonth(t *testing.T) {
 }
 
 func TestDiffForHumansNowAndMonth(t *testing.T) {
-	gotTime, err := Now().SubWeeks(4).DiffForHumans(nil, false, false, false)
-	assert.Nil(t, err)
-	assert.Equal(t, "4 weeks ago", gotTime)
-	gotTime, err = Now().SubMonth().DiffForHumans(nil, false, false, false)
+	gotTime, err := Now().SubMonth().DiffForHumans(nil, false, false, false)
 	assert.Nil(t, err)
 	assert.Equal(t, "1 month ago", gotTime)
 }
@@ -525,8 +522,8 @@ func TestDiffForHumansOtherAndLessThanFutureMonth(t *testing.T) {
 	assert.Equal(t, "4 weeks after", gotTime)
 }
 
-func _TestDiffForHumansOtherAndFutureMonth(t *testing.T) {
-	gotTime, err := Now().DiffForHumans(Now().SubMonth(), true, false, false)
+func TestDiffForHumansOtherAndFutureMonth(t *testing.T) {
+	gotTime, err := Now().AddMonth().DiffForHumans(Now(), true, false, false)
 	assert.Nil(t, err)
 	assert.Equal(t, "1 month after", gotTime)
 }
@@ -565,6 +562,12 @@ func TestDiffForHumansAbsoluteSeconds(t *testing.T) {
 	assert.Equal(t, "59 seconds", gotTime2)
 }
 
+func TestDiffForOneMinute(t *testing.T) {
+	gotTime, err := Now().SubMinute().DiffForHumans(nil, false, false, false)
+	assert.Nil(t, err)
+	assert.Equal(t, "1 minute ago", gotTime)
+}
+
 func TestDiffForHumansAbsoluteMinutes(t *testing.T) {
 	gotTime, err := Now().DiffForHumans(Now().SubMinutes(30), true, true, false)
 	assert.Nil(t, err)
@@ -583,6 +586,16 @@ func TestDiffForHumansAbsoluteHours(t *testing.T) {
 	gotTime2, err := Now().DiffForHumans(Now().AddHours(3), true, true, false)
 	assert.Nil(t, err)
 	assert.Equal(t, "3 hours", gotTime2)
+}
+
+func TestForDiffInHours(t *testing.T) {
+	a := NewCarbon(time.Now())
+	b := NewCarbon(time.Now().Add(time.Hour * 10))
+
+	gotTime, err := a.DiffForHumans(b, false, false, false)
+
+	assert.Nil(t, err)
+	assert.Equal(t, "10 hours before", gotTime)
 }
 
 func TestDiffForHumansAbsoluteDays(t *testing.T) {

@@ -1195,50 +1195,40 @@ func (c *Carbon) DiffInMonths(carb *Carbon, abs bool) int64 {
 	return calculateDiffInMonths(cAux, carbAux, abs)
 }
 
-func calculateDiffInMonths(c, carb *Carbon, abs bool) int64 {
+func calculateDiffInMonths(c *Carbon, carb *Carbon, abs bool) int64 {
 	if c.Month() == carb.Month() && c.Year() == carb.Year() {
 		return 0
 	}
 
-	if c.Month() != carb.Month() && c.Year() == carb.Year() {
-		diffInMonths := int64(carb.Month() - c.Month())
-		remainingTime := int(carb.DiffInHours(c, true))
+	diffInDays := c.DiffInDays(carb, false)
 
-		if remainingTime < c.DaysInMonth()*hoursPerDay {
-			return 0
-		}
+	end := c.Copy()
+	start := carb.Copy()
+	reg := -int64(1)
 
-		return absValue(abs, diffInMonths)
+	if diffInDays > 0 {
+		end = carb.Copy()
+		start = c.Copy()
+		reg = int64(1)
 	}
 
-	m := monthsPerYear - c.Month() + carb.Month() - 1
-	if c.Year() < carb.Year() && c.hasRemainingHours(carb) {
-		m = m + 1
+	months := calculateFromMonthToMonth(start, end, 0)
+
+	return absValue(abs, int64(months*reg))
+}
+
+func calculateFromMonthToMonth(start *Carbon, end *Carbon, months int64) int64 {
+	date := start.AddDays(start.DaysInMonth())
+	diffInDays := date.DiffInDays(end, false)
+	diffInSeconds := date.DiffInSeconds(end, false)
+
+	if diffInDays < 0 || diffInDays == 0 && diffInSeconds < 0 {
+		return months
 	}
 
-	if c.Year() > carb.Year() {
-		m = monthsPerYear - carb.Month() + c.Month() - 1
+	months += 1
 
-		if carb.hasRemainingHours(c) {
-			m = m + 1
-		}
-	}
-
-	diffYr := c.Year() - carb.Year()
-	if math.Abs(float64(diffYr)) > 1 {
-		dateWithoutMonths := c.AddMonths(int(m))
-		diff := dateWithoutMonths.DiffInYears(carb, abs)*monthsPerYear + int64(m)
-
-		return absValue(abs, diff)
-	}
-
-	diff := int64(m)
-
-	if c.GreaterThan(carb) {
-		diff = -diff
-	}
-
-	return absValue(abs, diff)
+	return calculateFromMonthToMonth(date, end, months)
 }
 
 func (c *Carbon) hasRemainingHours(carb *Carbon) bool {

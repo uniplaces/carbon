@@ -1935,6 +1935,14 @@ func TestDiffInMonthsTimeZone(t *testing.T) {
 	t1, _ := Create(2016, time.August, 18, 10, 0, 0, 0, "UTC")
 	t2, _ := Create(2016, time.January, 18, 12, 0, 0, 0, "Europe/Madrid")
 
+	// On January the diff from UTC and Europe/Madrid is only one hour
+	assert.EqualValues(t, 6, t1.DiffInMonths(t2, true))
+}
+
+func TestDiffInMonthsTimeZoneWithSameTimeDiff(t *testing.T) {
+	t1, _ := Create(2016, time.August, 18, 10, 0, 0, 0, "UTC")
+	t2, _ := Create(2016, time.January, 18, 11, 0, 0, 0, "Europe/Madrid")
+
 	assert.EqualValues(t, 7, t1.DiffInMonths(t2, true))
 }
 
@@ -1964,6 +1972,13 @@ func TestDiffInMonthsMoreThanTwoYears(t *testing.T) {
 	t2, _ := Create(2025, time.July, 3, 1, 0, 0, 0, "UTC")
 
 	assert.EqualValues(t, 82, t1.DiffInMonths(t2, true))
+}
+
+func TestDiffInMonthsTwoOverlapingYears(t *testing.T) {
+	t1, _ := Create(2019, 07, 1, 0, 0, 0, 0, time.UTC.String())
+	t2, _ := Create(2021, 07, 24, 0, 0, 0, 0, time.UTC.String())
+
+	assert.EqualValues(t, 24, t1.DiffInMonths(t2, true))
 }
 
 func TestDiffInMonthsOneDayDifference(t *testing.T) {
@@ -2069,6 +2084,17 @@ func TestDiffInMonthsEnsureIsTruncated(t *testing.T) {
 	t2, _ := Create(2018, time.February, 17, 0, 0, 0, 0, "UTC")
 
 	assert.EqualValues(t, 1, t1.DiffInMonths(t2, true))
+}
+
+func TestDiffInMonthsFor30DaysMonths(t *testing.T) {
+	d1, _ := Create(2020, time.November, 1, 0, 0, 0, 0, time.UTC.String())
+	d2, _ := Create(2020, time.December, 1, 0, 0, 0, 0, time.UTC.String())
+
+	months := d1.DiffInMonths(d2, true)
+	assert.EqualValues(t, 1, months)
+
+	monthsReverse := d2.DiffInMonths(d1, true)
+	assert.EqualValues(t, 1, monthsReverse)
 }
 
 func TestDiffInString(t *testing.T) {

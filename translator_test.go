@@ -24,5 +24,5 @@ func TestLoadNonExistentResource(t *testing.T) {
 	tr := NewTranslator()
 	err := tr.loadResource("iv")
 	assert.NotNil(t, err)
-	assert.True(t, strings.Contains(err.Error(), "github.com"))
+	assert.True(t, strings.Contains(err.Error(), "open iv.json: file does not exist"))
 }
