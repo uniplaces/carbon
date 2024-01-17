@@ -13,10 +13,10 @@ type CarbonInterval struct {
 // NewCarbonInterval returns a pointer to a new CarbonInterval instance
 func NewCarbonInterval(start, end *Carbon) (*CarbonInterval, error) {
 	if start == nil {
-		return nil, errors.New("start cannot be nil")
+		return nil, errors.New("start date cannot be nil")
 	}
 	if end == nil {
-		return nil, errors.New("end cannot be nil")
+		return nil, errors.New("end date cannot be nil")
 	}
 
 	if start.Gte(end) {
